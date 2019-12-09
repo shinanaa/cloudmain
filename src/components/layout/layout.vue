@@ -37,8 +37,8 @@
             </div>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>切换角色</el-dropdown-item>
-              <el-dropdown-item><span @click="changePwd">修改密码</span></el-dropdown-item>
-              <el-dropdown-item>退出登录</el-dropdown-item>
+              <el-dropdown-item><span @click="showChangePwd = true">修改密码</span></el-dropdown-item>
+              <el-dropdown-item><span @click="logout">退出登录</span></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </el-col>
@@ -59,7 +59,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button>取 消</el-button>
-          <el-button type="primary">确 定</el-button>
+          <el-button type="primary" @click="changPwd">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -68,6 +68,7 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 export default {
   name: 'layout',
   data () {
@@ -127,10 +128,18 @@ export default {
     moduleListActive (index) {
       this.activeIndex = index
     },
-    changePwd () {
-      console.log(12)
-      this.showChangePwd = true
-    }
+    changPwd () {
+
+    },
+    logout () {
+      console.log(123)
+      this.logOut().then(() => {
+        this.$router.push({ path: '/login' })
+      })
+    },
+    ...mapActions([
+      'logOut'
+    ])
   }
 }
 </script>
@@ -161,7 +170,7 @@ export default {
       width: calc(100% - 600px)
       height: 80px
       overflow: hidden
-      background: rgba(41,59,90,0.7)
+      background: rgba(41,59,90,0.9)
       line-height:80px
       &:hover
         position: absolute

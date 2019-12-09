@@ -41,8 +41,8 @@
 </template>
 
 <script>
-import {loginByUsername} from '@/api/login'
 import {ERR_CODE} from 'common/js/config'
+import {mapActions} from 'vuex'
 
 export default {
   name: 'login',
@@ -84,9 +84,8 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loginForm.url = 'loginOn'
-          loginByUsername(this.loginForm).then(res => {
+          this.LoginByUsername(this.loginForm).then(res => {
             if (res.errcode === ERR_CODE) {
-              console.log(res)
               this.$router.push({ path: '/' })
             } else {
               console.log(res)
@@ -103,7 +102,10 @@ export default {
           return false
         }
       })
-    }
+    },
+    ...mapActions([
+      'LoginByUsername'
+    ])
   },
   created () {
     this.linkInfo = [
