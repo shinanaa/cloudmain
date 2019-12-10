@@ -1,5 +1,7 @@
 import axios from 'axios'
 import qs from 'qs'
+import store from '@/store'
+import {getToken} from 'common/js/cache'
 
 import { J_API } from '../../../config/dev.env'
 import i from './i'
@@ -7,6 +9,9 @@ import i from './i'
 // 拦截器
 // 请求拦截器
 axios.interceptors.request.use(config => {
+  if (store.getters.token) {
+    config.data['authorization'] = getToken()
+  }
   return config
 }, error => {
   Promise.reject(error)
@@ -23,7 +28,6 @@ const Http = {
   postRequest: function (url, param) {
     param = param && typeof param === 'object' ? param : {}
     url = J_API + i[url].url
-    // url = 'http://121.41.83.191:10010/api/login/login'
     const config = {
       url: url,
       method: 'post',

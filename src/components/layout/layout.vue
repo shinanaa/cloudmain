@@ -7,7 +7,7 @@
       <ul class="modules">
         <li v-for="(item, index) in modules" :key="index" @mouseover="moduleListActive(index)" :class="{'active': activeIndex === index}">
           <span><i class="icon el-icon-menu"></i></span>
-          <span>{{item.name}}</span>
+          <router-link tag="span" :to="item.url">{{item.name}}</router-link>
         </li>
       </ul>
       <div class="right">
@@ -46,19 +46,19 @@
     </div>
     <div class="changePwd">
       <el-dialog title="修改密码" :visible.sync="showChangePwd">
-        <el-form :model="form" ref="dialogForm">
-          <el-form-item label="旧密码：" :label-width="formLabelWidth">
-            <el-input type="text" v-model="form.oldPwd"></el-input>
+        <el-form :model="changePwdForm" ref="changePwdForm" :rules="changePwdRules">
+          <el-form-item label="旧密码：" :label-width="formLabelWidth" prop="oldPwd">
+            <el-input type="text" v-model="changePwdForm.oldPwd"></el-input>
           </el-form-item>
-          <el-form-item label="新密码：" :label-width="formLabelWidth">
-            <el-input type="text" v-model="form.newPwd"></el-input>
+          <el-form-item label="新密码：" :label-width="formLabelWidth" prop="newPwd">
+            <el-input type="text" v-model="changePwdForm.newPwd"></el-input>
           </el-form-item>
-          <el-form-item label="确认密码：" :label-width="formLabelWidth">
-            <el-input type="text" v-model="form.surePwd"></el-input>
+          <el-form-item label="确认密码：" :label-width="formLabelWidth" prop="surePwd">
+            <el-input type="text" v-model="changePwdForm.surePwd"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button>取 消</el-button>
+          <el-button @click="cancelChangePwd">取 消</el-button>
           <el-button type="primary" @click="changPwd">确 定</el-button>
         </div>
       </el-dialog>
@@ -68,58 +68,60 @@
 </template>
 
 <script>
+import {ERR_CODE} from 'common/js/config'
 import {mapActions} from 'vuex'
+import {changePwd} from '@/api/login'
 export default {
   name: 'layout',
   data () {
+    const validateSurePwd = (rule, value, callback) => {
+      if (this.changePwdForm.newPwd !== this.changePwdForm.surePwd) {
+        callback(new Error('新密码与确认密码输入不一致'))
+      } else {
+        callback()
+      }
+    }
     return {
       activeIndex: null,
-      form: {
+      changePwdForm: {
         oldPwd: '',
         newPwd: '',
         surePwd: ''
+      },
+      changePwdRules: {
+        oldPwd: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        newPwd: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        surePwd: [
+          { required: true, message: '不能为空', trigger: 'blur' },
+          { required: true, trigger: 'blur', validator: validateSurePwd }
+        ]
       },
       showChangePwd: false,
       formLabelWidth: '100px',
       modules: [
         {
-          name: '基础数据'
+          name: '系统管理模块',
+          url: '/system'
         },
         {
-          name: '考试管理'
+          name: '单位管理',
+          url: '/system'
         },
         {
-          name: '题库管理'
+          name: '题库管理',
+          url: '/system'
         },
         {
-          name: '试卷管理'
+          name: '试卷管理',
+          url: '/system'
         },
         {
-          name: '考试管理'
-        },
-        {
-          name: '题库管理'
-        },
-        {
-          name: '试卷管理'
-        },
-        {
-          name: '考试管理'
-        },
-        {
-          name: '题库管理'
-        },
-        {
-          name: '试卷管理'
-        },
-        {
-          name: '考试管理'
-        },
-        {
-          name: '题库管理'
-        },
-        {
-          name: '试卷管理'
+          name: '考试管理',
+          url: '/system'
         }
       ]
     }
@@ -129,11 +131,33 @@ export default {
       this.activeIndex = index
     },
     changPwd () {
-
+      this.changePwdForm.url = 'changePwd'
+      changePwd(this.changePwdForm).then((res) => {
+        if (res.errcode === ERR_CODE) {
+          this.cancelChangePwd()
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'success'
+          })
+        } else {
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'error'
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    cancelChangePwd () {
+      this.$refs.changePwdForm.resetFields()
+      this.showChangePwd = false
     },
     logout () {
-      console.log(123)
-      this.logOut().then(() => {
+      const url = 'logOut'
+      this.logOut(url).then(() => {
         this.$router.push({ path: '/login' })
       })
     },
