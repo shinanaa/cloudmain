@@ -17,7 +17,11 @@ export default new Router({
         { path: '/home', component: () => import('@/components/home/home') },
         {
           path: '/system',
-          component: () => import('@/components/slideBar/slideBar')
+          component: () => import('@/components/moduleLayout/moduleLayout'),
+          redirect: '/user',
+          children: [
+            { path: '/user', component: () => import('@/views/system/user') }
+          ]
         }
       ]
     }

@@ -170,68 +170,71 @@ export default {
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/mixin"
-  .head
-    position: relative
-    height: 80px
-    min-width: 1200px
-    color: #FFF
-    clearfix()
-    background-color: #293b5a
-    .logo
-      float:left
-      width: 300px
+  @import "~common/stylus/variable"
+  .layout
+    height: 100%
+    .head
+      position: relative
       height: 80px
-      line-height: 80px
-      text-align:center
-      background-color: #21324f
-      img
-        width: 80%
-        height: auto
-        margin-left: -15px
-        vertical-align: middle
-    .modules
-      float: left
-      width: calc(100% - 600px)
-      height: 80px
-      overflow: hidden
-      background: rgba(41,59,90,0.9)
-      line-height:80px
-      &:hover
-        position: absolute
-        left: 300px
-        z-index: 10
-        height: auto
-      li
-        float: left
-        width: 180px
-        text-align: center
-        cursor: pointer
-        &.active
-          background: #21324f
-    .right
-      float:right
-      width: 300px
-      .info
-        clearfix()
-        height: 60px
-        margin-top:10px
-        padding-left: 15px
-        border-left: 2px solid #21324f
-        align-items: center
-        .el-col
-          .icon
-            font-size: 30px
-            color: #FFF
-      .user
+      min-width: 1200px
+      color: #FFF
+      clearfix()
+      background-color: #293b5a
+      .logo
+        float:left
+        width: $slide-width
         height: 80px
-        padding-left: 10px
-        display: flex
-        align-items: center
-        text-align: right
-        clearfix()
-        .user-text
-          font-size: 14px
-          line-height: 20px
-          margin-right: 8px
-          color: #ffffff
+        line-height: 80px
+        text-align:center
+        background-color: #21324f
+        img
+          width: 80%
+          height: auto
+          margin-left: -15px
+          vertical-align: middle
+      .modules
+        float: left
+        width: calc(100% - 300px - $slide-width)
+        height: 80px
+        overflow: hidden
+        background: rgba(41,59,90,0.9)
+        line-height:80px
+        &:hover
+          position: absolute
+          left: $slide-width
+          z-index: 10
+          height: auto
+        li
+          float: left
+          width: 180px
+          text-align: center
+          cursor: pointer
+          &.active
+            background: #21324f
+      .right
+        float:right
+        width: 300px
+        .info
+          clearfix()
+          height: 60px
+          margin-top:10px
+          padding-left: 15px
+          border-left: 2px solid #21324f
+          align-items: center
+          .el-col
+            .icon
+              font-size: 30px
+              color: #FFF
+        .user
+          height: 80px
+          padding-left: 10px
+          display: flex
+          align-items: center
+          text-align: right
+          clearfix()
+          .user-text
+            font-size: 14px
+            line-height: 20px
+            margin-right: 8px
+            color: #ffffff
 </style>
