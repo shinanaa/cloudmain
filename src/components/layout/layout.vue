@@ -194,7 +194,7 @@ export default {
           vertical-align: middle
       .modules
         float: left
-        width: calc(100% - 300px - $slide-width)
+        width: 'calc(100% - 300px - %s)' % $slide-width
         height: 80px
         overflow: hidden
         background: rgba(41,59,90,0.9)
@@ -210,7 +210,7 @@ export default {
           text-align: center
           cursor: pointer
           &.active
-            background: #21324f
+            background: rgba(255,255,255,0.1)
       .right
         float:right
         width: 300px
