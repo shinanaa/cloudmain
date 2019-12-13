@@ -7,3 +7,15 @@ export function getUserList (userInfo) {
   }
   return Http.postRequest(userInfo.url, data)
 }
+
+export function editUserItem (editParams) {
+  const data = {
+    dm: editParams.dm,
+    mm: editParams.mm,
+    mc: editParams.mc,
+    zt: editParams.zt,
+    yhjsid: editParams.yhjsid,
+    yhid: editParams.yhid
+  }
+  return Http.postRequest(editParams.url, data)
+}
