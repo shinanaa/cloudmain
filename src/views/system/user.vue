@@ -33,7 +33,7 @@
       <div class="table-wrapper">
         <div class="table-btn">
           <div class="btn-handle">
-            <el-button type="primary">新增</el-button>
+            <el-button type="primary" @click="addUser">新增</el-button>
             <el-button type="primary">导出</el-button>
             <el-button type="primary">批量删除</el-button>
           </div>
@@ -46,11 +46,11 @@
           <el-table
             :data="userList"
             style="width: 100%">
-            <el-table-column prop="mc" label="名称"></el-table-column>
+            <el-table-column prop="yhmc" label="名称"></el-table-column>
             <el-table-column prop="dm" label="代码"></el-table-column>
-            <el-table-column prop="role" label="角色"></el-table-column>
+            <el-table-column prop="jsmc" label="角色"></el-table-column>
             <!--<el-table-column prop="department" label="部门"></el-table-column>-->
-            <el-table-column prop="order" label="序号"></el-table-column>
+            <el-table-column prop="XH" label="序号"></el-table-column>
             <el-table-column prop="zt" label="状态">
               <template slot-scope="scope">
                 <span>{{scope.row.zt === 'Y' ? '使用' : '禁用'}}</span>
@@ -59,7 +59,7 @@
             <el-table-column label="操作" width="150">
               <template slot-scope="scope">
                 <el-button size="mini" type="success" @click="editUser(scope.row)">修改</el-button>
-                <el-button size="mini" type="danger">删除</el-button>
+                <el-button size="mini" type="danger" @click="deleteUser(scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -69,21 +69,44 @@
             :total="total">
           </el-pagination>
         </div>
+        <div class="card-mian">
+            <div class="userItem" v-for="(item, index) in userList" :key="index">
+              <div class="user">{{item.yhmc}}</div>
+              <div class="infoWrapper">
+                <div class="info-item">
+                  <div class="info.key">代码</div>
+                  <div class="info.value">{{item.dm}}</div>
+                </div>
+                <div class="info-item">
+                  <div class="info.key">角色</div>
+                  <div class="info.value">{{item.jsmc}}</div>
+                </div>
+                <div class="info-item">
+                  <div class="info.key">序号</div>
+                  <div class="info.value">{{item.XH}}</div>
+                </div>
+                <div class="info-item">
+                  <div class="info.key">状态</div>
+                  <div class="info.value">{{item.zt === 'Y' ? '使用' : '禁用'}}</div>
+                </div>
+              </div>
+            </div>
+        </div>
       </div>
       <div class="userDialog">
-        <el-dialog title="用户修改" :visible.sync="showUserDialog">
-          <el-form :model="userForm" ref="userForm">
-            <el-form-item label="名称" :label-width="formLabelWidth">
-              <el-input type="text" v-model="userForm.mc"></el-input>
+        <el-dialog :title="dialogTitle" :visible.sync="showUserDialog">
+          <el-form :model="userForm" ref="UsersForm" :rules="userRules">
+            <el-form-item label="名称" :label-width="formLabelWidth" prop="yhmc">
+              <el-input type="text" v-model="userForm.yhmc"></el-input>
             </el-form-item>
-            <el-form-item label="代码" :label-width="formLabelWidth">
+            <el-form-item label="代码" :label-width="formLabelWidth" prop="dm">
               <el-input type="text" v-model="userForm.dm"></el-input>
             </el-form-item>
-            <el-form-item label="密码" :label-width="formLabelWidth">
+            <el-form-item label="密码" :label-width="formLabelWidth" prop="mm">
               <el-input type="text" v-model="userForm.mm"></el-input>
             </el-form-item>
-            <el-form-item label="角色" :label-width="formLabelWidth">
-              <el-select v-model="userForm.role" placeholder="请选择">
+            <el-form-item label="角色" :label-width="formLabelWidth" prop="jsmc">
+              <el-select v-model="userForm.jsmc" placeholder="请选择">
                 <el-option
                   v-for="item in roles"
                   :key="item.value"
@@ -92,10 +115,10 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="序号" :label-width="formLabelWidth">
-              <el-input type="text" v-model="userForm.xh"></el-input>
+            <el-form-item label="序号" :label-width="formLabelWidth" prop="XH">
+              <el-input type="text" v-model="userForm.XH"></el-input>
             </el-form-item>
-            <el-form-item label="状态" :label-width="formLabelWidth">
+            <el-form-item label="状态" :label-width="formLabelWidth" prop="zt">
               <el-select v-model="userForm.zt" placeholder="请选择">
                 <el-option v-for="item in stateDialog" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
@@ -111,7 +134,7 @@
 </template>
 
 <script>
-import {getUserList, editUserItem} from '@/api/user'
+import {getUserList, editUserItem, addUserItem, deleteUserItem} from '@/api/user'
 import {ERR_CODE} from 'common/js/config'
 export default {
   name: 'user',
@@ -176,16 +199,28 @@ export default {
       currentPage: 1,
       pageSize: 5,
       // 弹窗
+      isAdd: true,
       showUserDialog: false,
       userForm: {
-        mc: '',
+        yhmc: '',
         dm: '',
         mm: '',
-        role: '',
-        xh: '',
+        jsmc: '',
+        XH: '',
         zt: '',
         yhid: '',
         yhjsid: ''
+      },
+      userRules: {
+        yhmc: [
+          { required: true, message: '名称不能为空', trigger: 'blur' }
+        ],
+        dm: [
+          { required: true, message: '代码不能为空', trigger: 'blur' }
+        ],
+        mm: [
+          { required: true, message: '密码不能为空', trigger: 'blur' }
+        ]
       },
       formLabelWidth: '60px'
     }
@@ -195,34 +230,79 @@ export default {
       let stateDialog = JSON.parse(JSON.stringify(this.states))
       stateDialog.shift()
       return stateDialog
+    },
+    dialogTitle () {
+      return this.isAdd ? '用户增加' : '用户修改'
     }
   },
   created () {
-    this._getUserList()
+    this._getUserList(this.pageSize, this.currentPage)
   },
   methods: {
+    deleteUser (rowData) {
+      console.log(rowData)
+      this._deleteUserInfo(rowData)
+    },
+    addUser () {
+      this.showUserDialog = true
+      this.isAdd = true
+    },
     editUser (rowData) {
       this.userForm = JSON.parse(JSON.stringify(rowData))
       this.showUserDialog = true
+      this.isAdd = false
     },
     cancelUserSet () {
-      this.$refs.userForm.resetFields()
       this.showUserDialog = false
+      this.$refs.UsersForm.resetFields()
     },
     submitUserSet () {
-      this._editUserInfo(this.userForm)
+      this.$refs.UsersForm.validate(valid => {
+        if (valid) {
+          if (this.isAdd) {
+            this._addUserInfo(this.userForm)
+          } else {
+            this._editUserInfo(this.userForm)
+          }
+        } else {
+          return false
+        }
+      })
     },
-    _editUserInfo (params) {
-      const editParams = {
+    _deleteUserInfo (params) {
+      const deleteParams = {
+        yhid: params.yhid,
+        url: 'deleteUserInfo'
+      }
+      deleteUserItem(deleteParams).then((res) => {
+        if (res.errcode === ERR_CODE) {
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'success'
+          })
+          this._getUserList(this.pageSize, this.currentPage)
+        } else {
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'error'
+          })
+        }
+        console.log(res)
+      })
+    },
+    _addUserInfo (params) {
+      const addParams = {
         dm: params.dm,
         mm: params.mm,
-        mc: params.mc,
+        mc: params.yhmc,
         zt: params.zt,
         yhjsid: params.yhjsid,
-        yhid: params.yhid,
-        url: 'editUserInfo'
+        url: 'addUserInfo'
       }
-      editUserItem(editParams).then((res) => {
+      addUserItem(addParams).then((res) => {
+        console.log(res)
         if (res.errcode === ERR_CODE) {
           this.cancelUserSet()
           this.$message({
@@ -230,13 +310,54 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
+          this._getUserList(this.pageSize, this.currentPage)
+        } else {
+          this.cancelUserSet()
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'error'
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    _editUserInfo (params) {
+      console.log(params)
+      const editParams = {
+        dm: params.dm,
+        mm: params.mm,
+        mc: params.yhmc,
+        zt: params.zt,
+        yhjsid: params.yhjsid,
+        yhid: params.yhid,
+        url: 'editUserInfo'
+      }
+      editUserItem(editParams).then((res) => {
+        console.log(res)
+        if (res.errcode === ERR_CODE) {
+          this.cancelUserSet()
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'success'
+          })
+          this._getUserList(this.pageSize, this.currentPage)
+        } else {
+          this.cancelUserSet()
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'error'
+          })
         }
       })
     },
-    _getUserList () {
+    _getUserList (pageSize, currentPage) {
       const getInfo = {
-        pageSize: 5,
-        pageCurrent: 1,
+        pageSize: pageSize,
+        pageCurrent: currentPage,
         url: 'getUserInfo'
       }
       getUserList(getInfo).then((res) => {
@@ -244,7 +365,7 @@ export default {
           this.userList = res.rows
           this.total = res.totalCount
         }
-        // console.log(res)
+        console.log(res)
       }).catch((err) => {
         console.log(err)
       })

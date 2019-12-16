@@ -122,6 +122,18 @@ export default {
         {
           name: '考试管理',
           url: '/system'
+        },
+        {
+          name: '题库管理',
+          url: '/system'
+        },
+        {
+          name: '试卷管理',
+          url: '/system'
+        },
+        {
+          name: '考试管理',
+          url: '/system'
         }
       ]
     }
@@ -197,7 +209,7 @@ export default {
         width: 'calc(100% - 300px - %s)' % $slide-width
         height: 80px
         overflow: hidden
-        background: rgba(41,59,90,0.9)
+        background: #293b5a
         line-height:80px
         &:hover
           position: absolute
