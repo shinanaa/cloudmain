@@ -6,7 +6,9 @@
           <hamburger class="hamburger-container" :toggleClick="toggleSideBar"></hamburger>
           <breadcrumb></breadcrumb>
         </div>
-        <router-view></router-view>
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
       </div>
     </div>
 </template>
@@ -33,13 +35,19 @@ export default {
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
 @import "~common/stylus/variable"
-.module-main
-  margin-left: $slide-width
-  .router-show
-    background: #FFFFFF
-    .hamburger-container
-      line-height: 58px
-      height: 50px
-      float: left
-      padding: 0 10px
+.moduleLayout
+  .module-main
+    margin-left: $slide-width
+    .router-show
+      position: fixed
+      top: 80px
+      left: 260px
+      right: 0
+      z-index: 10
+      background: #FFFFFF
+      .hamburger-container
+        line-height: 58px
+        height: 50px
+        float: left
+        padding: 0 10px
 </style>

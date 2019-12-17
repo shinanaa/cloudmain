@@ -186,7 +186,11 @@ export default {
   .layout
     height: 100%
     .head
-      position: relative
+      position: fixed
+      top: 0
+      left: 0
+      right: 0
+      z-index: 12
       height: 80px
       min-width: 1200px
       color: #FFF

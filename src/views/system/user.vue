@@ -38,11 +38,11 @@
             <el-button type="primary">批量删除</el-button>
           </div>
           <div class="btn-change">
-            <i class="el-icon-s-fold"></i>
-            <i class="el-icon-menu"></i>
+            <i class="el-icon-s-fold" :class="{'active' : listType}" @click="listType = true"></i>
+            <i class="el-icon-menu" :class="{'active' : !listType}" @click="listType = false"></i>
           </div>
         </div>
-        <div class="table-main">
+        <div v-if="listType" class="table-main">
           <el-table
             :data="userList"
             style="width: 100%">
@@ -63,35 +63,39 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-pagination
-            :current-page="currentPage"
-            layout="total, prev, pager, next, jumper"
-            :total="total">
-          </el-pagination>
         </div>
-        <div class="card-mian">
-            <div class="userItem" v-for="(item, index) in userList" :key="index">
-              <div class="user">{{item.yhmc}}</div>
+        <div v-if="!listType" class="card-mian">
+            <div class="cardItem" v-for="(item, index) in userList" :key="index">
+              <div class="userName">{{item.yhmc}}</div>
               <div class="infoWrapper">
                 <div class="info-item">
-                  <div class="info.key">代码</div>
-                  <div class="info.value">{{item.dm}}</div>
+                  <span class="info-key">代码</span>
+                  <span class="info-value">{{item.dm}}</span>
                 </div>
                 <div class="info-item">
-                  <div class="info.key">角色</div>
-                  <div class="info.value">{{item.jsmc}}</div>
+                  <span class="info-key">角色</span>
+                  <span class="info-value">{{item.jsmc}}</span>
                 </div>
                 <div class="info-item">
-                  <div class="info.key">序号</div>
-                  <div class="info.value">{{item.XH}}</div>
+                  <span class="info-key">序号</span>
+                  <span class="info-value">{{item.XH}}</span>
                 </div>
                 <div class="info-item">
-                  <div class="info.key">状态</div>
-                  <div class="info.value">{{item.zt === 'Y' ? '使用' : '禁用'}}</div>
+                  <span class="info-key">状态</span>
+                  <span class="info-value">{{item.zt === 'Y' ? '使用' : '禁用'}}</span>
                 </div>
+              </div>
+              <div class="card-btn">
+                <el-button size="mini" type="success" @click="editUser(scope.row)">修改</el-button>
+                <el-button size="mini" type="danger" @click="deleteUser(scope.row)">删除</el-button>
               </div>
             </div>
         </div>
+        <el-pagination
+          :current-page="currentPage"
+          layout="total, prev, pager, next, jumper"
+          :total="total">
+        </el-pagination>
       </div>
       <div class="userDialog">
         <el-dialog :title="dialogTitle" :visible.sync="showUserDialog">
@@ -140,6 +144,7 @@ export default {
   name: 'user',
   data () {
     return {
+      listType: true,
       search: {
         // department: [],
         role: '',
@@ -381,6 +386,7 @@ export default {
   .search
     .search-item
       display: inline-block
+      margin-top: 133px
       margin-right: 15px
       padding: 20px 0
       span
@@ -401,7 +407,42 @@ export default {
         margin-top: 5px
         font-size: 28px
         color: #606266
+        .active
+          color: #409eff
     .table-main
-      .el-pagination
+    .card-mian
+      clearfix()
+      .cardItem
+        float: left
+        padding: 15px 2.5%
+        margin-left: 4%
+        margin-bottom: 20px
+        width: 20%
+        box-sizing: border-box
+        background-color: #f2f6fc
+        border-radius: 15px
+        .userName
+          line-height: 38px
+          font-size: 17px
+          text-align: center
+          color: #606266
+          border-bottom: 1px solid #909399
+        .info-item
+          margin-top: 15px
+          font-size: 15px
+          .info-key
+            display: inline-block
+            margin-right: 10px
+            width: 70px
+            height: 30px
+            line-height: 30px
+            text-align: center
+            background: #FFFFFF
+            box-shadow: 0px 0px 5px 0px rgba(76, 112, 161, 0.5)
+            border-radius: 3px
+      .card-btn
+        heihgt: 70px
+        line-height: 70px
+    .el-pagination
         padding: 15px 20px
 </style>

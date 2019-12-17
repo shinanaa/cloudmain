@@ -12,9 +12,11 @@
             <span slot="title">用户管理</span>
           </el-menu-item>
         </router-link>
-        <el-menu-item index="2">
-          <span slot="title">代码管理</span>
-        </el-menu-item>
+        <router-link to="/module">
+          <el-menu-item index="2">
+            <span slot="title">模块管理</span>
+          </el-menu-item>
+        </router-link>
         <el-menu-item index="3">
           <span slot="title">日志管理</span>
         </el-menu-item>

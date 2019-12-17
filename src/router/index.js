@@ -20,7 +20,8 @@ export default new Router({
           component: () => import('@/components/moduleLayout/moduleLayout'),
           redirect: '/user',
           children: [
-            { path: '/user', component: () => import('@/views/system/user') }
+            { path: '/user', component: () => import('@/views/system/user') },
+            { path: '/module', component: () => import('@/views/system/module') }
           ]
         }
       ]
