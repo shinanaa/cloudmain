@@ -21,7 +21,8 @@ export default new Router({
           redirect: '/user',
           children: [
             { path: '/user', component: () => import('@/views/system/user') },
-            { path: '/module', component: () => import('@/views/system/module') }
+            { path: '/module', component: () => import('@/views/system/module') },
+            { path: '/plugin', component: () => import('@/views/system/plugin') }
           ]
         }
       ]

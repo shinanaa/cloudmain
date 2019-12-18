@@ -1,11 +1,11 @@
 import Http from 'common/js/request'
 
-export function getModuleList (userInfo) {
+export function getPluginList (pluginInfo) {
   const data = {
-    pageSize: userInfo.pageSize,
-    pageNo: userInfo.pageCurrent
+    pageSize: pluginInfo.pageSize,
+    pageNo: pluginInfo.pageCurrent
   }
-  return Http.postRequest(userInfo.url, data)
+  return Http.postRequest(pluginInfo.url, data)
 }
 
 export function editModuleItem (editParams) {
@@ -20,10 +20,12 @@ export function editModuleItem (editParams) {
   return Http.postRequest(editParams.url, data)
 }
 
-export function addModuleItem (addParams) {
+export function addPluginItem (addParams) {
   const data = {
-    mc: addParams.mc,
+    mcjc: addParams.mcjc,
     dm: addParams.dm,
+    mcqc: addParams.mcqc,
+    dz: addParams.dz,
     tb: addParams.tb,
     xh: addParams.xh,
     zt: addParams.zt

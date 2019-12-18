@@ -1,21 +1,10 @@
 <template>
-    <div class="user">
+    <div class="plugin">
       <div class="search">
-        <!--<div class="search-item">-->
-          <!--<span>部门：</span>-->
-          <!--<el-cascader-->
-            <!--v-model="search.department"-->
-            <!--:options="options"></el-cascader>-->
-        <!--</div>-->
         <div class="search-item">
-          <span>角色：</span>
-          <el-select v-model="search.role" placeholder="请选择">
-            <el-option
-              v-for="item in roles"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
+          <span>模块：</span>
+          <el-select v-model="search.module" placeholder="请选择">
+            <el-option v-for="item in states" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </div>
         <div class="search-item">
@@ -33,9 +22,7 @@
       <div class="table-wrapper">
         <div class="table-btn">
           <div class="btn-handle">
-            <el-button type="primary" @click="addUser">新增</el-button>
-            <el-button type="primary">导出</el-button>
-            <el-button type="primary">批量删除</el-button>
+            <el-button @click="addModule" type="primary">新增</el-button>
           </div>
           <div class="btn-change">
             <i class="el-icon-s-fold" :class="{'active' : listType}" @click="listType = true"></i>
@@ -44,13 +31,15 @@
         </div>
         <div v-if="listType" class="table-main">
           <el-table
-            :data="userList"
+            :data="pluginList"
             style="width: 100%">
-            <el-table-column prop="yhmc" label="名称"></el-table-column>
+            <el-table-column prop="mc" label="模块"></el-table-column>
+            <el-table-column prop="mcjc" label="简称"></el-table-column>
             <el-table-column prop="dm" label="代码"></el-table-column>
-            <el-table-column prop="jsmc" label="角色"></el-table-column>
-            <!--<el-table-column prop="department" label="部门"></el-table-column>-->
-            <el-table-column prop="XH" label="序号"></el-table-column>
+            <el-table-column prop="mcqc" label="全称"></el-table-column>
+            <el-table-column prop="dz" label="地址"></el-table-column>
+            <el-table-column prop="tb" label="图标"></el-table-column>
+            <el-table-column prop="xh" label="序号"></el-table-column>
             <el-table-column prop="zt" label="状态">
               <template slot-scope="scope">
                 <span>{{scope.row.zt === 'Y' ? '使用' : '禁用'}}</span>
@@ -58,73 +47,73 @@
             </el-table-column>
             <el-table-column label="操作" width="150">
               <template slot-scope="scope">
-                <el-button size="mini" type="success" @click="editUser(scope.row)">修改</el-button>
-                <el-button size="mini" type="danger" @click="deleteUser(scope.row)">删除</el-button>
+                <el-button size="mini" type="success" @click="editModule(scope.row)">修改</el-button>
+                <el-button size="mini" type="danger" @click="deleteModule(scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
         </div>
         <div v-if="!listType" class="card-mian">
-            <div class="cardItem" v-for="(item, index) in userList" :key="index">
-              <div class="userName">{{item.yhmc}}</div>
-              <div class="infoWrapper">
-                <div class="info-item">
-                  <span class="info-key">代码</span>
-                  <span class="info-value">{{item.dm}}</span>
-                </div>
-                <div class="info-item">
-                  <span class="info-key">角色</span>
-                  <span class="info-value">{{item.jsmc}}</span>
-                </div>
-                <div class="info-item">
-                  <span class="info-key">序号</span>
-                  <span class="info-value">{{item.XH}}</span>
-                </div>
-                <div class="info-item">
-                  <span class="info-key">状态</span>
-                  <span class="info-value">{{item.zt === 'Y' ? '使用' : '禁用'}}</span>
-                </div>
+          <div class="cardItem" v-for="(item, index) in pluginList" :key="index">
+            <div class="userName">{{item.mc}}</div>
+            <div class="infoWrapper">
+              <div class="info-item">
+                <span class="info-key">代码</span>
+                <span class="info-value">{{item.dm}}</span>
               </div>
-              <div class="card-btn">
-                <el-button size="mini" type="success" @click="editUser(scope.row)">修改</el-button>
-                <el-button size="mini" type="danger" @click="deleteUser(scope.row)">删除</el-button>
+              <div class="info-item">
+                <span class="info-key">图标</span>
+                <span class="info-value">{{item.tb}}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-key">序号</span>
+                <span class="info-value">{{item.xh}}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-key">状态</span>
+                <span class="info-value">{{item.zt === 'Y' ? '使用' : '禁用'}}</span>
               </div>
             </div>
+            <div class="card-btn">
+              <el-button size="mini" type="success">修改</el-button>
+              <el-button size="mini" type="danger">删除</el-button>
+            </div>
+          </div>
         </div>
         <el-pagination
           hide-on-single-page
           :current-page="currentPage"
+          :page-size="pageSize"
           layout="total, prev, pager, next, jumper"
           :total="total">
         </el-pagination>
       </div>
       <div class="dialog">
-        <el-dialog :title="dialogTitle" :visible.sync="showUserDialog">
-          <el-form :model="userForm" ref="UsersForm" :rules="userRules">
-            <el-form-item label="名称" :label-width="formLabelWidth" prop="yhmc">
-              <el-input type="text" v-model="userForm.yhmc"></el-input>
+        <el-dialog :title="dialogTitle" :visible.sync="showPluginDialog">
+          <el-form :model="pluginForm" ref="pluginForm" :rules="pluginRules">
+            <el-form-item label="简称" :label-width="formLabelWidth" prop="mcjc">
+              <el-input type="text" v-model="pluginForm.mcjc"></el-input>
+            </el-form-item>
+            <el-form-item label="模块" :label-width="formLabelWidth" prop="mc">
+              <el-input type="text" v-model="pluginForm.mc"></el-input>
+            </el-form-item>
+            <el-form-item label="全称" :label-width="formLabelWidth" prop="mcqc">
+              <el-input type="text" v-model="pluginForm.mcqc"></el-input>
             </el-form-item>
             <el-form-item label="代码" :label-width="formLabelWidth" prop="dm">
-              <el-input type="text" v-model="userForm.dm"></el-input>
+              <el-input type="text" v-model="pluginForm.dm"></el-input>
             </el-form-item>
-            <el-form-item label="密码" :label-width="formLabelWidth" prop="mm">
-              <el-input type="text" v-model="userForm.mm"></el-input>
+            <el-form-item label="图标" :label-width="formLabelWidth" prop="tb">
+              <el-input type="text" v-model="pluginForm.tb"></el-input>
             </el-form-item>
-            <el-form-item label="角色" :label-width="formLabelWidth" prop="jsmc">
-              <el-select v-model="userForm.jsmc" placeholder="请选择">
-                <el-option
-                  v-for="item in roles"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
+            <el-form-item label="地址" :label-width="formLabelWidth" prop="dz">
+              <el-input type="text" v-model="pluginForm.dz"></el-input>
             </el-form-item>
-            <el-form-item label="序号" :label-width="formLabelWidth" prop="XH">
-              <el-input type="text" v-model="userForm.XH"></el-input>
+            <el-form-item label="序号" :label-width="formLabelWidth" prop="xh">
+              <el-input type="text" v-model="pluginForm.xh"></el-input>
             </el-form-item>
             <el-form-item label="状态" :label-width="formLabelWidth" prop="zt">
-              <el-select v-model="userForm.zt" placeholder="请选择">
+              <el-select v-model="pluginForm.zt" placeholder="请选择">
                 <el-option v-for="item in stateDialog" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
@@ -139,16 +128,15 @@
 </template>
 
 <script>
-import {getUserList, editUserItem, addUserItem, deleteUserItem} from '@/api/user'
+import {getPluginList, addPluginItem, editModuleItem, deleteModuleItem} from '@/api/plugin'
 import {ERR_CODE} from 'common/js/config'
 export default {
-  name: 'user',
+  name: 'plugin',
   data () {
     return {
       listType: true,
       search: {
-        // department: [],
-        role: '',
+        module: '',
         userName: '',
         state: ''
       },
@@ -157,75 +145,30 @@ export default {
         {value: 'N', label: '停用'},
         {value: 'Y', label: '使用'}
       ],
-      roles: [
-        {value: 'admin', label: '管理员'},
-        {value: 'teacher', label: '教师'}
-      ],
-      options: [
-        {
-          value: 'zhinan',
-          label: '指南',
-          children: [
-            {
-              value: 'shejiyuanze',
-              label: '设计原则',
-              children: [{
-                value: 'yizhi',
-                label: '一致'
-              }, {
-                value: 'fankui',
-                label: '反馈'
-              }]
-            },
-            {
-              value: 'daohang',
-              label: '导航',
-              children: [{
-                value: 'cexiangdaohang',
-                label: '侧向导航'
-              }]
-            }]
-        },
-        {
-          value: 'ziyuan',
-          label: '资源',
-          children: [
-            {
-              value: 'axure',
-              label: 'Axure Components'
-            },
-            {
-              value: 'sketch',
-              label: 'Sketch Templates'
-            }]
-        }],
-      userList: [],
+      pluginList: [],
       // 分页
       total: 0,
       currentPage: 1,
       pageSize: 5,
       // 弹窗
       isAdd: true,
-      showUserDialog: false,
-      userForm: {
-        yhmc: '',
+      showPluginDialog: false,
+      pluginForm: {
+        mcjc: '',
+        mc: '',
+        mcqc: '',
         dm: '',
-        mm: '',
-        jsmc: '',
-        XH: '',
-        zt: '',
-        yhid: '',
-        yhjsid: ''
+        tb: '',
+        dz: '',
+        xh: '',
+        zt: ''
       },
-      userRules: {
-        yhmc: [
+      pluginRules: {
+        mc: [
           { required: true, message: '名称不能为空', trigger: 'blur' }
         ],
         dm: [
           { required: true, message: '代码不能为空', trigger: 'blur' }
-        ],
-        mm: [
-          { required: true, message: '密码不能为空', trigger: 'blur' }
         ]
       },
       formLabelWidth: '60px'
@@ -238,63 +181,56 @@ export default {
       return stateDialog
     },
     dialogTitle () {
-      return this.isAdd ? '用户增加' : '用户修改'
-    }
-  },
-  watch: {
-    'currentPage': function (newVal) {
-      console.log(newVal)
+      return this.isAdd ? '模块增加' : '模块修改'
     }
   },
   created () {
-    this._getUserList(this.pageSize, this.currentPage)
+    this._getPluginList(this.pageSize, this.currentPage)
   },
   methods: {
-    deleteUser (rowData) {
+    deleteModule (rowData) {
       console.log(rowData)
-      this._deleteUserInfo(rowData)
+      this._deleteModuleInfo(rowData)
     },
-    addUser () {
-      this.showUserDialog = true
-      this.isAdd = true
-    },
-    editUser (rowData) {
-      this.$nextTick(() => {
-        this.userForm = JSON.parse(JSON.stringify(rowData))
-      })
-      this.showUserDialog = true
+    editModule (rowData) {
+      this.pluginForm = JSON.parse(JSON.stringify(rowData))
+      this.showPluginDialog = true
       this.isAdd = false
     },
+    addModule () {
+      this.showPluginDialog = true
+      this.isAdd = true
+    },
     cancelUserSet () {
-      this.showUserDialog = false
-      this.$refs.UsersForm.resetFields()
+      this.showPluginDialog = false
+      this.$refs.pluginForm.resetFields()
     },
     submitUserSet () {
-      this.$refs.UsersForm.validate(valid => {
+      this.$refs.pluginForm.validate(valid => {
         if (valid) {
           if (this.isAdd) {
-            this._addUserInfo(this.userForm)
+            this._addPluginInfo(this.pluginForm)
           } else {
-            this._editUserInfo(this.userForm)
+            this._editModuleInfo(this.pluginForm)
           }
         } else {
           return false
         }
       })
     },
-    _deleteUserInfo (params) {
+    _deleteModuleInfo (params) {
       const deleteParams = {
-        yhid: params.yhid,
-        url: 'deleteUserInfo'
+        mkid: params.mkid,
+        url: 'deleteModuleInfo'
       }
-      deleteUserItem(deleteParams).then((res) => {
+      deleteModuleItem(deleteParams).then((res) => {
         if (res.errcode === ERR_CODE) {
           this.$message({
             showClose: true,
             message: res.errmsg,
             type: 'success'
           })
-          this._getUserList(this.pageSize, this.currentPage)
+          this._getModuleList(this.pageSize, this.currentPage)
         } else {
           this.$message({
             showClose: true,
@@ -305,16 +241,18 @@ export default {
         console.log(res)
       })
     },
-    _addUserInfo (params) {
+    _addPluginInfo (params) {
       const addParams = {
+        mcjc: params.mcjc,
         dm: params.dm,
-        mm: params.mm,
-        mc: params.yhmc,
+        mcqc: params.mcqc,
+        dz: params.dz,
+        tb: params.tb,
+        xh: params.xh,
         zt: params.zt,
-        yhjsid: params.yhjsid,
-        url: 'addUserInfo'
+        url: 'addPluginInfo'
       }
-      addUserItem(addParams).then((res) => {
+      addPluginItem(addParams).then((res) => {
         console.log(res)
         if (res.errcode === ERR_CODE) {
           this.cancelUserSet()
@@ -323,7 +261,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getUserList(this.pageSize, this.currentPage)
+          this._getModuleList(this.pageSize, this.currentPage)
         } else {
           this.cancelUserSet()
           this.$message({
@@ -336,18 +274,18 @@ export default {
         console.log(err)
       })
     },
-    _editUserInfo (params) {
+    _editModuleInfo (params) {
       console.log(params)
       const editParams = {
+        mc: params.mc,
         dm: params.dm,
-        mm: params.mm,
-        mc: params.yhmc,
+        tb: params.tb,
+        xh: params.xh,
         zt: params.zt,
-        yhjsid: params.yhjsid,
-        yhid: params.yhid,
-        url: 'editUserInfo'
+        mkid: params.mkid,
+        url: 'editModuleInfo'
       }
-      editUserItem(editParams).then((res) => {
+      editModuleItem(editParams).then((res) => {
         console.log(res)
         if (res.errcode === ERR_CODE) {
           this.cancelUserSet()
@@ -367,15 +305,15 @@ export default {
         }
       })
     },
-    _getUserList (pageSize, currentPage) {
+    _getPluginList (pageSize, currentPage) {
       const getInfo = {
         pageSize: pageSize,
         pageCurrent: currentPage,
-        url: 'getUserInfo'
+        url: 'getPluginInfo'
       }
-      getUserList(getInfo).then((res) => {
+      getPluginList(getInfo).then((res) => {
         if (res.errcode === ERR_CODE) {
-          this.userList = res.rows
+          this.pluginList = res.rows
           this.total = res.totalCount
         }
         console.log(res)
@@ -389,10 +327,10 @@ export default {
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/mixin"
-.user
-  padding: 0 35px
-  margin-top: 133px
-  .search
+  .plugin
+    padding: 0 35px
+    margin-top: 133px
+    .search
     .search-item
       display: inline-block
       margin-right: 15px
@@ -452,5 +390,5 @@ export default {
         heihgt: 70px
         line-height: 70px
     .el-pagination
-        padding: 15px 20px
+      padding: 15px 20px
 </style>

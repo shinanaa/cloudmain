@@ -16,7 +16,7 @@
       <div class="table-wrapper">
         <div class="table-btn">
           <div class="btn-handle">
-            <el-button type="primary">新增</el-button>
+            <el-button @click="addModule" type="primary">新增</el-button>
           </div>
           <div class="btn-change">
             <i class="el-icon-s-fold" :class="{'active' : listType}" @click="listType = true"></i>
@@ -38,8 +38,8 @@
             </el-table-column>
             <el-table-column label="操作" width="150">
               <template slot-scope="scope">
-                <el-button size="mini" type="success">修改</el-button>
-                <el-button size="mini" type="danger">删除</el-button>
+                <el-button size="mini" type="success" @click="editModule(scope.row)">修改</el-button>
+                <el-button size="mini" type="danger" @click="deleteModule(scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -72,16 +72,41 @@
           </div>
         </div>
         <el-pagination
+          hide-on-single-page
           :current-page="currentPage"
           layout="total, prev, pager, next, jumper"
           :total="total">
         </el-pagination>
       </div>
+      <div class="dialog">
+        <el-dialog :title="dialogTitle" :visible.sync="showUserDialog">
+          <el-form :model="moduleForm" ref="moduleForm" :rules="moduleRules">
+            <el-form-item label="名称" :label-width="formLabelWidth" prop="mc">
+              <el-input type="text" v-model="moduleForm.mc"></el-input>
+            </el-form-item>
+            <el-form-item label="代码" :label-width="formLabelWidth" prop="dm">
+              <el-input type="text" v-model="moduleForm.dm"></el-input>
+            </el-form-item>
+            <el-form-item label="序号" :label-width="formLabelWidth" prop="xh">
+              <el-input type="text" v-model="moduleForm.xh"></el-input>
+            </el-form-item>
+            <el-form-item label="状态" :label-width="formLabelWidth" prop="zt">
+              <el-select v-model="moduleForm.zt" placeholder="请选择">
+                <el-option v-for="item in stateDialog" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="cancelUserSet">取 消</el-button>
+            <el-button type="primary" @click="submitUserSet">确 定</el-button>
+          </div>
+        </el-dialog>
+      </div>
     </div>
 </template>
 
 <script>
-import {getModuleList} from '@/api/module'
+import {getModuleList, addModuleItem, editModuleItem, deleteModuleItem} from '@/api/module'
 import {ERR_CODE} from 'common/js/config'
 export default {
   name: 'module',
@@ -101,13 +126,156 @@ export default {
       // 分页
       total: 0,
       currentPage: 1,
-      pageSize: 5
+      pageSize: 5,
+      // 弹窗
+      isAdd: true,
+      showUserDialog: false,
+      moduleForm: {
+        mc: '',
+        dm: '',
+        xh: '',
+        zt: ''
+      },
+      moduleRules: {
+        mc: [
+          { required: true, message: '名称不能为空', trigger: 'blur' }
+        ],
+        dm: [
+          { required: true, message: '代码不能为空', trigger: 'blur' }
+        ]
+      },
+      formLabelWidth: '60px'
+    }
+  },
+  computed: {
+    stateDialog () {
+      let stateDialog = JSON.parse(JSON.stringify(this.states))
+      stateDialog.shift()
+      return stateDialog
+    },
+    dialogTitle () {
+      return this.isAdd ? '模块增加' : '模块修改'
     }
   },
   created () {
     this._getModuleList(this.pageSize, this.currentPage)
   },
   methods: {
+    deleteModule (rowData) {
+      console.log(rowData)
+      this._deleteModuleInfo(rowData)
+    },
+    editModule (rowData) {
+      this.moduleForm = JSON.parse(JSON.stringify(rowData))
+      this.showUserDialog = true
+      this.isAdd = false
+    },
+    addModule () {
+      this.showUserDialog = true
+      this.isAdd = true
+    },
+    cancelUserSet () {
+      this.showUserDialog = false
+      this.$refs.moduleForm.resetFields()
+    },
+    submitUserSet () {
+      this.$refs.moduleForm.validate(valid => {
+        if (valid) {
+          if (this.isAdd) {
+            this._addModuleInfo(this.moduleForm)
+          } else {
+            this._editModuleInfo(this.moduleForm)
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    _deleteModuleInfo (params) {
+      const deleteParams = {
+        mkid: params.mkid,
+        url: 'deleteModuleInfo'
+      }
+      deleteModuleItem(deleteParams).then((res) => {
+        if (res.errcode === ERR_CODE) {
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'success'
+          })
+          this._getModuleList(this.pageSize, this.currentPage)
+        } else {
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'error'
+          })
+        }
+        console.log(res)
+      })
+    },
+    _addModuleInfo (params) {
+      const addParams = {
+        dm: params.dm,
+        tb: params.tb,
+        mc: params.yhmc,
+        zt: params.zt,
+        xh: params.xh,
+        url: 'addModuleInfo'
+      }
+      addModuleItem(addParams).then((res) => {
+        console.log(res)
+        if (res.errcode === ERR_CODE) {
+          this.cancelUserSet()
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'success'
+          })
+          this._getModuleList(this.pageSize, this.currentPage)
+        } else {
+          this.cancelUserSet()
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'error'
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    _editModuleInfo (params) {
+      console.log(params)
+      const editParams = {
+        mc: params.mc,
+        dm: params.dm,
+        tb: params.tb,
+        xh: params.xh,
+        zt: params.zt,
+        mkid: params.mkid,
+        url: 'editModuleInfo'
+      }
+      editModuleItem(editParams).then((res) => {
+        console.log(res)
+        if (res.errcode === ERR_CODE) {
+          this.cancelUserSet()
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'success'
+          })
+          this._getUserList(this.pageSize, this.currentPage)
+        } else {
+          this.cancelUserSet()
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'error'
+          })
+        }
+      })
+    },
     _getModuleList (pageSize, currentPage) {
       const getInfo = {
         pageSize: pageSize,
@@ -132,10 +300,10 @@ export default {
   @import "~common/stylus/mixin"
 .module
   padding: 0 35px
+  margin-top: 133px
   .search
     .search-item
       display: inline-block
-      margin-top: 133px
       margin-right: 15px
       padding: 20px 0
       span

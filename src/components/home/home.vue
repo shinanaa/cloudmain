@@ -85,6 +85,7 @@ export default {
   @import "~common/stylus/mixin"
 .home
   padding: 30px
+  margin-top: 80px
   min-width:1200px
   box-sizing: border-box
   .card-head
