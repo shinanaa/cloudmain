@@ -8,14 +8,17 @@ export function getPluginList (pluginInfo) {
   return Http.postRequest(pluginInfo.url, data)
 }
 
-export function editModuleItem (editParams) {
+export function editPluginItem (editParams) {
   const data = {
-    mc: editParams.mc,
+    mcjc: editParams.mcjc,
     dm: editParams.dm,
+    mcqc: editParams.mcqc,
+    dz: editParams.dz,
     tb: editParams.tb,
     xh: editParams.xh,
     zt: editParams.zt,
-    mkid: editParams.mkid
+    mkid: editParams.mkid,
+    gnid: editParams.gnid
   }
   return Http.postRequest(editParams.url, data)
 }
@@ -33,9 +36,13 @@ export function addPluginItem (addParams) {
   return Http.postRequest(addParams.url, data)
 }
 
-export function deleteModuleItem (deleteParams) {
+export function deletePluginItem (deleteParams) {
   const data = {
-    mkid: deleteParams.mkid
+    gnid: deleteParams.gnid
   }
   return Http.postRequest(deleteParams.url, data)
+}
+
+export function getPluginTree (url) {
+  return Http.postRequest(url)
 }

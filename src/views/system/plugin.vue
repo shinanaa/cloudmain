@@ -48,7 +48,7 @@
             <el-table-column label="操作" width="150">
               <template slot-scope="scope">
                 <el-button size="mini" type="success" @click="editModule(scope.row)">修改</el-button>
-                <el-button size="mini" type="danger" @click="deleteModule(scope.row)">删除</el-button>
+                <el-button size="mini" type="danger" @click="deletePlugin(scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -128,7 +128,7 @@
 </template>
 
 <script>
-import {getPluginList, addPluginItem, editModuleItem, deleteModuleItem} from '@/api/plugin'
+import {getPluginList, addPluginItem, editPluginItem, deletePluginItem} from '@/api/plugin'
 import {ERR_CODE} from 'common/js/config'
 export default {
   name: 'plugin',
@@ -188,9 +188,9 @@ export default {
     this._getPluginList(this.pageSize, this.currentPage)
   },
   methods: {
-    deleteModule (rowData) {
+    deletePlugin (rowData) {
       console.log(rowData)
-      this._deleteModuleInfo(rowData)
+      this._deletePluginInfo(rowData)
     },
     editModule (rowData) {
       this.pluginForm = JSON.parse(JSON.stringify(rowData))
@@ -209,28 +209,30 @@ export default {
       this.$refs.pluginForm.validate(valid => {
         if (valid) {
           if (this.isAdd) {
+            console.log('tianjai')
             this._addPluginInfo(this.pluginForm)
           } else {
-            this._editModuleInfo(this.pluginForm)
+            console.log('xiugai')
+            this._editPluginInfo(this.pluginForm)
           }
         } else {
           return false
         }
       })
     },
-    _deleteModuleInfo (params) {
+    _deletePluginInfo (params) {
       const deleteParams = {
-        mkid: params.mkid,
-        url: 'deleteModuleInfo'
+        gnid: params.gnid,
+        url: 'deletePluginInfo'
       }
-      deleteModuleItem(deleteParams).then((res) => {
+      deletePluginItem(deleteParams).then((res) => {
         if (res.errcode === ERR_CODE) {
           this.$message({
             showClose: true,
             message: res.errmsg,
             type: 'success'
           })
-          this._getModuleList(this.pageSize, this.currentPage)
+          this._getPluginList(this.pageSize, this.currentPage)
         } else {
           this.$message({
             showClose: true,
@@ -274,7 +276,7 @@ export default {
         console.log(err)
       })
     },
-    _editModuleInfo (params) {
+    _editPluginInfo (params) {
       console.log(params)
       const editParams = {
         mc: params.mc,
@@ -283,9 +285,9 @@ export default {
         xh: params.xh,
         zt: params.zt,
         mkid: params.mkid,
-        url: 'editModuleInfo'
+        url: 'editPluginInfo'
       }
-      editModuleItem(editParams).then((res) => {
+      editPluginItem(editParams).then((res) => {
         console.log(res)
         if (res.errcode === ERR_CODE) {
           this.cancelUserSet()
@@ -294,7 +296,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getUserList(this.pageSize, this.currentPage)
+          this._getPluginList(this.pageSize, this.currentPage)
         } else {
           this.cancelUserSet()
           this.$message({

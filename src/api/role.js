@@ -1,6 +1,6 @@
 import Http from 'common/js/request'
 
-export function getUserList (userInfo) {
+export function getRoleList (userInfo) {
   const data = {
     pageSize: userInfo.pageSize,
     pageNo: userInfo.pageCurrent
@@ -8,36 +8,34 @@ export function getUserList (userInfo) {
   return Http.postRequest(userInfo.url, data)
 }
 
-export function editUserItem (editParams) {
+export function editRoleItem (editParams) {
   const data = {
-    dm: editParams.dm,
-    mm: editParams.mm,
     mc: editParams.mc,
+    dm: editParams.dm,
+    xh: editParams.xh,
     zt: editParams.zt,
-    yhjsid: editParams.yhjsid,
-    yhid: editParams.yhid
+    jsid: editParams.jsid,
+    jsgnid: editParams.jsgnid,
+    userids: editParams.userids
   }
   return Http.postRequest(editParams.url, data)
 }
 
-export function addUserItem (addParams) {
+export function addRoleItem (addParams) {
   const data = {
-    dm: addParams.dm,
-    mm: addParams.mm,
     mc: addParams.mc,
+    dm: addParams.dm,
+    xh: addParams.xh,
     zt: addParams.zt,
-    yhjsid: addParams.yhjsid
+    // gnArray: addParams.jsgnid
+    userids: addParams.userids
   }
   return Http.postRequest(addParams.url, data)
 }
 
-export function deleteUserItem (deleteParams) {
+export function deleteRoleItem (deleteParams) {
   const data = {
-    yhid: deleteParams.yhid
+    jsid: deleteParams.jsid
   }
   return Http.postRequest(deleteParams.url, data)
-}
-
-export function getUserTree (url) {
-  return Http.postRequest(url)
 }

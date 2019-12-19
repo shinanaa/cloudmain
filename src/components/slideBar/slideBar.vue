@@ -22,9 +22,11 @@
             <span slot="title">功能管理</span>
           </el-menu-item>
         </router-link>
-        <el-menu-item index="4">
-          <span slot="title">模块管理</span>
-        </el-menu-item>
+        <router-link to="/role">
+          <el-menu-item index="4">
+            <span slot="title">角色管理</span>
+          </el-menu-item>
+        </router-link>
         <el-menu-item index="5">
           <span slot="title">功能管理</span>
         </el-menu-item>

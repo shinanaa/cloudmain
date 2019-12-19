@@ -22,7 +22,8 @@ export default new Router({
           children: [
             { path: '/user', component: () => import('@/views/system/user') },
             { path: '/module', component: () => import('@/views/system/module') },
-            { path: '/plugin', component: () => import('@/views/system/plugin') }
+            { path: '/plugin', component: () => import('@/views/system/plugin') },
+            { path: '/role', component: () => import('@/views/system/role') }
           ]
         }
       ]
