@@ -2,6 +2,10 @@ import Http from 'common/js/request'
 
 export function getUserList (userInfo) {
   const data = {
+    // dm: userInfo.dm,
+    // mc: userInfo.mc,
+    // zt: userInfo.zt,
+    // jsid: userInfo.jsid,
     pageSize: userInfo.pageSize,
     pageNo: userInfo.pageCurrent
   }

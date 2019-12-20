@@ -39,3 +39,7 @@ export function deleteRoleItem (deleteParams) {
   }
   return Http.postRequest(deleteParams.url, data)
 }
+
+export function getRoleTree (url) {
+  return Http.postRequest(url)
+}

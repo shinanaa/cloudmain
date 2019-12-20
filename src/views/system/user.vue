@@ -28,7 +28,7 @@
             <el-option v-for="item in states" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </div>
-        <el-button type="primary">查询</el-button>
+        <el-button type="primary" @click="searchUser">查询</el-button>
       </div>
       <div class="table-wrapper">
         <div class="table-btn">
@@ -52,9 +52,9 @@
             <!--<el-table-column prop="department" label="部门"></el-table-column>-->
             <el-table-column prop="XH" label="序号"></el-table-column>
             <el-table-column prop="zt" label="状态">
-              <template slot-scope="scope">
+              <!--<template slot-scope="scope">
                 <span>{{scope.row.zt === 'Y' ? '使用' : '禁用'}}</span>
-              </template>
+              </template>-->
             </el-table-column>
             <el-table-column label="操作" width="150">
               <template slot-scope="scope">
@@ -93,7 +93,9 @@
         </div>
         <el-pagination
           hide-on-single-page
+          @current-change="pageChange"
           :current-page="currentPage"
+          :page-size="pageSize"
           layout="total, prev, pager, next, jumper"
           :total="total">
         </el-pagination>
@@ -111,7 +113,7 @@
               <el-input type="text" v-model="userForm.mm"></el-input>
             </el-form-item>
             <el-form-item label="角色" :label-width="formLabelWidth" prop="jsmc">
-              <el-select v-model="userForm.jsmc" placeholder="请选择">
+              <el-select v-model="userForm.yhjsid" placeholder="请选择">
                 <el-option
                   v-for="item in roles"
                   :key="item.value"
@@ -140,6 +142,7 @@
 
 <script>
 import {getUserList, editUserItem, addUserItem, deleteUserItem} from '@/api/user'
+import {getRoleTree} from '@/api/role'
 import {ERR_CODE} from 'common/js/config'
 export default {
   name: 'user',
@@ -153,14 +156,11 @@ export default {
         state: ''
       },
       states: [
-        {value: 'all', label: '全部'},
+        {value: '', label: '全部'},
         {value: 'N', label: '停用'},
         {value: 'Y', label: '使用'}
       ],
-      roles: [
-        {value: 'admin', label: '管理员'},
-        {value: 'teacher', label: '教师'}
-      ],
+      roles: [],
       options: [
         {
           value: 'zhinan',
@@ -215,7 +215,7 @@ export default {
         XH: '',
         zt: '',
         yhid: '',
-        yhjsid: ''
+        yhjsid: []
       },
       userRules: {
         yhmc: [
@@ -241,15 +241,30 @@ export default {
       return this.isAdd ? '用户增加' : '用户修改'
     }
   },
-  watch: {
-    'currentPage': function (newVal) {
-      console.log(newVal)
-    }
-  },
   created () {
     this._getUserList(this.pageSize, this.currentPage)
+    // 获取搜索中角色列表
+    getRoleTree('getRoleTree').then((res) => {
+      if (res.errcode === ERR_CODE) {
+        let roleList = res.list
+        roleList.map((item) => {
+          let roleItem = {}
+          roleItem.label = item.mc
+          roleItem.value = item.jsid
+          this.roles.push(roleItem)
+        })
+      } else {
+        return false
+      }
+    })
   },
   methods: {
+    searchUser () {
+      const searchParmas = JSON.parse(JSON.stringify(this.search))
+      searchParmas.pageSize = this.pageSize
+      searchParmas.pageCurrent = this.pageCurrent
+      this._getSearchList(searchParmas)
+    },
     deleteUser (rowData) {
       console.log(rowData)
       this._deleteUserInfo(rowData)
@@ -259,11 +274,13 @@ export default {
       this.isAdd = true
     },
     editUser (rowData) {
-      this.$nextTick(() => {
-        this.userForm = JSON.parse(JSON.stringify(rowData))
-      })
+      console.log(rowData)
+      this.userForm = JSON.parse(JSON.stringify(rowData))
       this.showUserDialog = true
       this.isAdd = false
+    },
+    pageChange (val) {
+      this._getUserList(this.pageSize, val)
     },
     cancelUserSet () {
       this.showUserDialog = false
@@ -287,6 +304,8 @@ export default {
         yhid: params.yhid,
         url: 'deleteUserInfo'
       }
+      console.log(12)
+      console.log(deleteParams)
       deleteUserItem(deleteParams).then((res) => {
         if (res.errcode === ERR_CODE) {
           this.$message({
@@ -367,12 +386,32 @@ export default {
         }
       })
     },
+    _getSearchList (searchParmas) {
+      const getInfo = {
+        mc: searchParmas.userName,
+        jsid: searchParmas.role,
+        zt: searchParmas.state,
+        pageSize: searchParmas.pageSize,
+        pageCurrent: searchParmas.currentPage,
+        url: 'getUserInfo'
+      }
+      getUserList(getInfo).then((res) => {
+        if (res.errcode === ERR_CODE) {
+          this.userList = res.rows
+          this.total = res.totalCount
+        }
+        console.log(res)
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
     _getUserList (pageSize, currentPage) {
       const getInfo = {
         pageSize: pageSize,
         pageCurrent: currentPage,
         url: 'getUserInfo'
       }
+      console.log(getInfo)
       getUserList(getInfo).then((res) => {
         if (res.errcode === ERR_CODE) {
           this.userList = res.rows

@@ -20,6 +20,7 @@ const i = {
   editPluginInfo: { url: 'gateway/admin/admin/plugin/updatePlugin' },
   deletePluginInfo: { url: 'gateway/admin/admin/plugin/deletePluginById' },
   // 角色管理
+  getRoleTree: { url: 'gateway/admin/admin/role/queryRoleList' },
   getRoleInfo: { url: 'gateway/admin/admin/role/queryRoleListPage' },
   addRoleInfo: { url: 'gateway/admin/admin/role/saveRole' },
   editRoleInfo: { url: 'gateway/admin/admin/role/updateRole' },

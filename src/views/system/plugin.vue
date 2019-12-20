@@ -82,6 +82,7 @@
         </div>
         <el-pagination
           hide-on-single-page
+          @current-change="pageChange"
           :current-page="currentPage"
           :page-size="pageSize"
           layout="total, prev, pager, next, jumper"
@@ -200,6 +201,9 @@ export default {
     addModule () {
       this.showPluginDialog = true
       this.isAdd = true
+    },
+    pageChange (val) {
+      this._getPluginList(this.pageSize, val)
     },
     cancelUserSet () {
       this.showPluginDialog = false
@@ -333,14 +337,14 @@ export default {
     padding: 0 35px
     margin-top: 133px
     .search
-    .search-item
-      display: inline-block
-      margin-right: 15px
-      padding: 20px 0
-      span
-        color: #606266
-      .el-input
-        width: auto
+      .search-item
+        display: inline-block
+        margin-right: 15px
+        padding: 20px 0
+        span
+          color: #606266
+        .el-input
+          width: auto
   .table-wrapper
     background: #FFFFFF
     border-radius: 8px

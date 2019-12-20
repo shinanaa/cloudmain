@@ -72,6 +72,8 @@
       </div>
       <el-pagination
         hide-on-single-page
+        :page-size="pageSize"
+        @current-change="pageChange"
         :current-page="currentPage"
         layout="total, prev, pager, next, jumper"
         :total="total">
@@ -265,6 +267,9 @@ export default {
       }
       this.showRoleDialog = true
       this.isAdd = true
+    },
+    pageChange (val) {
+      this._getRoleList(this.pageSize, val)
     },
     cancelRoleSet () {
       this.showRoleDialog = false
