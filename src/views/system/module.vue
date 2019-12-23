@@ -38,8 +38,8 @@
             </el-table-column>
             <el-table-column label="操作" width="150">
               <template slot-scope="scope">
-                <el-button size="mini" type="success" @click="editModule(scope.row)">修改</el-button>
-                <el-button size="mini" type="danger" @click="deleteModule(scope.row)">删除</el-button>
+                <el-button size="mini" type="success" @click="editModule(item)">修改</el-button>
+                <el-button size="mini" type="danger" @click="deleteModule(item)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -87,6 +87,9 @@
             <el-form-item label="代码" :label-width="formLabelWidth" prop="dm">
               <el-input type="text" v-model="moduleForm.dm"></el-input>
             </el-form-item>
+            <el-form-item label="图标" :label-width="formLabelWidth" prop="tb">
+              <el-input type="text" v-model="moduleForm.tb"></el-input>
+            </el-form-item>
             <el-form-item label="序号" :label-width="formLabelWidth" prop="xh">
               <el-input type="text" v-model="moduleForm.xh"></el-input>
             </el-form-item>
@@ -133,6 +136,7 @@ export default {
       moduleForm: {
         mc: '',
         dm: '',
+        tb: '',
         xh: '',
         zt: ''
       },
@@ -215,10 +219,11 @@ export default {
       })
     },
     _addModuleInfo (params) {
+      console.log(params)
       const addParams = {
         dm: params.dm,
         tb: params.tb,
-        mc: params.yhmc,
+        mc: params.mc,
         zt: params.zt,
         xh: params.xh,
         url: 'addModuleInfo'
@@ -339,6 +344,7 @@ export default {
         background-color: #f2f6fc
         border-radius: 15px
         .userName
+          textOverflow(100%)
           line-height: 38px
           font-size: 17px
           text-align: center

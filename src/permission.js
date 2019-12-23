@@ -1,9 +1,9 @@
 import router from './router'
-import {getToken} from 'common/js/cache'
+import {getRouter} from 'common/js/cache'
 
 const whiteList = ['/login']
 router.beforeEach((to, from, next) => {
-  if (getToken()) {
+  if (getRouter()) {
     next()
   } else {
     if (whiteList.indexOf(to.path) !== -1) {

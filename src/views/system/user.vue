@@ -86,8 +86,8 @@
                 </div>
               </div>
               <div class="card-btn">
-                <el-button size="mini" type="success" @click="editUser(scope.row)">修改</el-button>
-                <el-button size="mini" type="danger" @click="deleteUser(scope.row)">删除</el-button>
+                <el-button size="mini" type="success" @click="editUser(item)">修改</el-button>
+                <el-button size="mini" type="danger" @click="deleteUser(item)">删除</el-button>
               </div>
             </div>
         </div>
@@ -276,6 +276,9 @@ export default {
     editUser (rowData) {
       console.log(rowData)
       this.userForm = JSON.parse(JSON.stringify(rowData))
+      if (this.userForm.mm) {
+        this.userForm.mm = '******'
+      }
       this.showUserDialog = true
       this.isAdd = false
     },
@@ -487,6 +490,8 @@ export default {
             background: #FFFFFF
             box-shadow: 0px 0px 5px 0px rgba(76, 112, 161, 0.5)
             border-radius: 3px
+          .info-value
+            textOverflow(calc(100% - 85px))
       .card-btn
         heihgt: 70px
         line-height: 70px

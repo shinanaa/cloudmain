@@ -1,5 +1,5 @@
 const i = {
-  loginOn: { url: 'portal/login' },
+  loginOn: { url: 'portal/loginAdmin' },
   logOut: { url: 'portal/logout' },
   changePwd: { url: 'gateway/system/system/user/updatePassword' },
   // 用户管理

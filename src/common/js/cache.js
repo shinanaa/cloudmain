@@ -13,3 +13,16 @@ export function removeToken () {
   storage.remove(TOKEN_KEY)
   return []
 }
+
+// 可访问路由
+const ROUTER_KEY = 'router-list'
+export function setRouter (token) {
+  return storage.set(ROUTER_KEY, token)
+}
+export function getRouter () {
+  return storage.get(ROUTER_KEY)
+}
+export function removeRouter () {
+  storage.remove(ROUTER_KEY)
+  return []
+}
