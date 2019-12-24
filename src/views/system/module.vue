@@ -11,7 +11,7 @@
             <el-option v-for="item in states" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </div>
-        <el-button type="primary">查询</el-button>
+        <el-button type="primary" @click="searchModule">查询</el-button>
       </div>
       <div class="table-wrapper">
         <div class="table-btn">
@@ -38,8 +38,8 @@
             </el-table-column>
             <el-table-column label="操作" width="150">
               <template slot-scope="scope">
-                <el-button size="mini" type="success" @click="editModule(item)">修改</el-button>
-                <el-button size="mini" type="danger" @click="deleteModule(item)">删除</el-button>
+                <el-button size="mini" type="success" @click="editModule(scope.row)">修改</el-button>
+                <el-button size="mini" type="danger" @click="deleteModule(scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -66,8 +66,8 @@
               </div>
             </div>
             <div class="card-btn">
-              <el-button size="mini" type="success">修改</el-button>
-              <el-button size="mini" type="danger">删除</el-button>
+              <el-button size="mini" type="success" @click="editModule(item)">修改</el-button>
+              <el-button size="mini" type="danger" @click="deleteModule(item)">删除</el-button>
             </div>
           </div>
         </div>
@@ -121,7 +121,7 @@ export default {
         state: ''
       },
       states: [
-        {value: 'all', label: '全部'},
+        {value: '', label: '全部'},
         {value: 'N', label: '停用'},
         {value: 'Y', label: '使用'}
       ],
@@ -165,6 +165,12 @@ export default {
     this._getModuleList(this.pageSize, this.currentPage)
   },
   methods: {
+    searchModule () {
+      const searchParmas = JSON.parse(JSON.stringify(this.search))
+      searchParmas.pageSize = this.pageSize
+      searchParmas.pageCurrent = this.pageCurrent
+      this._getSearchList(searchParmas)
+    },
     deleteModule (rowData) {
       console.log(rowData)
       this._deleteModuleInfo(rowData)
@@ -270,7 +276,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getUserList(this.pageSize, this.currentPage)
+          this._getModuleList(this.pageSize, this.currentPage)
         } else {
           this.cancelUserSet()
           this.$message({
@@ -279,6 +285,25 @@ export default {
             type: 'error'
           })
         }
+      })
+    },
+    _getSearchList (searchParmas) {
+      const getInfo = {
+        mc: searchParmas.userName,
+        zt: searchParmas.state,
+        pageSize: searchParmas.pageSize,
+        pageCurrent: searchParmas.currentPage,
+        url: 'getModuleInfo'
+      }
+      console.log(getInfo)
+      getModuleList(getInfo).then((res) => {
+        if (res.errcode === ERR_CODE) {
+          this.moduleList = res.rows
+          this.total = res.totalCount
+        }
+        console.log(res)
+      }).catch((err) => {
+        console.log(err)
       })
     },
     _getModuleList (pageSize, currentPage) {

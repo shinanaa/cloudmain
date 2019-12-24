@@ -4,12 +4,12 @@
         <div class="search-item">
           <span>模块：</span>
           <el-select v-model="search.module" placeholder="请选择">
-            <el-option v-for="item in states" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            <el-option v-for="item in moduleList" :key="item.mkid" :label="item.mc" :value="item.mkid"></el-option>
           </el-select>
         </div>
         <div class="search-item">
           <span>名称：</span>
-          <el-input v-model="search.userName" placeholder="请输入内容"></el-input>
+          <el-input v-model="search.moduleName" placeholder="请输入内容"></el-input>
         </div>
         <div class="search-item">
           <span>状态：</span>
@@ -17,7 +17,7 @@
             <el-option v-for="item in states" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </div>
-        <el-button type="primary">查询</el-button>
+        <el-button type="primary" @click="searchPlugin">查询</el-button>
       </div>
       <div class="table-wrapper">
         <div class="table-btn">
@@ -55,8 +55,20 @@
         </div>
         <div v-if="!listType" class="card-mian">
           <div class="cardItem" v-for="(item, index) in pluginList" :key="index">
-            <div class="userName">{{item.mc}}</div>
+            <div class="userName">{{item.mcjc}}</div>
             <div class="infoWrapper">
+              <div class="info-item">
+                <span class="info-key">全称</span>
+                <span class="info-value">{{item.mcqc}}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-key">模块</span>
+                <span class="info-value">{{item.mc}}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-key">地址</span>
+                <span class="info-value">{{item.dz}}</span>
+              </div>
               <div class="info-item">
                 <span class="info-key">代码</span>
                 <span class="info-value">{{item.dm}}</span>
@@ -75,8 +87,8 @@
               </div>
             </div>
             <div class="card-btn">
-              <el-button size="mini" type="success">修改</el-button>
-              <el-button size="mini" type="danger">删除</el-button>
+              <el-button size="mini" type="success" @click="editModule(item)">修改</el-button>
+              <el-button size="mini" type="danger" @click="deletePlugin(item)">删除</el-button>
             </div>
           </div>
         </div>
@@ -95,8 +107,10 @@
             <el-form-item label="简称" :label-width="formLabelWidth" prop="mcjc">
               <el-input type="text" v-model="pluginForm.mcjc"></el-input>
             </el-form-item>
-            <el-form-item label="模块" :label-width="formLabelWidth" prop="mc">
-              <el-input type="text" v-model="pluginForm.mc"></el-input>
+            <el-form-item label="模块" :label-width="formLabelWidth" prop="mkid">
+              <el-select v-model="pluginForm.mkid" placeholder="请选择">
+                <el-option v-for="item in moduleList" :key="item.mkid" :label="item.mc" :value="item.mkid"></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="全称" :label-width="formLabelWidth" prop="mcqc">
               <el-input type="text" v-model="pluginForm.mcqc"></el-input>
@@ -130,6 +144,7 @@
 
 <script>
 import {getPluginList, addPluginItem, editPluginItem, deletePluginItem} from '@/api/plugin'
+import {getModuleTree} from '@/api/module'
 import {ERR_CODE} from 'common/js/config'
 export default {
   name: 'plugin',
@@ -138,7 +153,7 @@ export default {
       listType: true,
       search: {
         module: '',
-        userName: '',
+        moduleName: '',
         state: ''
       },
       states: [
@@ -146,6 +161,7 @@ export default {
         {value: 'N', label: '停用'},
         {value: 'Y', label: '使用'}
       ],
+      moduleList: [],
       pluginList: [],
       // 分页
       total: 0,
@@ -156,7 +172,7 @@ export default {
       showPluginDialog: false,
       pluginForm: {
         mcjc: '',
-        mc: '',
+        mkid: '',
         mcqc: '',
         dm: '',
         tb: '',
@@ -165,8 +181,8 @@ export default {
         zt: ''
       },
       pluginRules: {
-        mc: [
-          { required: true, message: '名称不能为空', trigger: 'blur' }
+        mkid: [
+          { required: true, message: '模块不能为空', trigger: 'blur' }
         ],
         dm: [
           { required: true, message: '代码不能为空', trigger: 'blur' }
@@ -182,19 +198,34 @@ export default {
       return stateDialog
     },
     dialogTitle () {
-      return this.isAdd ? '模块增加' : '模块修改'
+      return this.isAdd ? '功能增加' : '功能修改'
     }
   },
   created () {
     this._getPluginList(this.pageSize, this.currentPage)
+    getModuleTree('getModuleTree').then((res) => {
+      if (res.errcode === ERR_CODE) {
+        console.log(res)
+        this.moduleList = res.list
+      } else {
+        return false
+      }
+    })
   },
   methods: {
+    searchPlugin () {
+      const searchParmas = JSON.parse(JSON.stringify(this.search))
+      searchParmas.pageSize = this.pageSize
+      searchParmas.currentPage = this.currentPage
+      this._getSearchList(searchParmas)
+    },
     deletePlugin (rowData) {
       console.log(rowData)
       this._deletePluginInfo(rowData)
     },
     editModule (rowData) {
       this.pluginForm = JSON.parse(JSON.stringify(rowData))
+      console.log(this.pluginForm)
       this.showPluginDialog = true
       this.isAdd = false
     },
@@ -203,6 +234,7 @@ export default {
       this.isAdd = true
     },
     pageChange (val) {
+      this.currentPage = val
       this._getPluginList(this.pageSize, val)
     },
     cancelUserSet () {
@@ -249,6 +281,7 @@ export default {
     },
     _addPluginInfo (params) {
       const addParams = {
+        mkid: params.mkid,
         mcjc: params.mcjc,
         dm: params.dm,
         mcqc: params.mcqc,
@@ -267,7 +300,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getModuleList(this.pageSize, this.currentPage)
+          this._getPluginList(this.pageSize, this.currentPage)
         } else {
           this.cancelUserSet()
           this.$message({
@@ -283,12 +316,15 @@ export default {
     _editPluginInfo (params) {
       console.log(params)
       const editParams = {
-        mc: params.mc,
+        mcjc: params.mcjc,
         dm: params.dm,
+        mcqc: params.mcqc,
+        dz: params.dz,
         tb: params.tb,
         xh: params.xh,
         zt: params.zt,
         mkid: params.mkid,
+        gnid: params.gnid,
         url: 'editPluginInfo'
       }
       editPluginItem(editParams).then((res) => {
@@ -300,6 +336,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
+          console.log(this.currentPage)
           this._getPluginList(this.pageSize, this.currentPage)
         } else {
           this.cancelUserSet()
@@ -309,6 +346,26 @@ export default {
             type: 'error'
           })
         }
+      })
+    },
+    _getSearchList (searchParmas) {
+      const getInfo = {
+        mkid: searchParmas.module,
+        mcjc: searchParmas.moduleName,
+        zt: searchParmas.state,
+        pageSize: searchParmas.pageSize,
+        pageCurrent: searchParmas.currentPage,
+        url: 'getPluginInfo'
+      }
+      getPluginList(getInfo).then((res) => {
+        if (res.errcode === ERR_CODE) {
+          console.log(res)
+          this.pluginList = res.rows
+          this.total = res.totalCount
+        }
+        console.log(res)
+      }).catch((err) => {
+        console.log(err)
       })
     },
     _getPluginList (pageSize, currentPage) {

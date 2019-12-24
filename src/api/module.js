@@ -2,6 +2,8 @@ import Http from 'common/js/request'
 
 export function getModuleList (userInfo) {
   const data = {
+    mc: userInfo.mc,
+    zt: userInfo.zt,
     pageSize: userInfo.pageSize,
     pageNo: userInfo.pageCurrent
   }
@@ -36,4 +38,8 @@ export function deleteModuleItem (deleteParams) {
     mkid: deleteParams.mkid
   }
   return Http.postRequest(deleteParams.url, data)
+}
+
+export function getModuleTree (url) {
+  return Http.postRequest(url)
 }

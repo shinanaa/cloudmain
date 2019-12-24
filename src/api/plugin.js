@@ -2,6 +2,9 @@ import Http from 'common/js/request'
 
 export function getPluginList (pluginInfo) {
   const data = {
+    mcjc: pluginInfo.mcjc,
+    mkid: pluginInfo.mkid,
+    zt: pluginInfo.zt,
     pageSize: pluginInfo.pageSize,
     pageNo: pluginInfo.pageCurrent
   }
@@ -25,13 +28,15 @@ export function editPluginItem (editParams) {
 
 export function addPluginItem (addParams) {
   const data = {
+    mkid: addParams.mkid,
     mcjc: addParams.mcjc,
     dm: addParams.dm,
     mcqc: addParams.mcqc,
     dz: addParams.dz,
     tb: addParams.tb,
     xh: addParams.xh,
-    zt: addParams.zt
+    zt: addParams.zt,
+    gnid: addParams.gnid
   }
   return Http.postRequest(addParams.url, data)
 }

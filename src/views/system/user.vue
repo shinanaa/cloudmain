@@ -52,9 +52,9 @@
             <!--<el-table-column prop="department" label="部门"></el-table-column>-->
             <el-table-column prop="XH" label="序号"></el-table-column>
             <el-table-column prop="zt" label="状态">
-              <!--<template slot-scope="scope">
+              <template slot-scope="scope">
                 <span>{{scope.row.zt === 'Y' ? '使用' : '禁用'}}</span>
-              </template>-->
+              </template>
             </el-table-column>
             <el-table-column label="操作" width="150">
               <template slot-scope="scope">
@@ -365,10 +365,13 @@ export default {
         mm: params.mm,
         mc: params.yhmc,
         zt: params.zt,
-        yhjsid: params.yhjsid,
         yhid: params.yhid,
         url: 'editUserInfo'
       }
+      if (params.yhjsid) {
+        editParams.yhjsid = params.yhjsid.split(',')
+      }
+      console.log(editParams)
       editUserItem(editParams).then((res) => {
         console.log(res)
         if (res.errcode === ERR_CODE) {

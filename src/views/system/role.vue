@@ -226,23 +226,23 @@ export default {
       this._deleteRoleInfo(rowData)
     },
     editRole (rowData) {
-      // if (!this.userIds) {
-      //   getUserTree('getUserTree').then((res) => {
-      //     console.log(res)
-      //     if (res.errcode === ERR_CODE) {
-      //       this.userIds = res.list
-      //     }
-      //   }).catch((err) => {
-      //     console.log(err)
-      //   })
-      // }
-      // if (!this.plugins) {
-      //   getPluginTree().then((res) => {
-      //     console.log(res)
-      //   }).catch((err) => {
-      //     console.log(err)
-      //   })
-      // }
+      if (!this.userIds) {
+        getUserTree('getUserTree').then((res) => {
+          console.log(res)
+          if (res.errcode === ERR_CODE) {
+            this.userIds = res.list
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
+      }
+      if (!this.plugins) {
+        getPluginTree().then((res) => {
+          console.log(res)
+        }).catch((err) => {
+          console.log(err)
+        })
+      }
       this.roleForm = JSON.parse(JSON.stringify(rowData))
       this.showRoleDialog = true
       this.isAdd = false
