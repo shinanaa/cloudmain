@@ -27,7 +27,7 @@ export function addRoleItem (addParams) {
     dm: addParams.dm,
     xh: addParams.xh,
     zt: addParams.zt,
-    // gnArray: addParams.jsgnid
+    jsgnid: addParams.jsgnid,
     userids: addParams.userids
   }
   return Http.postRequest(addParams.url, data)

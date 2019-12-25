@@ -97,17 +97,25 @@
             </el-select>
           </el-form-item>
           <!--级联选择 多选-->
-          <el-form-item label="功能" :label-width="formLabelWidth">
+          <!--<el-form-item label="功能" :label-width="formLabelWidth">
             <el-cascader
             v-model="roleForm.jsgnid"
             :options="plugins"
             :props="props"></el-cascader>
+          </el-form-item>-->
+          <el-form-item label="功能" :label-width="formLabelWidth">
+            <el-tree :data="plugins" :props="pluginTree" show-checkbox ref="pluginTree"></el-tree>
           </el-form-item>
           <el-form-item label="用户" :label-width="formLabelWidth">
             <el-select v-model="roleForm.userids" multiple placeholder="请选择">
-              <el-option v-for="item in userIds" :key="item.id" :label="item.yhmc" :value="item.yhid"></el-option>
+            <el-option v-for="item in userIds" :key="item.id" :label="item.yhmc" :value="item.yhid"></el-option>
             </el-select>
           </el-form-item>
+          <!--<el-form-item label="用户" :label-width="formLabelWidth">-->
+            <!--<el-checkbox-group v-model="roleForm.userids">-->
+              <!--<el-checkbox v-for="(item,index) in userIds" :label="item.yhmc" :key="index"></el-checkbox>-->
+            <!--</el-checkbox-group>-->
+          <!--</el-form-item>-->
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="cancelRoleSet">取 消</el-button>
@@ -163,6 +171,10 @@ export default {
       },
       userIds: [],
       plugins: [],
+      pluginTree: {
+        label: 'label',
+        children: 'children'
+      },
       options: [
         {
           value: 'zhinan',
@@ -226,45 +238,13 @@ export default {
       this._deleteRoleInfo(rowData)
     },
     editRole (rowData) {
-      if (!this.userIds) {
-        getUserTree('getUserTree').then((res) => {
-          console.log(res)
-          if (res.errcode === ERR_CODE) {
-            this.userIds = res.list
-          }
-        }).catch((err) => {
-          console.log(err)
-        })
-      }
-      if (!this.plugins) {
-        getPluginTree().then((res) => {
-          console.log(res)
-        }).catch((err) => {
-          console.log(err)
-        })
-      }
+      this._getTreeList()
       this.roleForm = JSON.parse(JSON.stringify(rowData))
       this.showRoleDialog = true
       this.isAdd = false
     },
     addRole () {
-      if (!this.userIds.length) {
-        getUserTree('getUserTree').then((res) => {
-          console.log(res)
-          if (res.errcode === ERR_CODE) {
-            this.userIds = res.list
-          }
-        }).catch((err) => {
-          console.log(err)
-        })
-      }
-      if (!this.plugins.length) {
-        getPluginTree('getPluginTree').then((res) => {
-          console.log(res)
-        }).catch((err) => {
-          console.log(err)
-        })
-      }
+      this._getTreeList()
       this.showRoleDialog = true
       this.isAdd = true
     },
@@ -278,15 +258,45 @@ export default {
     submitRoleSet () {
       this.$refs.roleForm.validate(valid => {
         if (valid) {
-          if (this.isAdd) {
-            this._addRoleInfo(this.roleForm)
-          } else {
-            this._editModuleInfo(this.roleForm)
-          }
+          // this.roleForm.jsgnid
+          const checkArr = this.$refs.pluginTree.getCheckedNodes()
+          const gnArr = checkArr.filter((item) => {
+            if (item.isgn !== undefined) {
+              return item.value
+            }
+          })
+          console.log(gnArr)
+          // if (this.isAdd) {
+          //   this._addRoleInfo(this.roleForm)
+          // } else {
+          //   this._editModuleInfo(this.roleForm)
+          // }
         } else {
           return false
         }
       })
+    },
+    _getTreeList () {
+      if (!this.userIds.length) {
+        getUserTree('getUserTree').then((res) => {
+          console.log(res)
+          if (res.errcode === ERR_CODE) {
+            this.userIds = res.list
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
+      }
+      if (!this.plugins.length) {
+        getPluginTree('getPluginTree').then((res) => {
+          console.log(res)
+          if (res.errcode === ERR_CODE) {
+            this.plugins = res.list
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
+      }
     },
     _deleteRoleInfo (params) {
       const deleteParams = {
@@ -321,6 +331,11 @@ export default {
         userids: params.userids,
         url: 'addRoleInfo'
       }
+      console.log(params)
+      // params.jsgnid.map((item) => {
+      //   let
+      //   addParams.jsgnid.push(item.value)
+      // })
       addRoleItem(addParams).then((res) => {
         console.log(res)
         if (res.errcode === ERR_CODE) {
@@ -363,7 +378,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getUserList(this.pageSize, this.currentPage)
+          this._getRoleList(this.pageSize, this.currentPage)
         } else {
           this.cancelRoleSet()
           this.$message({
