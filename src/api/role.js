@@ -8,6 +8,13 @@ export function getRoleList (userInfo) {
   return Http.postRequest(userInfo.url, data)
 }
 
+export function getRoleItem (getInfo) {
+  const data = {
+    jsid: getInfo.jsid
+  }
+  return Http.postRequest(getInfo.url, data)
+}
+
 export function editRoleItem (editParams) {
   const data = {
     mc: editParams.mc,

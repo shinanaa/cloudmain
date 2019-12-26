@@ -23,6 +23,7 @@ const i = {
   // 角色管理
   getRoleTree: { url: 'gateway/admin/admin/role/queryRoleList' },
   getRoleInfo: { url: 'gateway/admin/admin/role/queryRoleListPage' },
+  getRoleById: { url: 'gateway/admin/admin/role/queryRoleById' },
   addRoleInfo: { url: 'gateway/admin/admin/role/saveRole' },
   editRoleInfo: { url: 'gateway/admin/admin/role/updateRole' },
   deleteRoleInfo: { url: 'gateway/admin/admin/role/deleteRoleById' }

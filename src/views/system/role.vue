@@ -52,10 +52,6 @@
               <span class="info-value">{{item.dm}}</span>
             </div>
             <div class="info-item">
-              <span class="info-key">图标</span>
-              <span class="info-value">{{item.tb}}</span>
-            </div>
-            <div class="info-item">
               <span class="info-key">序号</span>
               <span class="info-value">{{item.xh}}</span>
             </div>
@@ -65,8 +61,8 @@
             </div>
           </div>
           <div class="card-btn">
-            <el-button size="mini" type="success">修改</el-button>
-            <el-button size="mini" type="danger">删除</el-button>
+            <el-button size="mini" type="success" @click="editRole(item)">修改</el-button>
+            <el-button size="mini" type="danger" @click="deleteRole(item)">删除</el-button>
           </div>
         </div>
       </div>
@@ -104,7 +100,7 @@
             :props="props"></el-cascader>
           </el-form-item>-->
           <el-form-item label="功能" :label-width="formLabelWidth">
-            <el-tree :data="plugins" :props="pluginTree" show-checkbox ref="pluginTree"></el-tree>
+            <el-tree :data="plugins" :props="pluginTree" show-checkbox ref="pluginTree" node-key="value"></el-tree>
           </el-form-item>
           <el-form-item label="用户" :label-width="formLabelWidth">
             <el-select v-model="roleForm.userids" multiple placeholder="请选择">
@@ -127,7 +123,7 @@
 </template>
 
 <script>
-import {getRoleList, addRoleItem, editRoleItem, deleteRoleItem} from '@/api/role'
+import {getRoleList, addRoleItem, editRoleItem, deleteRoleItem, getRoleItem} from '@/api/role'
 import {getUserTree} from '@/api/user'
 import {getPluginTree} from '@/api/plugin'
 import {ERR_CODE} from 'common/js/config'
@@ -158,6 +154,7 @@ export default {
         dm: '',
         xh: '',
         zt: '',
+        jsid: '',
         jsgnid: [],
         userids: []
       },
@@ -175,44 +172,6 @@ export default {
         label: 'label',
         children: 'children'
       },
-      options: [
-        {
-          value: 'zhinan',
-          label: '指南',
-          children: [
-            {
-              value: 'shejiyuanze',
-              label: '设计原则',
-              children: [{
-                value: 'yizhi',
-                label: '一致'
-              }, {
-                value: 'fankui',
-                label: '反馈'
-              }]
-            },
-            {
-              value: 'daohang',
-              label: '导航',
-              children: [{
-                value: 'cexiangdaohang',
-                label: '侧向导航'
-              }]
-            }]
-        },
-        {
-          value: 'ziyuan',
-          label: '资源',
-          children: [
-            {
-              value: 'axure',
-              label: 'Axure Components'
-            },
-            {
-              value: 'sketch',
-              label: 'Sketch Templates'
-            }]
-        }],
       props: {
         multiple: true
       },
@@ -239,7 +198,7 @@ export default {
     },
     editRole (rowData) {
       this._getTreeList()
-      this.roleForm = JSON.parse(JSON.stringify(rowData))
+      this._getRoleItem(rowData.jsid)
       this.showRoleDialog = true
       this.isAdd = false
     },
@@ -249,28 +208,29 @@ export default {
       this.isAdd = true
     },
     pageChange (val) {
+      this.currentPage = val
       this._getRoleList(this.pageSize, val)
     },
     cancelRoleSet () {
       this.showRoleDialog = false
       this.$refs.roleForm.resetFields()
+      this.$refs.pluginTree.setCheckedNodes([])
     },
     submitRoleSet () {
       this.$refs.roleForm.validate(valid => {
         if (valid) {
-          // this.roleForm.jsgnid
           const checkArr = this.$refs.pluginTree.getCheckedNodes()
-          const gnArr = checkArr.filter((item) => {
+          this.roleForm.jsgnid = []
+          checkArr.filter((item) => {
             if (item.isgn !== undefined) {
-              return item.value
+              this.roleForm.jsgnid.push(item.value)
             }
           })
-          console.log(gnArr)
-          // if (this.isAdd) {
-          //   this._addRoleInfo(this.roleForm)
-          // } else {
-          //   this._editModuleInfo(this.roleForm)
-          // }
+          if (this.isAdd) {
+            this._addRoleInfo(this.roleForm)
+          } else {
+            this._editModuleInfo(this.roleForm)
+          }
         } else {
           return false
         }
@@ -331,13 +291,7 @@ export default {
         userids: params.userids,
         url: 'addRoleInfo'
       }
-      console.log(params)
-      // params.jsgnid.map((item) => {
-      //   let
-      //   addParams.jsgnid.push(item.value)
-      // })
       addRoleItem(addParams).then((res) => {
-        console.log(res)
         if (res.errcode === ERR_CODE) {
           this.cancelRoleSet()
           this.$message({
@@ -359,18 +313,17 @@ export default {
       })
     },
     _editModuleInfo (params) {
-      console.log(params)
       const editParams = {
         mc: params.mc,
         dm: params.dm,
-        tb: params.tb,
         xh: params.xh,
         zt: params.zt,
-        mkid: params.mkid,
-        url: 'editModuleInfo'
+        jsid: params.jsid,
+        jsgnid: params.jsgnid,
+        userids: params.userids,
+        url: 'editRoleInfo'
       }
       editRoleItem(editParams).then((res) => {
-        console.log(res)
         if (res.errcode === ERR_CODE) {
           this.cancelRoleSet()
           this.$message({
@@ -387,6 +340,28 @@ export default {
             type: 'error'
           })
         }
+      })
+    },
+    _getRoleItem (roleId) {
+      const getInfo = {
+        jsid: roleId,
+        url: 'getRoleById'
+      }
+      getRoleItem(getInfo).then((res) => {
+        if (res.errcode === ERR_CODE) {
+          console.log(res.list[0])
+          const role = res.list[0].role[0]
+          this.roleForm.mc = role.mc
+          this.roleForm.dm = role.dm
+          this.roleForm.xh = role.xh
+          this.roleForm.zt = role.zt
+          this.roleForm.jsid = role.jsid
+          this.roleForm.userids = res.list[0].userids
+          this.$refs.pluginTree.setCheckedKeys(res.list[0].gnids)
+          console.log(this.roleForm)
+        }
+      }).catch((err) => {
+        console.log(err)
       })
     },
     _getRoleList (pageSize, currentPage) {
