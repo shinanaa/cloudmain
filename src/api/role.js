@@ -2,6 +2,8 @@ import Http from 'common/js/request'
 
 export function getRoleList (userInfo) {
   const data = {
+    mc: userInfo.mc,
+    zt: userInfo.zt,
     pageSize: userInfo.pageSize,
     pageNo: userInfo.pageCurrent
   }

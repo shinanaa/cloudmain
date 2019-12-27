@@ -26,7 +26,9 @@ const i = {
   getRoleById: { url: 'gateway/admin/admin/role/queryRoleById' },
   addRoleInfo: { url: 'gateway/admin/admin/role/saveRole' },
   editRoleInfo: { url: 'gateway/admin/admin/role/updateRole' },
-  deleteRoleInfo: { url: 'gateway/admin/admin/role/deleteRoleById' }
+  deleteRoleInfo: { url: 'gateway/admin/admin/role/deleteRoleById' },
+  // 日志管理
+  getLogInfo: { url: 'gateway/admin/admin/log/queryLogListPage' }
 }
 
 export default i

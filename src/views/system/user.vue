@@ -161,44 +161,6 @@ export default {
         {value: 'Y', label: '使用'}
       ],
       roles: [],
-      options: [
-        {
-          value: 'zhinan',
-          label: '指南',
-          children: [
-            {
-              value: 'shejiyuanze',
-              label: '设计原则',
-              children: [{
-                value: 'yizhi',
-                label: '一致'
-              }, {
-                value: 'fankui',
-                label: '反馈'
-              }]
-            },
-            {
-              value: 'daohang',
-              label: '导航',
-              children: [{
-                value: 'cexiangdaohang',
-                label: '侧向导航'
-              }]
-            }]
-        },
-        {
-          value: 'ziyuan',
-          label: '资源',
-          children: [
-            {
-              value: 'axure',
-              label: 'Axure Components'
-            },
-            {
-              value: 'sketch',
-              label: 'Sketch Templates'
-            }]
-        }],
       userList: [],
       // 分页
       total: 0,

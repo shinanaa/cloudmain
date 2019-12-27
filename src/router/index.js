@@ -23,7 +23,8 @@ export default new Router({
             { path: '/user', component: () => import('@/views/system/user') },
             { path: '/module', component: () => import('@/views/system/module') },
             { path: '/plugin', component: () => import('@/views/system/plugin') },
-            { path: '/role', component: () => import('@/views/system/role') }
+            { path: '/role', component: () => import('@/views/system/role') },
+            { path: '/log', component: () => import('@/views/system/log') }
           ]
         }
       ]

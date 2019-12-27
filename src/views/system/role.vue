@@ -11,7 +11,7 @@
           <el-option v-for="item in states" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </div>
-      <el-button type="primary">查询</el-button>
+      <el-button type="primary" @click="searchRoles">查询</el-button>
     </div>
     <div class="table-wrapper">
       <div class="table-btn">
@@ -137,7 +137,7 @@ export default {
         state: ''
       },
       states: [
-        {value: 'all', label: '全部'},
+        {value: '', label: '全部'},
         {value: 'N', label: '停用'},
         {value: 'Y', label: '使用'}
       ],
@@ -192,6 +192,13 @@ export default {
     this._getRoleList(this.pageSize, this.currentPage)
   },
   methods: {
+    searchRoles () {
+      const searchParmas = JSON.parse(JSON.stringify(this.search))
+      searchParmas.pageSize = this.pageSize
+      searchParmas.pageCurrent = this.pageCurrent
+      console.log(searchParmas)
+      this._getSearchList(searchParmas)
+    },
     deleteRole (rowData) {
       console.log(rowData)
       this._deleteRoleInfo(rowData)
@@ -360,6 +367,24 @@ export default {
           this.$refs.pluginTree.setCheckedKeys(res.list[0].gnids)
           console.log(this.roleForm)
         }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    _getSearchList (searchParmas) {
+      const getInfo = {
+        mc: searchParmas.userName,
+        zt: searchParmas.state,
+        pageSize: searchParmas.pageSize,
+        pageCurrent: searchParmas.currentPage,
+        url: 'getRoleInfo'
+      }
+      getRoleList(getInfo).then((res) => {
+        if (res.errcode === ERR_CODE) {
+          this.roleList = res.rows
+          this.total = res.totalCount
+        }
+        console.log(res)
       }).catch((err) => {
         console.log(err)
       })
