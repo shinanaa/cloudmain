@@ -28,7 +28,10 @@ const i = {
   editRoleInfo: { url: 'gateway/admin/admin/role/updateRole' },
   deleteRoleInfo: { url: 'gateway/admin/admin/role/deleteRoleById' },
   // 日志管理
-  getLogInfo: { url: 'gateway/admin/admin/log/queryLogListPage' }
+  getLogInfo: { url: 'gateway/admin/admin/log/queryLogListPage' },
+  // 单位管理
+  getUnitInfo: { url: 'gateway/admin/admin/unit/queryAllCompanyWithPage' },
+  getUnitPluginTree: { url: 'gateway/system/system/plugin/moudlePluginTree' }
 }
 
 export default i

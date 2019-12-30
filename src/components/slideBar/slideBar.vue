@@ -32,9 +32,16 @@
             <span slot="title">日志管理</span>
           </el-menu-item>
         </router-link>
-        <el-menu-item index="6">
-          <span slot="title">角色管理</span>
-        </el-menu-item>
+        <router-link to="/unit">
+          <el-menu-item index="6">
+            <span slot="title">单位管理</span>
+          </el-menu-item>
+        </router-link>
+        <router-link to="/notice">
+          <el-menu-item index="7">
+            <span slot="title">通知公告</span>
+          </el-menu-item>
+        </router-link>
       </el-menu>
     </el-scrollbar>
 </template>

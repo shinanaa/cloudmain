@@ -113,14 +113,31 @@ export default {
   methods: {
     searchLog () {
       console.log(this.search)
+      if (this.search.date) {
+        if (this.search.date.length) {
+          let dateStart = new Date(this.search.date[0])
+          let dateEnd = new Date(this.search.date[1])
+          this.search.dateStart = this._changeData(dateStart)
+          this.search.dateEnd = this._changeData(dateEnd)
+        } else {
+          this.search.dateStart = ''
+          this.search.dateEnd = ''
+        }
+      } else {
+        this.search.dateStart = ''
+        this.search.dateEnd = ''
+      }
+      this._getLogList(this.search)
     },
     pageChange () {},
+    _changeData (date) {
+      return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+    },
     _getLogList (params) {
-      console.log(params.date)
       const getInfo = {
         lx: params.type,
-        ksrq: params.date,
-        jsrq: params.jsrq,
+        ksrq: params.dateStart,
+        jsrq: params.dateEnd,
         pageSize: this.pageSize,
         pageNo: this.currentPage,
         url: 'getLogInfo'
