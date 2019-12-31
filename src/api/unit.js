@@ -21,9 +21,25 @@ export function addUnitItem (addParams) {
     dz: addParams.address,
     xh: addParams.order,
     zt: addParams.state,
-    dwgnid: addParams.plugins
+    dwgnid: addParams.plugins,
+    dwid: 'jdsikhd'
   }
   return Http.postRequest(addParams.url, data)
+}
+
+export function editUnitItem (editParams) {
+  const data = {
+    mc: editParams.name,
+    dm: editParams.code,
+    lxr: editParams.contacts,
+    dh: editParams.tel,
+    yx: editParams.email,
+    dz: editParams.address,
+    xh: editParams.order,
+    zt: editParams.state,
+    dwgnid: editParams.plugins
+  }
+  return Http.postRequest(editParams.url, data)
 }
 
 export function getUnitPluginTree (url) {

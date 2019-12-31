@@ -31,7 +31,11 @@ const i = {
   getLogInfo: { url: 'gateway/admin/admin/log/queryLogListPage' },
   // 单位管理
   getUnitInfo: { url: 'gateway/admin/admin/unit/queryAllCompanyWithPage' },
-  getUnitPluginTree: { url: 'gateway/system/system/plugin/moudlePluginTree' }
+  getUnitById: { url: 'gateway/admin/admin/unit/queryCompanyById' },
+  getUnitPluginTree: { url: 'gateway/system/system/plugin/moudlePluginTree' },
+  addUnitInfo: { url: 'gateway/admin/admin/unit/unitInsert' },
+  editUnitInfo: { url: 'gateway/admin/admin/unit/unitUpdate' },
+  deleteUnitInfo: { url: 'gateway/admin/admin/unit/deleteUnit' }
 }
 
 export default i

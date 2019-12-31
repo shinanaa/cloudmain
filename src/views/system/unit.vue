@@ -134,7 +134,7 @@
           </el-form>
           <div slot="footer" class="dialog-footer">
             <!--<el-button @click="cancelUserSet">取 消</el-button>-->
-            <!--<el-button type="primary" @click="submitUserSet">确 定</el-button>-->
+            <el-button type="primary" @click="submitUnitSet">确 定</el-button>
           </div>
         </el-dialog>
       </div>
@@ -142,7 +142,7 @@
 </template>
 
 <script>
-import {getUnitList, getUnitPluginTree} from '@/api/unit'
+import {getUnitList, getUnitPluginTree, addUnitItem, editUnitItem} from '@/api/unit'
 import {ERR_CODE} from 'common/js/config'
 export default {
   name: 'unit',
@@ -184,14 +184,14 @@ export default {
         children: 'children'
       },
       unitRules: {
-        yhmc: [
+        name: [
           { required: true, message: '名称不能为空', trigger: 'blur' }
         ],
-        dm: [
+        code: [
           { required: true, message: '代码不能为空', trigger: 'blur' }
         ],
-        mm: [
-          { required: true, message: '密码不能为空', trigger: 'blur' }
+        state: [
+          { required: true, message: '状态不能为空', trigger: 'change' }
         ]
       },
       formLabelWidth: '80px'
@@ -220,8 +220,73 @@ export default {
       this.showUnitDialog = true
       this.isAdd = true
     },
+    submitUnitSet () {
+      this.$refs.unitForm.validate(valid => {
+        if (valid) {
+          const checkArr = this.$refs.pluginTree.getCheckedNodes()
+          checkArr.filter((item) => {
+            if (item.isgn !== undefined) {
+              this.unitForm.plugins.push(item.value)
+            }
+          })
+          if (this.isAdd) {
+            this._addUnitInfo(this.unitForm)
+          } else {
+            this._editUnitInfo(this.unitForm)
+          }
+        } else {
+          return false
+        }
+      })
+    },
     searchUnit () {
       this._getUnitList(this.search)
+    },
+    _addUnitInfo (params) {
+      const addParams = params
+      addParams.url = 'addUnitInfo'
+      addUnitItem(addParams).then((res) => {
+        console.log(res)
+        if (res.errcode === ERR_CODE) {
+          this.cancelUserSet()
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'success'
+          })
+          this._getUnitList(this.search)
+        } else {
+          this.cancelUserSet()
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'error'
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    _editUnitInfo () {
+      editUnitItem(editParams).then((res) => {
+        console.log(res)
+        if (res.errcode === ERR_CODE) {
+          this.cancelUserSet()
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'success'
+          })
+          this._getUserList(this.pageSize, this.currentPage)
+        } else {
+          this.cancelUserSet()
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'error'
+          })
+        }
+      })
     },
     _getPluginTree () {
       if (!this.plugins.length) {
