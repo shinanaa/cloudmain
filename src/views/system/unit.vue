@@ -45,8 +45,8 @@
             </el-table-column>
             <el-table-column label="操作" width="150">
               <template slot-scope="scope">
-                <el-button size="mini" type="success" @click="editUser(scope.row)">修改</el-button>
-                <el-button size="mini" type="danger" @click="deleteUser(scope.row)">删除</el-button>
+                <el-button size="mini" type="success" @click="editUnit(scope.row)">修改</el-button>
+                <el-button size="mini" type="danger" @click="deleteUnit(scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -85,8 +85,8 @@
               </div>
             </div>
             <div class="card-btn">
-              <el-button size="mini" type="success" @click="editUser(item)">修改</el-button>
-              <el-button size="mini" type="danger" @click="deleteUser(item)">删除</el-button>
+              <el-button size="mini" type="success" @click="editUnit(item)">修改</el-button>
+              <el-button size="mini" type="danger" @click="deleteUnit(item)">删除</el-button>
             </div>
           </div>
         </div>
@@ -133,7 +133,7 @@
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <!--<el-button @click="cancelUserSet">取 消</el-button>-->
+            <el-button @click="cancelUserSet">取 消</el-button>
             <el-button type="primary" @click="submitUnitSet">确 定</el-button>
           </div>
         </el-dialog>
@@ -142,7 +142,7 @@
 </template>
 
 <script>
-import {getUnitList, getUnitPluginTree, addUnitItem, editUnitItem} from '@/api/unit'
+import {getUnitList, getUnitPluginTree, addUnitItem, editUnitItem, getUnitItem, deleteUnitItem} from '@/api/unit'
 import {ERR_CODE} from 'common/js/config'
 export default {
   name: 'unit',
@@ -215,10 +215,25 @@ export default {
       this.currentPage = val
       this._getUnitList(this.pageSize, val)
     },
+    editUnit (item) {
+      this._getPluginTree()
+      this.isAdd = false
+      this.showUnitDialog = true
+      this._getUnitItem(item.dwid)
+    },
+    deleteUnit (item) {
+      console.log(item)
+      this._deleteUnitInfo(item)
+    },
     addUnit () {
       this._getPluginTree()
       this.showUnitDialog = true
       this.isAdd = true
+    },
+    cancelUserSet () {
+      this.showUnitDialog = false
+      this.$refs.unitForm.resetFields()
+      this.$refs.pluginTree.setCheckedNodes([])
     },
     submitUnitSet () {
       this.$refs.unitForm.validate(valid => {
@@ -241,6 +256,29 @@ export default {
     },
     searchUnit () {
       this._getUnitList(this.search)
+    },
+    _deleteUnitInfo (params) {
+      const deleteParams = {
+        unitId: params.dwid,
+        url: 'deleteUnitInfo'
+      }
+      deleteUnitItem(deleteParams).then((res) => {
+        console.log(res)
+        if (res.errcode === ERR_CODE) {
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'success'
+          })
+          this._getUnitList(this.search)
+        } else {
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'error'
+          })
+        }
+      })
     },
     _addUnitInfo (params) {
       const addParams = params
@@ -267,7 +305,10 @@ export default {
         console.log(err)
       })
     },
-    _editUnitInfo () {
+    _editUnitInfo (params) {
+      const editParams = params
+      editParams.url = 'editUnitInfo'
+      console.log(editParams)
       editUnitItem(editParams).then((res) => {
         console.log(res)
         if (res.errcode === ERR_CODE) {
@@ -277,7 +318,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getUserList(this.pageSize, this.currentPage)
+          this._getUnitList(this.search)
         } else {
           this.cancelUserSet()
           this.$message({
@@ -300,6 +341,32 @@ export default {
         })
       }
     },
+    _getUnitItem (unitId) {
+      const getInfo = {
+        unitId,
+        url: 'getUnitById'
+      }
+      getUnitItem(getInfo).then((res) => {
+        if (res.errcode === ERR_CODE) {
+          const unit = res.list[0].unitInfo[0]
+          this.unitForm.name = unit.mc
+          this.unitForm.code = unit.dm
+          this.unitForm.contacts = unit.lxr
+          this.unitForm.tel = unit.dh
+          this.unitForm.email = unit.yx
+          this.unitForm.address = unit.dz
+          this.unitForm.order = unit.xh
+          this.unitForm.state = unit.zt
+          this.unitForm.unitId = unit.dwid
+          const pluginChecked = res.list[0].gnInUnitInfo[0]
+          if (pluginChecked) {
+            this.$refs.pluginTree.setCheckedKeys(pluginChecked.split(','))
+          }
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
     _getUnitList (params) {
       console.log(params)
       const getInfo = {
@@ -314,6 +381,7 @@ export default {
         if (res.errcode === ERR_CODE) {
           console.log(res)
           this.unitList = res.rows
+          this.total = res.totalCount
         }
       })
     }

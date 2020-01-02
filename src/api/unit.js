@@ -21,14 +21,14 @@ export function addUnitItem (addParams) {
     dz: addParams.address,
     xh: addParams.order,
     zt: addParams.state,
-    dwgnid: addParams.plugins,
-    dwid: 'jdsikhd'
+    dwgnid: addParams.plugins
   }
   return Http.postRequest(addParams.url, data)
 }
 
 export function editUnitItem (editParams) {
   const data = {
+    dwid: editParams.unitId,
     mc: editParams.name,
     dm: editParams.code,
     lxr: editParams.contacts,
@@ -40,6 +40,20 @@ export function editUnitItem (editParams) {
     dwgnid: editParams.plugins
   }
   return Http.postRequest(editParams.url, data)
+}
+
+export function deleteUnitItem (deleteParams) {
+  const data = {
+    unitId: deleteParams.unitId
+  }
+  return Http.postRequest(deleteParams.url, data)
+}
+
+export function getUnitItem (getInfo) {
+  const data = {
+    unitId: getInfo.unitId
+  }
+  return Http.postRequest(getInfo.url, data)
 }
 
 export function getUnitPluginTree (url) {
