@@ -35,7 +35,13 @@ const i = {
   getUnitPluginTree: { url: 'gateway/system/system/plugin/moudlePluginTree' },
   addUnitInfo: { url: 'gateway/admin/admin/unit/unitInsert' },
   editUnitInfo: { url: 'gateway/admin/admin/unit/unitUpdate' },
-  deleteUnitInfo: { url: 'gateway/admin/admin/unit/deleteUnit' }
+  deleteUnitInfo: { url: 'gateway/admin/admin/unit/deleteUnit' },
+  // 通知公告
+  getNoticeInfo: { url: 'gateway/admin/admin/notice/queryNoticeListPage' },
+  getNoticeById: { url: 'gateway/admin/admin/notice/queryNoticeById' },
+  addNoticeInfo: { url: 'gateway/admin/admin/notice/saveNoticeInfo' },
+  editNoticeInfo: { url: 'gateway/admin/admin/notice/updateNotice' },
+  deleteNoticeInfo: { url: 'gateway/admin/admin/notice/deleteNoticeById' }
 }
 
 export default i
