@@ -129,8 +129,11 @@
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
             </el-form-item>
+            <el-form-item label="附件" :label-width="formLabelWidth" prop="fjwj">
+              <el-input type="fjwj" v-model="noticeForm.fjwj"></el-input>
+            </el-form-item>
             <el-form-item label="内容" :label-width="formLabelWidth" prop="XH">
-              <el-input type="text" v-model="noticeForm.XH"></el-input>
+              <tinymce :height="300" v-model="noticeForm.content" :id="tinymceId"></tinymce>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -145,8 +148,10 @@
 <script>
 import {getNoticeInfo} from '@/api/notice'
 import {ERR_CODE} from 'common/js/config'
+import Tinymce from '@/components/Tinymce'
 export default {
   name: 'notice',
+  components: {Tinymce},
   data () {
     return {
       listType: true,
@@ -172,6 +177,7 @@ export default {
       // 弹窗
       isAdd: true,
       showNoticeDialog: false,
+      tinymceId: '',
       noticeForm: {
         type: '',
         state: '',
@@ -207,6 +213,7 @@ export default {
     }
   },
   created () {
+    this.tinymceId = new Date().getTime() + ''
     this._getNoticeList(this.search)
   },
   methods: {
@@ -320,7 +327,7 @@ export default {
       .el-pagination
         padding: 15px 20px
     .dialog
-      .img-uploader
+      /deep/  .el-upload
         border: 1px dashed #d9d9d9
         border-radius: 6px
         cursor: pointer
