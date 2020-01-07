@@ -97,24 +97,24 @@
       </div>
       <div class="dialog">
         <el-dialog :title="dialogTitle" :visible.sync="showNoticeDialog">
-          <el-form :model="noticeForm" ref="UsersForm" :rules="userRules">
+          <el-form :model="noticeForm" ref="NoticeForm" :rules="userRules">
             <el-row>
               <el-col :span="12">
-                <el-form-item label="类型" :label-width="formLabelWidth" prop="yhmc">
+                <el-form-item label="类型" :label-width="formLabelWidth" prop="type">
                   <el-select v-model="noticeForm.type" placeholder="请选择">
                     <el-option v-for="item in types" :key="item.value" :label="item.label" :value="item.value"></el-option>
                   </el-select>
               </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="状态" :label-width="formLabelWidth" prop="dm">
+                <el-form-item label="状态" :label-width="formLabelWidth" prop="state">
                   <el-select v-model="noticeForm.state" placeholder="请选择">
                     <el-option v-for="item in stateDialog" :key="item.value" :label="item.label" :value="item.value"></el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
             </el-row>
-            <el-form-item label="标题" :label-width="formLabelWidth" prop="mm">
+            <el-form-item label="标题" :label-width="formLabelWidth" prop="title">
               <el-input type="text" v-model="noticeForm.title"></el-input>
             </el-form-item>
             <el-form-item label="来源" :label-width="formLabelWidth" prop="XH">
@@ -122,15 +122,23 @@
             </el-form-item>
             <el-form-item label="图片" :label-width="formLabelWidth" prop="zt">
               <el-upload
+                ref="uploadImg"
                 class="img-uploader"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                action=""
+                :http-request="httpRequest"
+                :auto-upload="false"
                 :show-file-list="false">
                 <img v-if="noticeForm.imageUrl" :src="noticeForm.imageUrl" class="img">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
             </el-form-item>
             <el-form-item label="附件" :label-width="formLabelWidth" prop="fjwj">
-              <el-input type="fjwj" v-model="noticeForm.fjwj"></el-input>
+              <el-upload
+                class="upload-demo"
+                action=""
+                :file-list="fileList">
+                <el-button size="small" type="primary">点击上传</el-button>
+              </el-upload>
             </el-form-item>
             <el-form-item label="内容" :label-width="formLabelWidth" prop="XH">
               <tinymce :height="300" v-model="noticeForm.content" :id="tinymceId"></tinymce>
@@ -146,7 +154,7 @@
 </template>
 
 <script>
-import {getNoticeInfo} from '@/api/notice'
+import {getNoticeInfo, getNoticeItem, addNoticeItem, editNoticeItem} from '@/api/notice'
 import {ERR_CODE} from 'common/js/config'
 import Tinymce from '@/components/Tinymce'
 export default {
@@ -178,6 +186,7 @@ export default {
       isAdd: true,
       showNoticeDialog: false,
       tinymceId: '',
+      fileList: [],
       noticeForm: {
         type: '',
         state: '',
@@ -209,7 +218,7 @@ export default {
       return stateDialog
     },
     dialogTitle () {
-      return this.isAdd ? '用户增加' : '用户修改'
+      return this.isAdd ? '通知公告增加' : '通知公告修改'
     }
   },
   created () {
@@ -217,6 +226,7 @@ export default {
     this._getNoticeList(this.search)
   },
   methods: {
+    httpRequest () {},
     pageChange (val) {
       this.currentPage = val
       this._getUserList(this.pageSize, val)
@@ -226,13 +236,93 @@ export default {
       this.showNoticeDialog = true
       this.isAdd = true
     },
-    editNotice () {},
-    cancelNoticeSet () {},
-    submitNoticeSet () {},
+    editNotice (params) {
+      this.isAdd = false
+      this.showNoticeDialog = true
+      this._getNoticeItem(params.tzggid)
+    },
+    cancelNoticeSet () {
+      this.showNoticeDialog = false
+      this.$refs.NoticeForm.resetFields()
+    },
+    submitNoticeSet () {
+      this.$refs.NoticeForm.validate(valid => {
+        if (valid) {
+          if (this.isAdd) {
+            this._addNoticeInfo(this.noticeForm)
+          } else {
+            this._editNoticeInfo(this.noticeForm)
+          }
+        } else {
+          return false
+        }
+      })
+    },
     deleteNotice () {},
     searchNotice () {
       console.log(this.search)
       this._getNoticeList(this.search)
+    },
+    _addNoticeInfo (params) {
+      const addParams = params
+      addParams.url = 'addNoticeInfo'
+      addNoticeItem(addParams).then((res) => {
+        if (res.errcode === ERR_CODE) {
+          console.log(res)
+          this.cancelNoticeSet()
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'success'
+          })
+          this._getNoticeList(this.search)
+        } else {
+          this.cancelNoticeSet()
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'error'
+          })
+        }
+      })
+    },
+    _editNoticeInfo (params) {
+      const editParams = params
+      editParams.url = 'editNoticeInfo'
+      console.log(editParams)
+      editNoticeItem(editParams).then((res) => {
+        console.log(res)
+        if (res.errcode === ERR_CODE) {
+          this.cancelNoticeSet()
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'success'
+          })
+          this._getNoticeList(this.search)
+        } else {
+          this.cancelNoticeSet()
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'error'
+          })
+        }
+      })
+    },
+    _getNoticeItem (noticeId) {
+      const getInfo = {
+        noticeId,
+        url: 'getUnitById'
+      }
+      getNoticeItem(getInfo).then((res) => {
+        console.log(res)
+        if (res.errcode === ERR_CODE) {
+          console.log(res)
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
     },
     _getNoticeList (parmas) {
       const getInfo = {
@@ -327,14 +417,15 @@ export default {
       .el-pagination
         padding: 15px 20px
     .dialog
-      /deep/  .el-upload
-        border: 1px dashed #d9d9d9
-        border-radius: 6px
-        cursor: pointer
-        position: relative
-        overflow: hidden
-        &:hover
-          border-color: #409EFF;
+      .img-uploader
+        /deep/  .el-upload
+          border: 1px dashed #d9d9d9
+          border-radius: 6px
+          cursor: pointer
+          position: relative
+          overflow: hidden
+          &:hover
+            border-color: #409EFF;
       .avatar-uploader-icon
         width: 178px
         height: 178px

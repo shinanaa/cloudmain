@@ -1,20 +1,20 @@
 <template>
   <div class="tinymce-container editor-container" :class="{fullscreen:fullscreen}">
     <textarea class="tinymce-textarea" :id="tinymceId"></textarea>
-    <div class="editor-custom-btn-container">
-      <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK"></editorImage>
-    </div>
+    <!--<div class="editor-custom-btn-container">-->
+      <!--<editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK"></editorImage>-->
+    <!--</div>-->
   </div>
 </template>
 
 <script>
-import editorImage from './components/editorImage'
+// import editorImage from './components/editorImage'
 import plugins from './plugins'
 import toolbar from './toolbar'
 
 export default {
   name: 'tinymce',
-  components: { editorImage },
+  // components: { editorImage },
   props: {
     id: {
       type: String
