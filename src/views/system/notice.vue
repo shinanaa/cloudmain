@@ -117,16 +117,14 @@
             <el-form-item label="标题" :label-width="formLabelWidth" prop="title">
               <el-input type="text" v-model="noticeForm.title"></el-input>
             </el-form-item>
-            <el-form-item label="来源" :label-width="formLabelWidth" prop="XH">
-              <el-input type="text" v-model="noticeForm.XH"></el-input>
+            <el-form-item label="来源" :label-width="formLabelWidth" prop="ly">
+              <el-input type="text" v-model="noticeForm.ly"></el-input>
             </el-form-item>
-            <el-form-item label="图片" :label-width="formLabelWidth" prop="zt">
+            <el-form-item label="图片" :label-width="formLabelWidth" prop="imageUrl">
               <el-upload
-                ref="uploadImg"
                 class="img-uploader"
-                action=""
-                :http-request="httpRequest"
-                :auto-upload="false"
+                action="#"
+                :http-request="imgUpload"
                 :show-file-list="false">
                 <img v-if="noticeForm.imageUrl" :src="noticeForm.imageUrl" class="img">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -134,9 +132,11 @@
             </el-form-item>
             <el-form-item label="附件" :label-width="formLabelWidth" prop="fjwj">
               <el-upload
-                class="upload-demo"
-                action=""
-                :file-list="fileList">
+                class="annexUpload"
+                action="#"
+                :http-request="annexUpload"
+                multiple
+                :file-list="noticeForm.fjwj">
                 <el-button size="small" type="primary">点击上传</el-button>
               </el-upload>
             </el-form-item>
@@ -154,7 +154,8 @@
 </template>
 
 <script>
-import {getNoticeInfo, getNoticeItem, addNoticeItem, editNoticeItem} from '@/api/notice'
+import {getToken} from 'common/js/cache'
+import {getNoticeInfo, getNoticeItem, addNoticeItem, editNoticeItem, uploadImg} from '@/api/notice'
 import {ERR_CODE} from 'common/js/config'
 import Tinymce from '@/components/Tinymce'
 export default {
@@ -191,11 +192,9 @@ export default {
         type: '',
         state: '',
         title: '',
+        ly: '',
         imageUrl: '',
-        XH: '',
-        zt: '',
-        yhid: '',
-        yhjsid: []
+        fjwj: []
       },
       userRules: {
         yhmc: [
@@ -226,7 +225,41 @@ export default {
     this._getNoticeList(this.search)
   },
   methods: {
-    httpRequest () {},
+    // 文件上传
+    imgUpload (content) {
+      this.isImgUpload = true
+      let url = 'http://192.168.1.81/gateway/admin/admin/file/upImage'
+      this._noticeUpload(content.file, url)
+    },
+    annexUpload (content) {
+      this.isImgUpload = false
+      let url = 'http://192.168.1.81/gateway/admin/admin/file/upFile'
+      this._noticeUpload(content.file, url)
+    },
+    _noticeUpload (file, url) {
+      let ImgData = new FormData()
+      ImgData.append('upfile', file)
+      ImgData.append('fileType', 'noticeFile')
+      ImgData.append('authorization', getToken())
+      console.log(ImgData)
+      const _this = this
+      uploadImg(ImgData, url).then((res) => {
+        console.log(res)
+        if (res.errcode === ERR_CODE) {
+          if (this.isImgUpload) {
+            _this.noticeForm.imageUrl = res.dz
+          } else {
+            let annex = {
+              name: res.ysmc,
+              url: res.dz,
+              id: res.wjid
+            }
+            _this.noticeForm.fjwj.push(annex)
+          }
+        }
+      })
+    },
+    // 页面
     pageChange (val) {
       this.currentPage = val
       this._getUserList(this.pageSize, val)
@@ -236,10 +269,11 @@ export default {
       this.showNoticeDialog = true
       this.isAdd = true
     },
-    editNotice (params) {
-      this.isAdd = false
+    editNotice (item) {
+      this._getNoticeItem(item.tzggid)
       this.showNoticeDialog = true
-      this._getNoticeItem(params.tzggid)
+      this.isAdd = false
+      // this.isSee = false
     },
     cancelNoticeSet () {
       this.showNoticeDialog = false
@@ -264,27 +298,35 @@ export default {
       this._getNoticeList(this.search)
     },
     _addNoticeInfo (params) {
+      console.log(params)
       const addParams = params
-      addParams.url = 'addNoticeInfo'
-      addNoticeItem(addParams).then((res) => {
-        if (res.errcode === ERR_CODE) {
-          console.log(res)
-          this.cancelNoticeSet()
-          this.$message({
-            showClose: true,
-            message: res.errmsg,
-            type: 'success'
-          })
-          this._getNoticeList(this.search)
-        } else {
-          this.cancelNoticeSet()
-          this.$message({
-            showClose: true,
-            message: res.errmsg,
-            type: 'error'
-          })
-        }
+      let fjArr = params.fjwj
+      let fjUrlArr = []
+      fjArr.map((item) => {
+        fjUrlArr.push(item.id)
       })
+      addParams.fjwj = fjUrlArr.join(',')
+      addParams.url = 'addNoticeInfo'
+      console.log(addParams)
+      // addNoticeItem(addParams).then((res) => {
+      //   if (res.errcode === ERR_CODE) {
+      //     console.log(res)
+      //     this.cancelNoticeSet()
+      //     this.$message({
+      //       showClose: true,
+      //       message: res.errmsg,
+      //       type: 'success'
+      //     })
+      //     this._getNoticeList(this.search)
+      //   } else {
+      //     this.cancelNoticeSet()
+      //     this.$message({
+      //       showClose: true,
+      //       message: res.errmsg,
+      //       type: 'error'
+      //     })
+      //   }
+      // })
     },
     _editNoticeInfo (params) {
       const editParams = params

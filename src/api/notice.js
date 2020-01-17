@@ -1,4 +1,5 @@
 import Http from 'common/js/request'
+import axios from 'axios'
 
 export function getNoticeInfo (unitInfo) {
   const data = {
@@ -15,13 +16,11 @@ export function addNoticeItem (addParams) {
   const data = {
     lx: addParams.type,
     bt: addParams.title,
-    ly: addParams.source,
+    ly: addParams.ly,
     nr: addParams.content,
-    tpwj: addParams.images,
-    fjwj: addParams.appendix,
-    zt: addParams.state,
-    units: addParams.units,
-    yhid: addParams.userId
+    tpwj: addParams.imageUrl,
+    fjwj: addParams.fjwj,
+    zt: addParams.state
   }
   return Http.postRequest(addParams.url, data)
 }
@@ -54,4 +53,18 @@ export function getNoticeItem (getInfo) {
     tzggid: getInfo.noticeId
   }
   return Http.postRequest(getInfo.url, data)
+}
+
+export function uploadImg (info, url) {
+  const config = {
+    url,
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data;'
+    },
+    data: info,
+    timeout: 20000
+  }
+  console.log(config)
+  return axios(config)
 }
