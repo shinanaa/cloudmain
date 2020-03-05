@@ -308,7 +308,7 @@ export default {
       addParams.fjwj = fjUrlArr.join(',')
       addParams.url = 'addNoticeInfo'
       console.log(addParams)
-      // addNoticeItem(addParams).then((res) => {
+      addNoticeItem(addParams).then((res) => {
       //   if (res.errcode === ERR_CODE) {
       //     console.log(res)
       //     this.cancelNoticeSet()
@@ -326,7 +326,7 @@ export default {
       //       type: 'error'
       //     })
       //   }
-      // })
+      })
     },
     _editNoticeInfo (params) {
       const editParams = params
