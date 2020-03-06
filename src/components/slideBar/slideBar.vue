@@ -10,6 +10,7 @@
         <div class="menu-wrapper" v-for="(item, index) in menuList" :key="index">
           <router-link :to="item.path">
             <el-menu-item :index="item.path">
+              <span><i class="icon el-icon-menu"></i></span>
               <span slot="title">{{item.text}}</span>
             </el-menu-item>
           </router-link>
@@ -19,10 +20,10 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 export default {
   data () {
     return {
-      isCollapse: false,
       menuList: [
         {path: '/user', text: '用户管理'},
         {path: '/module', text: '模块管理'},
@@ -32,6 +33,14 @@ export default {
         {path: '/unit', text: '单位管理'},
         {path: '/notice', text: '通知公告'}
       ]
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'opened'
+    ]),
+    isCollapse () {
+      return !this.opened
     }
   },
   methods: {}

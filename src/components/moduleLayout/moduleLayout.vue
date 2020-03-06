@@ -1,9 +1,9 @@
 <template>
-    <div class="moduleLayout">
-      <sliderbar class="sidebar-container"></sliderbar>
+    <div class="moduleLayout" :class="{'bigger': !opened}">
+      <slider-bar class="sidebar-container"></slider-bar>
       <div class="module-main">
         <div class="router-show">
-          <hamburger class="hamburger-container" :toggleClick="toggleSideBar"></hamburger>
+          <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="opened"></hamburger>
           <breadcrumb></breadcrumb>
         </div>
         <keep-alive>
@@ -14,20 +14,25 @@
 </template>
 
 <script>
-import sliderbar from '@/components/slidebar/slidebar'
+import {mapGetters} from 'vuex'
+import sliderBar from '@/components/slidebar/slidebar'
 import Hamburger from '@/components/Hamburger/Hamburger'
 import Breadcrumb from '@/components/Breadcrumb/Breadcrumb'
 export default {
   name: 'module-layout',
   components: {
-    sliderbar,
+    sliderBar,
     Breadcrumb,
     Hamburger
   },
+  computed: {
+    ...mapGetters([
+      'opened'
+    ])
+  },
   methods: {
     toggleSideBar () {
-      console.log(123)
-      // this.$store.dispatch('toggleSideBar')
+      this.$store.dispatch('toggleSideBar')
     }
   }
 }
@@ -38,16 +43,23 @@ export default {
 .moduleLayout
   .module-main
     margin-left: $slide-width
+    transition: margin-left 0.28s
     .router-show
       position: fixed
       top: 80px
-      left: 260px
+      left: $slide-width
       right: 0
       z-index: 10
       background: #FFFFFF
+      transition: left 0.28s
       .hamburger-container
         line-height: 58px
         height: 50px
         float: left
         padding: 0 10px
+.bigger
+  .module-main
+    margin-left: 64px
+    .router-show
+      left: 64px
 </style>

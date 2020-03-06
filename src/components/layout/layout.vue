@@ -5,7 +5,7 @@
         <img src="@/common/img/logo-index.png" alt="">
       </router-link>
       <ul class="modules">
-        <li v-for="(item, index) in modules" :key="index" @mouseover="moduleListActive(index)" :class="{'active': activeIndex === index}">
+        <li v-for="(item, index) in modules" :key="index" @click="moduleListActive(index)" :class="{'active': activeIndex === index}">
           <span><i class="icon el-icon-menu"></i></span>
           <router-link tag="span" :to="item.url">{{item.name}}</router-link>
         </li>
@@ -226,6 +226,8 @@ export default {
           text-align: center
           cursor: pointer
           &.active
+            background: rgba(255,255,255,0.1)
+          &:hover
             background: rgba(255,255,255,0.1)
       .right
         float:right
