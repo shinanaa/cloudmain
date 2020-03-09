@@ -16,8 +16,8 @@ export function removeToken () {
 
 // 可访问路由
 const ROUTER_KEY = 'router-list'
-export function setRouter (token) {
-  return storage.set(ROUTER_KEY, token)
+export function setRouter (list) {
+  return storage.set(ROUTER_KEY, list)
 }
 export function getRouter () {
   return storage.get(ROUTER_KEY)
