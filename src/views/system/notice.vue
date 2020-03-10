@@ -154,7 +154,7 @@
 </template>
 
 <script>
-import {getToken} from 'common/js/cache'
+// import {getToken} from 'common/js/cache'
 import {getNoticeInfo, getNoticeItem, addNoticeItem, editNoticeItem, uploadImg} from '@/api/notice'
 import {ERR_CODE} from 'common/js/config'
 import Tinymce from '@/components/Tinymce'
@@ -240,7 +240,7 @@ export default {
       let ImgData = new FormData()
       ImgData.append('upfile', file)
       ImgData.append('fileType', 'noticeFile')
-      ImgData.append('authorization', getToken())
+      // ImgData.append('authorization', getToken())
       console.log(ImgData)
       const _this = this
       uploadImg(ImgData, url).then((res) => {

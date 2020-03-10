@@ -12,6 +12,13 @@ export function getUserList (userInfo) {
   return Http.postRequest(userInfo.url, data)
 }
 
+export function getUserItem (getInfo) {
+  const data = {
+    yhid: getInfo.yhid
+  }
+  return Http.postRequest(getInfo.url, data)
+}
+
 export function editUserItem (editParams) {
   const data = {
     dm: editParams.dm,

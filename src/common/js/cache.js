@@ -1,28 +1,28 @@
 import storage from 'good-storage'
 
-// 用户信息
-const TOKEN_KEY = 'user-Token'
+// 用户登录信息
+const LOGIN_KEY = 'user-Info'
 
-export function setToken (token) {
-  return storage.set(TOKEN_KEY, token)
+export function setUserLogin (token) {
+  return storage.session.set(LOGIN_KEY, token)
 }
-export function getToken () {
-  return storage.get(TOKEN_KEY)
+export function getUserLogin () {
+  return storage.session.get(LOGIN_KEY)
 }
-export function removeToken () {
-  storage.remove(TOKEN_KEY)
+export function removeUserLogin () {
+  storage.session.remove(LOGIN_KEY)
   return []
 }
 
 // 可访问路由
 const ROUTER_KEY = 'router-list'
 export function setRouter (list) {
-  return storage.set(ROUTER_KEY, list)
+  return storage.session.set(ROUTER_KEY, list)
 }
 export function getRouter () {
-  return storage.get(ROUTER_KEY)
+  return storage.session.get(ROUTER_KEY)
 }
 export function removeRouter () {
-  storage.remove(ROUTER_KEY)
+  storage.session.remove(ROUTER_KEY)
   return []
 }

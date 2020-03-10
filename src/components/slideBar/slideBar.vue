@@ -11,7 +11,7 @@
           <router-link :to="item.path">
             <el-menu-item :index="item.path">
               <span><i class="icon el-icon-menu"></i></span>
-              <span slot="title">{{item.text}}</span>
+              <span slot="title">{{item.meta.title}}</span>
             </el-menu-item>
           </router-link>
         </div>
@@ -21,19 +21,29 @@
 
 <script>
 import {mapGetters} from 'vuex'
+import {getRouter} from 'common/js/cache'
 export default {
   data () {
     return {
-      menuList: [
-        {path: '/user', text: '用户管理'},
-        {path: '/module', text: '模块管理'},
-        {path: '/plugin', text: '功能管理'},
-        {path: '/role', text: '角色管理'},
-        {path: '/log', text: '日志管理'},
-        {path: '/unit', text: '单位管理'},
-        {path: '/notice', text: '通知公告'}
-      ]
+      menuList: []
     }
+  },
+  created () {
+    let menuArr = []
+    this.$router.options.routes.filter(route => {
+      if (route.path === '/layout') {
+        route.children.filter(item => {
+          if (item.path === '/system') {
+            item.children.map(menu => {
+              if (getRouter().indexOf(menu.path) > -1) {
+                menuArr.push(menu)
+              }
+            })
+          }
+        })
+      }
+    })
+    this.menuList = menuArr
   },
   computed: {
     ...mapGetters([

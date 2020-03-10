@@ -5,6 +5,7 @@ const i = {
   // 用户管理
   getUserTree: { url: 'gateway/admin/admin/adminUser/queryAllUser' },
   getUserInfo: { url: 'gateway/admin/admin/adminUser/queryAllUserWithPage' }, // 分页获取用户数据
+  getUserById: { url: 'gateway/admin/admin/adminUser/queryUserById' },
   editUserInfo: { url: 'gateway/admin/admin/adminUser/updateUser' },
   addUserInfo: { url: 'gateway/admin/admin/adminUser/insertUser' },
   deleteUserInfo: { url: 'gateway/admin/admin/adminUser/deleteUser' },

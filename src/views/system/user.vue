@@ -141,7 +141,7 @@
 </template>
 
 <script>
-import {getUserList, editUserItem, addUserItem, deleteUserItem} from '@/api/user'
+import {getUserList, editUserItem, addUserItem, deleteUserItem, getUserItem} from '@/api/user'
 import {getRoleTree} from '@/api/role'
 import {ERR_CODE} from 'common/js/config'
 export default {
@@ -237,6 +237,7 @@ export default {
     },
     editUser (rowData) {
       console.log(rowData)
+      this._getUserItem(rowData.yhid)
       this.userForm = JSON.parse(JSON.stringify(rowData))
       if (this.userForm.mm) {
         this.userForm.mm = '******'
@@ -369,6 +370,28 @@ export default {
           this.total = res.totalCount
         }
         console.log(res)
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    _getUserItem (userId) {
+      const getInfo = {
+        yhid: userId,
+        url: 'getUserById'
+      }
+      getUserItem(getInfo).then((res) => {
+        if (res.errcode === ERR_CODE) {
+          console.log(res.list[0])
+          // const role = res.list[0].role[0]
+          // this.roleForm.mc = role.mc
+          // this.roleForm.dm = role.dm
+          // this.roleForm.xh = role.xh
+          // this.roleForm.zt = role.zt
+          // this.roleForm.jsid = role.jsid
+          // this.roleForm.userids = res.list[0].userids
+          // this.$refs.pluginTree.setCheckedKeys(res.list[0].gnids)
+          // console.log(this.roleForm)
+        }
       }).catch((err) => {
         console.log(err)
       })
