@@ -109,7 +109,7 @@
 </template>
 
 <script>
-import {getModuleList, addModuleItem, editModuleItem, deleteModuleItem} from '@/api/module'
+import {getModuleList, addModuleItem, editModuleItem, deleteModuleItem, getModuleItem} from '@/api/module'
 import {ERR_CODE} from 'common/js/config'
 export default {
   name: 'module',
@@ -176,7 +176,9 @@ export default {
       this._deleteModuleInfo(rowData)
     },
     editModule (rowData) {
-      this.moduleForm = JSON.parse(JSON.stringify(rowData))
+      console.log(rowData)
+      this._getMoudleItem(rowData.mkid)
+      // this.moduleForm = JSON.parse(JSON.stringify(rowData))
       this.showUserDialog = true
       this.isAdd = false
     },
@@ -302,6 +304,22 @@ export default {
           this.total = res.totalCount
         }
         console.log(res)
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    _getMoudleItem (mkid) {
+      const getInfo = {
+        mkid: mkid,
+        url: 'getModuleById'
+      }
+      getModuleItem(getInfo).then((res) => {
+        if (res.errcode === ERR_CODE) {
+          console.log(124)
+          console.log(res.list[0])
+          const moduleItem = res.list[0]
+          this.moduleForm = JSON.parse(JSON.stringify(moduleItem))
+        }
       }).catch((err) => {
         console.log(err)
       })

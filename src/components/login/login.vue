@@ -9,7 +9,7 @@
           <div class="login-type">
             <ul>
               <li class="type-item" :class="loginFlag === true ? 'active' : ''" @click="loginFlag = true">账号密码</li>
-              <li class="type-item" :class="loginFlag === false ? 'active' : ''" @click="loginFlag = false">手机验证</li>
+              <li class="type-item" :class="loginFlag === false ? 'active' : ''" @click="validIphone">手机验证</li>
             </ul>
           </div>
           <div>
@@ -25,7 +25,7 @@
                     <i slot="prefix" class="el-input__icon el-icon-lock"></i>
                   </el-input>
                 </el-form-item>
-                <div class="findPwd">忘记密码？</div>
+                <!--<div class="findPwd">忘记密码？</div>-->
                 <el-button class="login-btn" @click.native.prevent="login">登录</el-button>
               </el-form>
             </div>
@@ -80,6 +80,13 @@ export default {
     }
   },
   methods: {
+    validIphone () {
+      this.$message({
+        showClose: true,
+        message: '手机验证暂未开通',
+        type: 'warning'
+      })
+    },
     login () {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
@@ -129,7 +136,9 @@ export default {
     min-width: 1200px
     padding: 110px 0
     background-image: url('~common/img/login-bg.png')
+    background-size: 100%
     background-position: center
+    background-repeat: no-repeat
     .content
       minWidth()
       clearfix()
@@ -137,6 +146,7 @@ export default {
         float: right
         width: 320px
         padding: 20px 30px
+        margin-right: 50px
         box-sizing:border-box
         border-radius: 7px
         box-shadow: 0px 0px 9px 1px rgba(0, 0, 0, 0.3)
@@ -171,7 +181,7 @@ export default {
   .link
     minWidth()
     text-align: center
-    margin-top: 50px
+    margin: 50px auto
     b
       display: inline-block
       padding: 0 20px

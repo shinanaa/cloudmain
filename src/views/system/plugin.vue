@@ -143,7 +143,7 @@
 </template>
 
 <script>
-import {getPluginList, addPluginItem, editPluginItem, deletePluginItem} from '@/api/plugin'
+import {getPluginList, addPluginItem, editPluginItem, deletePluginItem, getPluginItem} from '@/api/plugin'
 import {getModuleTree} from '@/api/module'
 import {ERR_CODE} from 'common/js/config'
 export default {
@@ -224,8 +224,7 @@ export default {
       this._deletePluginInfo(rowData)
     },
     editModule (rowData) {
-      this.pluginForm = JSON.parse(JSON.stringify(rowData))
-      console.log(this.pluginForm)
+      this._getPluginItem(rowData.gnid)
       this.showPluginDialog = true
       this.isAdd = false
     },
@@ -346,6 +345,20 @@ export default {
             type: 'error'
           })
         }
+      })
+    },
+    _getPluginItem (gnid) {
+      const getInfo = {
+        gnid: gnid,
+        url: 'getPluginById'
+      }
+      getPluginItem(getInfo).then((res) => {
+        if (res.errcode === ERR_CODE) {
+          const pluginItem = res.list[0]
+          this.pluginForm = JSON.parse(JSON.stringify(pluginItem))
+        }
+      }).catch((err) => {
+        console.log(err)
       })
     },
     _getSearchList (searchParmas) {

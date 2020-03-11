@@ -12,12 +12,14 @@ const i = {
   // 模块管理
   getModuleTree: { url: 'gateway/admin/admin/module/queryModuleList' },
   getModuleInfo: { url: 'gateway/admin/admin/module/queryModuleListPage' },
+  getModuleById: { url: 'gateway/admin/admin/module/queryModuleById' },
   addModuleInfo: { url: 'gateway/admin/admin/module/saveModule' },
   editModuleInfo: { url: 'gateway/admin/admin/module/updateModule' },
   deleteModuleInfo: { url: 'gateway/admin/admin/module/deleteModuleById' },
   // 功能管理
   getPluginTree: { url: 'gateway/admin/admin/plugin/moudlePluginTree' },
   getPluginInfo: { url: 'gateway/admin/admin/plugin/queryPluginListPage' },
+  getPluginById: { url: 'gateway/admin/admin/plugin/queryPluginById' },
   addPluginInfo: { url: 'gateway/admin/admin/plugin/savePlugin' },
   editPluginInfo: { url: 'gateway/admin/admin/plugin/updatePlugin' },
   deletePluginInfo: { url: 'gateway/admin/admin/plugin/deletePluginById' },

@@ -113,7 +113,7 @@
               <el-input type="text" v-model="userForm.mm"></el-input>
             </el-form-item>
             <el-form-item label="角色" :label-width="formLabelWidth" prop="jsmc">
-              <el-select v-model="userForm.yhjsid" placeholder="请选择">
+              <el-select v-model="userForm.yhjsid" multiple placeholder="请选择">
                 <el-option
                   v-for="item in roles"
                   :key="item.value"
@@ -238,10 +238,6 @@ export default {
     editUser (rowData) {
       console.log(rowData)
       this._getUserItem(rowData.yhid)
-      this.userForm = JSON.parse(JSON.stringify(rowData))
-      if (this.userForm.mm) {
-        this.userForm.mm = '******'
-      }
       this.showUserDialog = true
       this.isAdd = false
     },
@@ -329,12 +325,11 @@ export default {
         mc: params.yhmc,
         zt: params.zt,
         yhid: params.yhid,
+        yhjsid: params.yhjsid,
         url: 'editUserInfo'
       }
-      if (params.yhjsid) {
-        editParams.yhjsid = params.yhjsid.split(',')
-      }
-      console.log(editParams)
+      // console.log('yhjsid')
+      // console.log(editParams)
       editUserItem(editParams).then((res) => {
         console.log(res)
         if (res.errcode === ERR_CODE) {
@@ -381,16 +376,13 @@ export default {
       }
       getUserItem(getInfo).then((res) => {
         if (res.errcode === ERR_CODE) {
+          console.log(124)
           console.log(res.list[0])
-          // const role = res.list[0].role[0]
-          // this.roleForm.mc = role.mc
-          // this.roleForm.dm = role.dm
-          // this.roleForm.xh = role.xh
-          // this.roleForm.zt = role.zt
-          // this.roleForm.jsid = role.jsid
-          // this.roleForm.userids = res.list[0].userids
-          // this.$refs.pluginTree.setCheckedKeys(res.list[0].gnids)
-          // console.log(this.roleForm)
+          const userItem = res.list[0]
+          this.userForm = JSON.parse(JSON.stringify(userItem))
+          if (this.userForm.mm) {
+            this.userForm.mm = '******'
+          }
         }
       }).catch((err) => {
         console.log(err)

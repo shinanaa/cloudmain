@@ -41,6 +41,13 @@ export function addPluginItem (addParams) {
   return Http.postRequest(addParams.url, data)
 }
 
+export function getPluginItem (getInfo) {
+  const data = {
+    gnid: getInfo.gnid
+  }
+  return Http.postRequest(getInfo.url, data)
+}
+
 export function deletePluginItem (deleteParams) {
   const data = {
     gnid: deleteParams.gnid

@@ -33,6 +33,13 @@ export function addModuleItem (addParams) {
   return Http.postRequest(addParams.url, data)
 }
 
+export function getModuleItem (getInfo) {
+  const data = {
+    mkid: getInfo.mkid
+  }
+  return Http.postRequest(getInfo.url, data)
+}
+
 export function deleteModuleItem (deleteParams) {
   const data = {
     mkid: deleteParams.mkid
