@@ -20,7 +20,8 @@ export function addNoticeItem (addParams) {
     nr: addParams.content,
     tpwj: addParams.imageUrl,
     fjwj: addParams.fjwj,
-    zt: addParams.state
+    zt: addParams.state,
+    users: addParams.users
   }
   return Http.postRequest(addParams.url, data)
 }
@@ -36,6 +37,7 @@ export function editNoticeItem (editParams) {
     zt: editParams.state,
     units: editParams.units,
     yhid: editParams.userId,
+    users: editParams.users,
     tzggid: editParams.noticeId
   }
   return Http.postRequest(editParams.url, data)
