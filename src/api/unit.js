@@ -59,3 +59,7 @@ export function getUnitItem (getInfo) {
 export function getUnitPluginTree (url) {
   return Http.postRequest(url)
 }
+
+export function getUnitData (url) {
+  return Http.postRequest(url)
+}

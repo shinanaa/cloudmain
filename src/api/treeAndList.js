@@ -1,6 +1,6 @@
 import {ERR_CODE} from 'common/js/config'
 import {getRoleTree} from '@/api/role'
-// import {getDepartmentData} from '@/api/department'
+import {getUnitData} from '@/api/unit'
 import {getUserTree} from '@/api/user'
 
 // 获取角色列表
@@ -36,19 +36,20 @@ export function getUserDepartmentTree (zt) {
   return p
 }
 
-// 获取部门树
-// export function getDepartmentTree () {
-//   const p = new Promise(function (resolve, reject) {
-//     getDepartmentData('getDepartmentTree').then((res) => {
-//       if (res.errcode === ERR_CODE) {
-//         resolve(res.list)
-//       }
-//     }).catch((err) => {
-//       reject(err)
-//     })
-//   })
-//   return p
-// }
+// 获取单位树
+export function getUnitTree (url) {
+  const p = new Promise(function (resolve, reject) {
+    getUnitData(url).then((res) => {
+      if (res.errcode === ERR_CODE) {
+        console.log(res.list)
+        resolve(res.list)
+      }
+    }).catch((err) => {
+      reject(err)
+    })
+  })
+  return p
+}
 
 // 获取部门人员树
 export function getDepartmentPersonTree (url) {

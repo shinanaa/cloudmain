@@ -156,7 +156,7 @@ export default {
       },
       states: [
         {value: '', label: '全部'},
-        {value: 'N', label: '停用'},
+        {value: 'N', label: '禁用'},
         {value: 'Y', label: '使用'}
       ],
       unitList: [],

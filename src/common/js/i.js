@@ -1,6 +1,6 @@
 const i = {
-  loginOn: { url: 'portal/loginAdmin' },
-  logOut: { url: 'portal/logout' },
+  loginOn: { url: 'portal/admin/loginAdmin' },
+  logOut: { url: 'portal/admin/logout' },
   changePwd: { url: 'gateway/system/system/user/updatePassword' },
   // 用户管理
   getUserTree: { url: 'gateway/admin/admin/adminUser/queryAllUser' },
@@ -36,6 +36,7 @@ const i = {
   getUnitInfo: { url: 'gateway/admin/admin/unit/queryAllCompanyWithPage' },
   getUnitById: { url: 'gateway/admin/admin/unit/queryCompanyById' },
   getUnitPluginTree: { url: 'gateway/system/system/plugin/moudlePluginTree' },
+  getUnitList: { url: 'gateway/admin/admin/unit/queryAllCompany' }, // 获取所有单位
   addUnitInfo: { url: 'gateway/admin/admin/unit/unitInsert' },
   editUnitInfo: { url: 'gateway/admin/admin/unit/unitUpdate' },
   deleteUnitInfo: { url: 'gateway/admin/admin/unit/deleteUnit' },
@@ -45,6 +46,7 @@ const i = {
   addNoticeInfo: { url: 'gateway/admin/admin/notice/saveNoticeInfo' },
   editNoticeInfo: { url: 'gateway/admin/admin/notice/updateNotice' },
   deleteNoticeInfo: { url: 'gateway/admin/admin/notice/deleteNoticeById' }
+
 }
 
 export default i

@@ -120,7 +120,9 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="范围" :label-width="formLabelWidth">
-                <el-tree :data="userIds" :props="userTree" show-checkbox ref="userTree" node-key="value"></el-tree>
+                <el-select v-model="noticeForm.unitIds" multiple value-key="dwid" placeholder="请选择">
+                  <el-option v-for="(item, index) in unitList" :key="index" :label="item.mc" :value="item.dwid"></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -170,7 +172,7 @@
 <script>
 // import {getToken} from 'common/js/cache'
 import {getNoticeInfo, uploadImg, addNoticeItem, getNoticeItem, editNoticeItem} from '@/api/notice'
-import {getDepartmentPersonTree} from '@/api/treeAndList'
+import {getUnitTree} from '@/api/treeAndList'
 import {ERR_CODE} from 'common/js/config'
 import Tinymce from '@/components/Tinymce'
 export default {
@@ -203,7 +205,7 @@ export default {
       showNoticeDialog: false,
       tinymceId: '',
       isImgUpload: true,
-      userIds: [],
+      unitList: [],
       noticeForm: {
         type: '',
         state: '',
@@ -211,7 +213,7 @@ export default {
         imageUrl: '',
         fjwj: [],
         ly: '',
-        userids: [],
+        unitIds: [],
         nr: ''
       },
       userRules: {
@@ -224,10 +226,6 @@ export default {
         mm: [
           { required: true, message: '密码不能为空', trigger: 'blur' }
         ]
-      },
-      userTree: {
-        label: 'label',
-        children: 'children'
       },
       imgParams: { // action
         fileType: 'noticeFile'
@@ -267,12 +265,12 @@ export default {
       this._getNoticeItem(item.tzggid)
     },
     async addNotice () {
-      this.userIds = await getDepartmentPersonTree('getDepartmentPersonTree')
+      this.unitList = await getUnitTree('getUnitList')
       this.showNoticeDialog = true
       this.isAdd = true
     },
     async editNotice (item) {
-      this.userIds = await getDepartmentPersonTree('getDepartmentPersonTree')
+      this.unitList = await getUnitTree('getUnitList')
       this._getNoticeItem(item.tzggid)
       this.showNoticeDialog = true
       this.isAdd = false
@@ -281,24 +279,17 @@ export default {
     cancelNoticeSet () {
       this.showNoticeDialog = false
       this.$refs.noticeForm.resetFields()
-      this.$refs.userTree.setCheckedKeys([])
       console.log(this.noticeForm)
     },
     submitNoticeSet () {
       this.$refs.noticeForm.validate(valid => {
         if (valid) {
-          const userArr = this.$refs.userTree.getCheckedNodes()
-          this.noticeForm.userids = []
-          userArr.filter((item) => {
-            if (item.isPerson) {
-              this.noticeForm.userids.push(item.value)
-            }
-          })
-          if (this.isAdd) {
-            this._addNoticeInfo(this.noticeForm)
-          } else {
-            this._editNoticeInfo(this.noticeForm)
-          }
+          console.log(this.noticeForm)
+          // if (this.isAdd) {
+          //   this._addNoticeInfo(this.noticeForm)
+          // } else {
+          //   this._editNoticeInfo(this.noticeForm)
+          // }
         } else {
           return false
         }
@@ -356,8 +347,6 @@ export default {
         zt: params.state,
         url: 'addNoticeInfo'
       }
-      let user = params.userids
-      addParams.users = user.toString()
       let fjArr = params.fjwj
       let fjUrlArr = []
       fjArr.map((item) => {
@@ -398,8 +387,6 @@ export default {
         url: 'editNoticeInfo'
       }
       console.log(editParams)
-      let user = params.userids
-      editParams.users = user.toString()
       let fjArr = params.fjwj
       let fjUrlArr = []
       fjArr.map((item) => {
@@ -467,9 +454,6 @@ export default {
             this.noticeForm.imageUrl = noticeItem.tpwj
             this.noticeForm.state = noticeItem.zt
             console.log(this.noticeForm)
-            if (noticeItem.list_users) {
-              this.$refs.userTree.setCheckedKeys(noticeItem.list_users)
-            }
             const fileArr = noticeItem.list_file_filePath
             fileArr.map((item) => {
               let file = {}

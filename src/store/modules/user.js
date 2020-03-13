@@ -1,21 +1,21 @@
 import * as types from '../mutation-types'
 import {ERR_CODE} from 'common/js/config'
 import {loginByUsername, logout} from '@/api/login'
-import {getRouter, setRouter, removeRouter, getUserLogin, setUserLogin, removeUserLogin} from 'common/js/cache'
+import {getRouter, setRouter, removeRouter, getUserLogin, setUserLogin, removeUserLogin, setUserName, getUserName, removeUserName} from 'common/js/cache'
 
 const user = {
   state: {
-    mc: '',
     roles: '平台管理员',
     routerList: getRouter(),
-    userLogin: getUserLogin()
+    userLogin: getUserLogin(),
+    userName: getUserName()
   },
   mutations: {
     [types.SET_USER_LOGIN] (state, userLogin) {
       state.userLogin = userLogin
     },
     [types.SET_USER_NAME] (state, mc) {
-      state.mc = mc
+      state.userName = mc
     },
     [types.SET_ROUTER] (state, routerList) {
       state.routerList = routerList
@@ -34,9 +34,10 @@ const user = {
             // setToken(data.authorization)
             commit(types.SET_USER_NAME, data.mc)
             commit(types.SET_ROUTER, data.dz)
-            commit(types.SET_ROUTER, data.dz)
+            commit(types.SET_USER_LOGIN, data.dm)
             setRouter(data.dz)
-            setUserLogin(data.yhid)
+            setUserLogin(data.dm)
+            setUserName(data.mc)
             // 还需提交用户的当前角色,后端未开发功能
           }
           resolve(data)
@@ -54,6 +55,7 @@ const user = {
           commit(types.SET_USER_LOGIN, '')
           removeRouter()
           removeUserLogin()
+          removeUserName()
           resolve()
         })
       })

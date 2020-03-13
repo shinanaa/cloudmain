@@ -34,7 +34,7 @@
         <div class="table-btn">
           <div class="btn-handle">
             <el-button type="primary" @click="addUser">新增</el-button>
-            <el-button type="primary">导出</el-button>
+            <el-button type="primary">导入</el-button>
             <el-button type="primary">批量删除</el-button>
           </div>
           <div class="btn-change">
@@ -157,7 +157,7 @@ export default {
       },
       states: [
         {value: '', label: '全部'},
-        {value: 'N', label: '停用'},
+        {value: 'N', label: '禁用'},
         {value: 'Y', label: '使用'}
       ],
       roles: [],
@@ -236,7 +236,6 @@ export default {
       this.isAdd = true
     },
     editUser (rowData) {
-      console.log(rowData)
       this._getUserItem(rowData.yhid)
       this.showUserDialog = true
       this.isAdd = false
@@ -397,6 +396,8 @@ export default {
       console.log(getInfo)
       getUserList(getInfo).then((res) => {
         if (res.errcode === ERR_CODE) {
+          console.log(111)
+          console.log(res.rows)
           this.userList = res.rows
           this.total = res.totalCount
         }

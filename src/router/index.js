@@ -6,7 +6,7 @@ Vue.use(Router)
 // import Layout from '@/components/layout/layout'
 export default new Router({
   mode: 'history',
-  // base: 'portal',
+  // base: 'portal/admin',
   routes: [
     { path: '/login', component: () => import('@/components/login/login') },
     { path: '/', redirect: '/home' },
