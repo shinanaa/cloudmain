@@ -93,7 +93,7 @@ export default {
           }
           _this.hasInit = true
           editor.on('NodeChange Change KeyUp SetContent', () => {
-            this.hasChange = true
+            // this.hasChange = true  注释后，编辑器只能回显一次内容的问题解决
             this.$emit('input', editor.getContent())
           })
         },

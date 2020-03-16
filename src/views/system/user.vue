@@ -50,10 +50,10 @@
             <el-table-column prop="dm" label="代码"></el-table-column>
             <el-table-column prop="jsmc" label="角色"></el-table-column>
             <!--<el-table-column prop="department" label="部门"></el-table-column>-->
-            <el-table-column prop="XH" label="序号"></el-table-column>
+            <el-table-column prop="xh" label="序号"></el-table-column>
             <el-table-column prop="zt" label="状态">
               <template slot-scope="scope">
-                <span>{{scope.row.zt === 'Y' ? '使用' : '禁用'}}</span>
+                <span>{{scope.row.zt === 'Y' ? '使用' : '停用'}}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作" width="150">
@@ -78,11 +78,11 @@
                 </div>
                 <div class="info-item">
                   <span class="info-key">序号</span>
-                  <span class="info-value">{{item.XH}}</span>
+                  <span class="info-value">{{item.xh}}</span>
                 </div>
                 <div class="info-item">
                   <span class="info-key">状态</span>
-                  <span class="info-value">{{item.zt === 'Y' ? '使用' : '禁用'}}</span>
+                  <span class="info-value">{{item.zt === 'Y' ? '使用' : '停用'}}</span>
                 </div>
               </div>
               <div class="card-btn">
@@ -122,8 +122,8 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="序号" :label-width="formLabelWidth" prop="XH">
-              <el-input type="text" v-model="userForm.XH"></el-input>
+            <el-form-item label="序号" :label-width="formLabelWidth" prop="xh">
+              <el-input type="text" v-model="userForm.xh"></el-input>
             </el-form-item>
             <el-form-item label="状态" :label-width="formLabelWidth" prop="zt">
               <el-select v-model="userForm.zt" placeholder="请选择">
@@ -157,7 +157,7 @@ export default {
       },
       states: [
         {value: '', label: '全部'},
-        {value: 'N', label: '禁用'},
+        {value: 'N', label: '停用'},
         {value: 'Y', label: '使用'}
       ],
       roles: [],
@@ -174,7 +174,7 @@ export default {
         dm: '',
         mm: '',
         jsmc: '',
-        XH: '',
+        xh: '',
         zt: '',
         yhid: '',
         yhjsid: []
@@ -291,6 +291,7 @@ export default {
         mm: params.mm,
         mc: params.yhmc,
         zt: params.zt,
+        xh: params.xh,
         yhjsid: params.yhjsid,
         url: 'addUserInfo'
       }
@@ -324,6 +325,7 @@ export default {
         mc: params.yhmc,
         zt: params.zt,
         yhid: params.yhid,
+        xh: params.xh,
         yhjsid: params.yhjsid,
         url: 'editUserInfo'
       }

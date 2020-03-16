@@ -32,7 +32,7 @@
           <el-table-column prop="xh" label="序号"></el-table-column>
           <el-table-column prop="zt" label="状态">
             <template slot-scope="scope">
-              <span>{{scope.row.zt === 'Y' ? '使用' : '禁用'}}</span>
+              <span>{{scope.row.zt === 'Y' ? '使用' : '停用'}}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="150">
@@ -57,7 +57,7 @@
             </div>
             <div class="info-item">
               <span class="info-key">状态</span>
-              <span class="info-value">{{item.zt === 'Y' ? '使用' : '禁用'}}</span>
+              <span class="info-value">{{item.zt === 'Y' ? '使用' : '停用'}}</span>
             </div>
           </div>
           <div class="card-btn">
@@ -138,7 +138,7 @@ export default {
       },
       states: [
         {value: '', label: '全部'},
-        {value: 'N', label: '禁用'},
+        {value: 'N', label: '停用'},
         {value: 'Y', label: '使用'}
       ],
       roleList: [],

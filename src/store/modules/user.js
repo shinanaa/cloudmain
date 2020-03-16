@@ -34,9 +34,9 @@ const user = {
             // setToken(data.authorization)
             commit(types.SET_USER_NAME, data.mc)
             commit(types.SET_ROUTER, data.dz)
-            commit(types.SET_USER_LOGIN, data.dm)
+            commit(types.SET_USER_LOGIN, data.yhid)
             setRouter(data.dz)
-            setUserLogin(data.dm)
+            setUserLogin(data.yhid)
             setUserName(data.mc)
             // 还需提交用户的当前角色,后端未开发功能
           }

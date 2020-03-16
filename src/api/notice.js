@@ -14,31 +14,31 @@ export function getNoticeInfo (unitInfo) {
 
 export function addNoticeItem (addParams) {
   const data = {
-    lx: addParams.type,
-    bt: addParams.title,
+    lx: addParams.lx,
+    bt: addParams.bt,
     ly: addParams.ly,
-    nr: addParams.content,
-    tpwj: addParams.imageUrl,
+    nr: addParams.nr,
+    tpwj: addParams.tpwj,
     fjwj: addParams.fjwj,
-    zt: addParams.state,
-    users: addParams.users
+    zt: addParams.zt,
+    yhid: addParams.yhid,
+    list_units: addParams.list_units
   }
   return Http.postRequest(addParams.url, data)
 }
 
 export function editNoticeItem (editParams) {
   const data = {
-    lx: editParams.type,
-    bt: editParams.title,
-    ly: editParams.source,
-    nr: editParams.content,
-    tpwj: editParams.images,
-    fjwj: editParams.appendix,
-    zt: editParams.state,
-    units: editParams.units,
-    yhid: editParams.userId,
-    users: editParams.users,
-    tzggid: editParams.noticeId
+    lx: editParams.lx,
+    bt: editParams.bt,
+    ly: editParams.ly,
+    nr: editParams.nr,
+    tpwj: editParams.tpwj,
+    fjwj: editParams.fjwj,
+    zt: editParams.zt,
+    list_units: editParams.list_units,
+    yhid: editParams.yhid,
+    tzggid: editParams.tzggid
   }
   return Http.postRequest(editParams.url, data)
 }

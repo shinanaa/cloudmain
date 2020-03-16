@@ -171,6 +171,7 @@
 
 <script>
 // import {getToken} from 'common/js/cache'
+import {mapGetters} from 'vuex'
 import {getNoticeInfo, uploadImg, addNoticeItem, getNoticeItem, editNoticeItem} from '@/api/notice'
 import {getUnitTree} from '@/api/treeAndList'
 import {ERR_CODE} from 'common/js/config'
@@ -199,7 +200,7 @@ export default {
       // 分页
       total: 0,
       currentPage: 1,
-      pageSize: 5,
+      pageSize: 8,
       // 弹窗
       isAdd: true,
       showNoticeDialog: false,
@@ -207,6 +208,7 @@ export default {
       isImgUpload: true,
       unitList: [],
       noticeForm: {
+        tzggid: '',
         type: '',
         state: '',
         title: '',
@@ -248,7 +250,10 @@ export default {
     },
     dialogTitle () {
       return this.isAdd ? '通知公告增加' : '通知公告修改'
-    }
+    },
+    ...mapGetters([
+      'userLogin'
+    ])
   },
   created () {
     this.tinymceId = new Date().getTime() + ''
@@ -285,17 +290,18 @@ export default {
       this.$refs.noticeForm.validate(valid => {
         if (valid) {
           console.log(this.noticeForm)
-          // if (this.isAdd) {
-          //   this._addNoticeInfo(this.noticeForm)
-          // } else {
-          //   this._editNoticeInfo(this.noticeForm)
-          // }
+          if (this.isAdd) {
+            this._addNoticeInfo(this.noticeForm)
+          } else {
+            this._editNoticeInfo(this.noticeForm)
+          }
         } else {
           return false
         }
       })
     },
     deleteNotice (item) {
+      console.log(item)
       this._deleteNoticeItem(item.tzggid)
     },
     searchNotice () {
@@ -333,7 +339,6 @@ export default {
       })
     },
     imgDisplay (res, file) {
-      console.log(11111)
       this.noticeForm.imageUrl = URL.createObjectURL(file.raw)
     },
     _addNoticeInfo (params) {
@@ -345,6 +350,8 @@ export default {
         nr: params.nr,
         tpwj: params.imageUrl,
         zt: params.state,
+        list_units: params.unitIds,
+        yhid: this.userLogin,
         url: 'addNoticeInfo'
       }
       let fjArr = params.fjwj
@@ -355,6 +362,7 @@ export default {
       addParams.fjwj = fjUrlArr.join(',')
       console.log(addParams)
       addNoticeItem(addParams).then((res) => {
+        console.log(res)
         if (res.errcode === ERR_CODE) {
           this.cancelNoticeSet()
           this.$message({
@@ -384,9 +392,10 @@ export default {
         nr: params.nr,
         tpwj: params.imageUrl,
         zt: params.state,
+        list_units: params.unitIds,
+        yhid: this.userLogin,
         url: 'editNoticeInfo'
       }
-      console.log(editParams)
       let fjArr = params.fjwj
       let fjUrlArr = []
       fjArr.map((item) => {
@@ -453,6 +462,8 @@ export default {
             this.noticeForm.nr = noticeItem.nr
             this.noticeForm.imageUrl = noticeItem.tpwj
             this.noticeForm.state = noticeItem.zt
+            this.noticeForm.unitIds = noticeItem.list_units
+            console.log(111)
             console.log(this.noticeForm)
             const fileArr = noticeItem.list_file_filePath
             fileArr.map((item) => {
@@ -478,7 +489,7 @@ export default {
         title: parmas.title,
         state: parmas.state,
         pageSize: this.pageSize,
-        pageCurrent: this.currentPage,
+        pageNo: this.currentPage,
         url: 'getNoticeInfo'
       }
       console.log(getInfo)

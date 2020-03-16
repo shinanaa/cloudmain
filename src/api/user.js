@@ -25,6 +25,7 @@ export function editUserItem (editParams) {
     mm: editParams.mm,
     mc: editParams.mc,
     zt: editParams.zt,
+    xh: editParams.xh,
     yhjsid: editParams.yhjsid,
     yhid: editParams.yhid
   }
@@ -37,6 +38,7 @@ export function addUserItem (addParams) {
     mm: addParams.mm,
     mc: addParams.mc,
     zt: addParams.zt,
+    xh: addParams.xh,
     yhjsid: addParams.yhjsid
   }
   return Http.postRequest(addParams.url, data)
