@@ -1,6 +1,6 @@
 const i = {
-  loginOn: { url: 'portal/admin/loginAdmin' },
-  logOut: { url: 'portal/admin/logout' },
+  loginOn: { url: 'portal/loginAdmin' },
+  logOut: { url: 'portal/logout' },
   changePwd: { url: 'gateway/system/system/user/updatePassword' },
   // 用户管理
   getUserTree: { url: 'gateway/admin/admin/adminUser/queryAllUser' },

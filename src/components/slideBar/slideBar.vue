@@ -11,7 +11,7 @@
           <router-link :to="item.path">
             <el-menu-item :index="item.path">
               <span><i class="icon el-icon-menu"></i></span>
-              <span slot="title">{{item.meta.title}}</span>
+              <span slot="title">{{item.title}}</span>
             </el-menu-item>
           </router-link>
         </div>
@@ -21,29 +21,40 @@
 
 <script>
 import {mapGetters} from 'vuex'
-import {getRouter} from 'common/js/cache'
+// import {getRouter} from 'common/js/cache'
 export default {
   data () {
     return {
-      menuList: []
+      menuList: [
+        {path: '/user', icon: 'el-icon-menu', title: '用户管理'},
+        {path: '/role', icon: 'el-icon-menu', sort: '2', title: '角色管理'},
+        {path: '/unit', icon: 'el-icon-menu', sort: '3', title: '单位管理'},
+        {path: '/module', icon: 'el-icon-menu', sort: '4', title: '模块管理'},
+        {path: '/plugin', icon: 'el-icon-menu', sort: '5', title: '功能管理'},
+        {path: '/log', icon: 'el-icon-menu', sort: '6', title: '日志管理'},
+        {path: '/notice', icon: 'el-icon-menu', sort: '7', title: '通知公告'}
+      ]
     }
   },
   created () {
-    let menuArr = []
-    this.$router.options.routes.filter(route => {
-      if (route.path === '/layout') {
-        route.children.filter(item => {
-          if (item.path === '/system') {
-            item.children.map(menu => {
-              if (getRouter().indexOf(menu.path) > -1) {
-                menuArr.push(menu)
-              }
-            })
-          }
-        })
-      }
-    })
-    this.menuList = menuArr
+    // 从路由表中获取菜单列表
+    // let menuArr = []
+    // this.$router.options.routes.filter(route => {
+    //   if (route.path === '/layout') {
+    //     route.children.filter(item => {
+    //       if (item.path === '/system') {
+    //         item.children.map(menu => {
+    //           if (getRouter().indexOf(menu.path) > -1) {
+    //             menuArr.push(menu)
+    //           }
+    //         })
+    //       }
+    //     })
+    //   }
+    // })
+    // this.menuList = menuArr
+
+    // 从sessionStorage中获取请求的列表
   },
   computed: {
     ...mapGetters([

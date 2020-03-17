@@ -5,9 +5,9 @@
         <img src="@/common/img/logo-index.png" alt="">
       </router-link>
       <ul class="modules">
-        <li v-for="(item, index) in modules" :key="index" @click="moduleListActive(index)" :class="{'active': activeIndex === index}">
-          <span><i class="icon el-icon-menu"></i></span>
-          <router-link tag="span" :to="item.url">{{item.name}}</router-link>
+        <li v-for="(item, index) in modules" :key="index" @click="moduleListItem(index)" :class="{'active': activeIndex === index}">
+          <!--<router-link tag="span" :to="item.url">{{item.name}}</router-link>-->
+          {{item.name}}
         </li>
       </ul>
       <div class="right">
@@ -104,36 +104,29 @@ export default {
       formLabelWidth: '100px',
       modules: [
         {
+          id: 1,
           name: '系统管理模块',
           url: '/system'
         },
         {
+          id: 2,
           name: '单位管理',
-          url: '/system'
+          url: 'http://www.baidu.com'
         },
         {
+          id: 3,
           name: '题库管理',
-          url: '/system'
+          url: 'http://www.baidu.com'
         },
         {
+          id: 4,
           name: '试卷管理',
-          url: '/system'
+          url: 'http://www.baidu.com'
         },
         {
+          id: 5,
           name: '考试管理',
-          url: '/system'
-        },
-        {
-          name: '题库管理',
-          url: '/system'
-        },
-        {
-          name: '试卷管理',
-          url: '/system'
-        },
-        {
-          name: '考试管理',
-          url: '/system'
+          url: 'http://www.baidu.com'
         }
       ]
     }
@@ -145,8 +138,9 @@ export default {
     ])
   },
   methods: {
-    moduleListActive (index) {
+    moduleListItem (index) {
       this.activeIndex = index
+      this.$router.push('/system')
     },
     changPwd () {
       this.changePwdForm.url = 'changePwd'
