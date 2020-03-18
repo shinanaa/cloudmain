@@ -112,7 +112,7 @@
             <el-form-item label="密码" :label-width="formLabelWidth" prop="mm">
               <el-input type="text" v-model="userForm.mm"></el-input>
             </el-form-item>
-            <el-form-item label="角色" :label-width="formLabelWidth" prop="jsmc">
+            <el-form-item label="角色" :label-width="formLabelWidth" prop="yhjsid">
               <el-select v-model="userForm.yhjsid" multiple placeholder="请选择">
                 <el-option
                   v-for="item in roles"
@@ -188,6 +188,15 @@ export default {
         ],
         mm: [
           { required: true, message: '密码不能为空', trigger: 'blur' }
+        ],
+        yhjsid: [
+          { required: true, message: '角色不能为空', trigger: 'change' }
+        ],
+        zt: [
+          { required: true, message: '状态不能为空', trigger: 'change' }
+        ],
+        xh: [
+          { min: 0, max: 5, message: '长度在 0 到 5 个字符', trigger: 'blur' }
         ]
       },
       formLabelWidth: '60px'

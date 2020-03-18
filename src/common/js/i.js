@@ -2,6 +2,7 @@ const i = {
   loginOn: { url: 'portal/loginAdmin' },
   logOut: { url: 'portal/logout' },
   changePwd: { url: 'gateway/system/system/user/updatePassword' },
+  getPluginList: { url: 'gateway/admin/admin/plugin/showGn' },
   // 用户管理
   getUserTree: { url: 'gateway/admin/admin/adminUser/queryAllUser' },
   getUserInfo: { url: 'gateway/admin/admin/adminUser/queryAllUserWithPage' }, // 分页获取用户数据

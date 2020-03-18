@@ -5,9 +5,9 @@
         <img src="@/common/img/logo-index.png" alt="">
       </router-link>
       <ul class="modules">
-        <li v-for="(item, index) in modules" :key="index" @click="moduleListItem(index)" :class="{'active': activeIndex === index}">
+        <li v-for="(item, index) in modules" :key="item.mkid" @click="moduleListItem(index, item.mkid)" :class="{'active': activeIndex === index}">
           <!--<router-link tag="span" :to="item.url">{{item.name}}</router-link>-->
-          {{item.name}}
+          {{item.mc}}
         </li>
       </ul>
       <div class="right">
@@ -30,8 +30,8 @@
           <el-dropdown>
             <div class="user">
               <div class="user-text">
-                <div class="username">{{userName}}</div>
-                <div class="userIntroduce">{{userLogin}}</div>
+                <div class="username">{{userRole}}</div>
+                <div class="userIntroduce">{{userName}}</div>
               </div>
               <img class="userImg" src="@/common/img/user.png" alt="">
             </div>
@@ -69,8 +69,9 @@
 
 <script>
 import {ERR_CODE} from 'common/js/config'
+import {setPluginList} from 'common/js/cache'
 import {mapActions, mapGetters} from 'vuex'
-import {changePwd} from '@/api/login'
+import {changePwd, getPluginList} from '@/api/login'
 export default {
   name: 'layout',
   data () {
@@ -101,46 +102,35 @@ export default {
         ]
       },
       showChangePwd: false,
-      formLabelWidth: '100px',
-      modules: [
-        {
-          id: 1,
-          name: '系统管理模块',
-          url: '/system'
-        },
-        {
-          id: 2,
-          name: '单位管理',
-          url: 'http://www.baidu.com'
-        },
-        {
-          id: 3,
-          name: '题库管理',
-          url: 'http://www.baidu.com'
-        },
-        {
-          id: 4,
-          name: '试卷管理',
-          url: 'http://www.baidu.com'
-        },
-        {
-          id: 5,
-          name: '考试管理',
-          url: 'http://www.baidu.com'
-        }
-      ]
+      formLabelWidth: '100px'
     }
   },
   computed: {
+    modules () {
+      return this.moduleList
+    },
     ...mapGetters([
       'userName',
+      'userRole',
+      'moduleList',
       'userLogin'
     ])
   },
   methods: {
-    moduleListItem (index) {
+    moduleListItem (index, id) {
       this.activeIndex = index
-      this.$router.push('/system')
+      if (id === '1f8f43fb-7adb-48cf-b8a8-1419543bbfec') {
+        const getInfo = {
+          yhid: this.userLogin,
+          mkid: id,
+          url: 'getPluginList'
+        }
+        getPluginList(getInfo).then((res) => {
+          console.log(res)
+          setPluginList(res)
+          this.$router.push('/system')
+        })
+      }
     },
     changPwd () {
       this.changePwdForm.url = 'changePwd'

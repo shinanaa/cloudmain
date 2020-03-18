@@ -1,12 +1,12 @@
 import * as types from '../mutation-types'
 import {ERR_CODE} from 'common/js/config'
 import {loginByUsername, logout} from '@/api/login'
-import {getRouter, setRouter, removeRouter, getUserLogin, setUserLogin, removeUserLogin, setUserName, getUserName, removeUserName} from 'common/js/cache'
+import {getRouter, setRouter, removeRouter, getUserLogin, setUserLogin, removeUserLogin, setUserName, getUserName, removeUserName, setUserRole, getUserRole, removeUserRole, removePluginList} from 'common/js/cache'
 
 const user = {
   state: {
-    roles: '平台管理员',
-    routerList: getRouter(),
+    role: getUserRole(),
+    moduleList: getRouter(),
     userLogin: getUserLogin(),
     userName: getUserName()
   },
@@ -17,8 +17,11 @@ const user = {
     [types.SET_USER_NAME] (state, mc) {
       state.userName = mc
     },
-    [types.SET_ROUTER] (state, routerList) {
-      state.routerList = routerList
+    [types.SET_ROUTER] (state, moduleList) {
+      state.moduleList = moduleList
+    },
+    [types.SET_USER_ROLE] (state, jsmc) {
+      state.role = jsmc
     }
   },
   actions: {
@@ -33,12 +36,13 @@ const user = {
             commit(types.SET_USER_LOGIN, data.authorization)
             // setToken(data.authorization)
             commit(types.SET_USER_NAME, data.mc)
-            commit(types.SET_ROUTER, data.dz)
+            commit(types.SET_ROUTER, data.mkList)
             commit(types.SET_USER_LOGIN, data.yhid)
-            setRouter(data.dz)
+            commit(types.SET_USER_ROLE, data.jsmc)
+            setRouter(data.mkList)
             setUserLogin(data.yhid)
             setUserName(data.mc)
-            // 还需提交用户的当前角色,后端未开发功能
+            setUserRole(data.jsmc)
           }
           resolve(data)
         }).catch((err) => {
@@ -53,9 +57,12 @@ const user = {
           commit(types.SET_ROUTER, [])
           commit(types.SET_USER_NAME, '')
           commit(types.SET_USER_LOGIN, '')
+          commit(types.SET_USER_ROLE, '')
           removeRouter()
           removeUserLogin()
           removeUserName()
+          removeUserRole()
+          removePluginList()
           resolve()
         })
       })

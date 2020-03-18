@@ -28,15 +28,42 @@ export function removeUserName () {
   return []
 }
 
-// 可访问路由
-const ROUTER_KEY = 'router-list'
+// 用户角色
+const ROLE_KEY = 'user-Role'
+
+export function setUserRole (name) {
+  return storage.session.set(ROLE_KEY, name)
+}
+export function getUserRole () {
+  return storage.session.get(ROLE_KEY)
+}
+export function removeUserRole () {
+  storage.session.remove(ROLE_KEY)
+  return []
+}
+
+// 头部的模块列表
+const MODULE_LIST_KEY = 'router-list'
 export function setRouter (list) {
-  return storage.session.set(ROUTER_KEY, list)
+  return storage.session.set(MODULE_LIST_KEY, list)
 }
 export function getRouter () {
-  return storage.session.get(ROUTER_KEY)
+  return storage.session.get(MODULE_LIST_KEY)
 }
 export function removeRouter () {
-  storage.session.remove(ROUTER_KEY)
+  storage.session.remove(MODULE_LIST_KEY)
+  return []
+}
+
+// 左侧的功能列表
+const PLUGIN_LIST_KEY = 'plugin-list'
+export function setPluginList (list) {
+  return storage.session.set(PLUGIN_LIST_KEY, list)
+}
+export function getPluginList () {
+  return storage.session.get(PLUGIN_LIST_KEY)
+}
+export function removePluginList () {
+  storage.session.remove(PLUGIN_LIST_KEY)
   return []
 }
