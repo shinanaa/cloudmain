@@ -47,7 +47,7 @@ export default {
     // this.menuList = menuArr
 
     // 从sessionStorage中获取请求的列表
-    this.menuList = getPluginList().menuList
+    this.menuList = getPluginList()
   },
   computed: {
     ...mapGetters([

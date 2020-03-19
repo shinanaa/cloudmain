@@ -2,17 +2,18 @@
     <div class="plugin">
       <div class="search">
         <div class="search-item">
-          <span>模块：</span>
+          <span>模块</span>
           <el-select v-model="search.module" placeholder="请选择">
+            <el-option label="全部" value=""></el-option>
             <el-option v-for="item in moduleList" :key="item.mkid" :label="item.mc" :value="item.mkid"></el-option>
           </el-select>
         </div>
         <div class="search-item">
-          <span>名称：</span>
+          <span>名称</span>
           <el-input v-model="search.moduleName" placeholder="请输入内容"></el-input>
         </div>
         <div class="search-item">
-          <span>状态：</span>
+          <span>状态</span>
           <el-select v-model="search.state" placeholder="请选择">
             <el-option v-for="item in states" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
@@ -146,8 +147,10 @@
 import {getPluginList, addPluginItem, editPluginItem, deletePluginItem, getPluginItem} from '@/api/plugin'
 import {getModuleTree} from '@/api/module'
 import {ERR_CODE} from 'common/js/config'
+import {pagingMixin} from 'common/js/mixin'
 export default {
   name: 'plugin',
+  mixins: [pagingMixin],
   data () {
     return {
       listType: true,
@@ -163,10 +166,6 @@ export default {
       ],
       moduleList: [],
       pluginList: [],
-      // 分页
-      total: 0,
-      currentPage: 1,
-      pageSize: 5,
       // 弹窗
       isAdd: true,
       showPluginDialog: false,

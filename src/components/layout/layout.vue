@@ -127,7 +127,8 @@ export default {
         }
         getPluginList(getInfo).then((res) => {
           console.log(res)
-          setPluginList(res)
+          console.log(res.menuList)
+          setPluginList(res.menuList)
           this.$router.push('/system')
         })
       }

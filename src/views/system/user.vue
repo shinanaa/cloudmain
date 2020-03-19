@@ -1,15 +1,10 @@
 <template>
     <div class="user">
       <div class="search">
-        <!--<div class="search-item">-->
-          <!--<span>部门：</span>-->
-          <!--<el-cascader-->
-            <!--v-model="search.department"-->
-            <!--:options="options"></el-cascader>-->
-        <!--</div>-->
         <div class="search-item">
-          <span>角色：</span>
+          <span>角色</span>
           <el-select v-model="search.role" placeholder="请选择">
+            <el-option value="" key="" label="全部"></el-option>
             <el-option
               v-for="item in roles"
               :key="item.value"
@@ -19,11 +14,11 @@
           </el-select>
         </div>
         <div class="search-item">
-          <span>名称：</span>
+          <span>名称</span>
           <el-input v-model="search.userName" placeholder="请输入内容"></el-input>
         </div>
         <div class="search-item">
-          <span>状态：</span>
+          <span>状态</span>
           <el-select v-model="search.state" placeholder="请选择">
             <el-option v-for="item in states" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
@@ -144,8 +139,10 @@
 import {getUserList, editUserItem, addUserItem, deleteUserItem, getUserItem} from '@/api/user'
 import {getRoleTree} from '@/api/role'
 import {ERR_CODE} from 'common/js/config'
+import {pagingMixin} from 'common/js/mixin'
 export default {
   name: 'user',
+  mixins: [pagingMixin],
   data () {
     return {
       listType: true,
@@ -162,10 +159,6 @@ export default {
       ],
       roles: [],
       userList: [],
-      // 分页
-      total: 0,
-      currentPage: 1,
-      pageSize: 5,
       // 弹窗
       isAdd: true,
       showUserDialog: false,

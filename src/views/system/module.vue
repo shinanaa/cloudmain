@@ -2,11 +2,11 @@
     <div class="module">
       <div class="search">
         <div class="search-item">
-          <span>名称：</span>
+          <span>名称</span>
           <el-input v-model="search.userName" placeholder="请输入内容"></el-input>
         </div>
         <div class="search-item">
-          <span>状态：</span>
+          <span>状态</span>
           <el-select v-model="search.state" placeholder="请选择">
             <el-option v-for="item in states" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
@@ -111,8 +111,10 @@
 <script>
 import {getModuleList, addModuleItem, editModuleItem, deleteModuleItem, getModuleItem} from '@/api/module'
 import {ERR_CODE} from 'common/js/config'
+import {pagingMixin} from 'common/js/mixin'
 export default {
   name: 'module',
+  mixins: [pagingMixin],
   data () {
     return {
       listType: true,
@@ -126,10 +128,6 @@ export default {
         {value: 'Y', label: '使用'}
       ],
       moduleList: [],
-      // 分页
-      total: 0,
-      currentPage: 1,
-      pageSize: 5,
       // 弹窗
       isAdd: true,
       showUserDialog: false,

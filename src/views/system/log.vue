@@ -2,17 +2,17 @@
     <div class="log">
       <div class="search">
         <div class="search-item">
-          <span>类型：</span>
+          <span>类型</span>
           <el-select v-model="search.type" placeholder="请选择">
             <el-option v-for="item in types" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </div>
         <div class="search-item">
-          <span>用户：</span>
+          <span>用户</span>
           <el-input v-model="search.userName" placeholder="请输入内容"></el-input>
         </div>
         <div class="search-item">
-          <span>日期：</span>
+          <span>日期</span>
           <el-date-picker
             v-model="search.date"
             type="daterange"
@@ -86,12 +86,15 @@
 <script>
 import {getLogList} from '@/api/log'
 import {ERR_CODE} from 'common/js/config'
+import {pagingMixin} from 'common/js/mixin'
 export default {
   name: 'log',
+  mixins: [pagingMixin],
   data () {
     return {
       listType: true,
       types: [
+        {value: '', label: '全部'},
         {value: '1', label: '登录日志'},
         {value: '2', label: '操作日志'}
       ],
@@ -100,11 +103,7 @@ export default {
         type: '',
         date: ''
       },
-      logList: [],
-      // 分页
-      total: 0,
-      currentPage: 1,
-      pageSize: 5
+      logList: []
     }
   },
   created () {
@@ -146,6 +145,7 @@ export default {
         if (res.errcode === ERR_CODE) {
           console.log(res)
           this.logList = res.rows
+          this.total = res.totalCount
         }
       }).catch((err) => {
         console.log(err)

@@ -2,17 +2,17 @@
   <div class="notice common">
     <div class="search">
       <div class="search-item">
-        <span>类型：</span>
+        <span>类型</span>
         <el-select v-model="search.type" placeholder="请选择">
           <el-option v-for="item in types" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </div>
       <div class="search-item">
-        <span>标题：</span>
+        <span>标题</span>
         <el-input v-model="search.title" placeholder="请输入文章标题"></el-input>
       </div>
       <div class="search-item">
-        <span>状态：</span>
+        <span>状态</span>
         <el-select v-model="search.state" placeholder="请选择">
           <el-option v-for="item in states" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
@@ -170,14 +170,15 @@
 </template>
 
 <script>
-// import {getToken} from 'common/js/cache'
 import {mapGetters} from 'vuex'
 import {getNoticeInfo, uploadImg, addNoticeItem, getNoticeItem, editNoticeItem} from '@/api/notice'
 import {getUnitTree} from '@/api/treeAndList'
 import {ERR_CODE} from 'common/js/config'
+import {pagingMixin} from 'common/js/mixin'
 import Tinymce from '@/components/Tinymce'
 export default {
   name: 'notice',
+  mixins: [pagingMixin],
   components: {Tinymce},
   data () {
     return {
@@ -188,6 +189,7 @@ export default {
         state: ''
       },
       types: [
+        {value: '', label: '全部'},
         {value: '1', label: '通知'},
         {value: '2', label: '公告'}
       ],
@@ -197,10 +199,6 @@ export default {
         {value: '2', label: '发布'}
       ],
       noticeList: [],
-      // 分页
-      total: 0,
-      currentPage: 1,
-      pageSize: 8,
       // 弹窗
       isAdd: true,
       showNoticeDialog: false,
