@@ -30,7 +30,7 @@
           <div class="btn-handle">
             <el-button type="primary" @click="addUser">新增</el-button>
             <el-button type="primary">导入</el-button>
-            <el-button type="primary">批量删除</el-button>
+            <el-button type="primary" @click="delUsers">批量删除</el-button>
           </div>
           <div class="btn-change">
             <i class="el-icon-s-fold" :class="{'active' : listType}" @click="listType = true"></i>
@@ -96,6 +96,7 @@
         </el-pagination>
       </div>
       <div class="dialog">
+        <!--新增/修改-->
         <el-dialog :title="dialogTitle" :visible.sync="showUserDialog">
           <el-form :model="userForm" ref="UsersForm" :rules="userRules">
             <el-form-item label="名称" :label-width="formLabelWidth" prop="yhmc">
@@ -131,6 +132,14 @@
             <el-button type="primary" @click="submitUserSet">确 定</el-button>
           </div>
         </el-dialog>
+        <!--批量删除-->
+        <el-dialog title="批量删除" :visible.sync="showDelUsers">
+          <el-tree
+            :data="userTree"
+            :props="userTreeProps"
+            show-checkbox>
+          </el-tree>
+        </el-dialog>
       </div>
     </div>
 </template>
@@ -161,6 +170,7 @@ export default {
       userList: [],
       // 弹窗
       isAdd: true,
+      showDelUsers: false,
       showUserDialog: false,
       userForm: {
         yhmc: '',
@@ -192,7 +202,21 @@ export default {
           { min: 0, max: 5, message: '长度在 0 到 5 个字符', trigger: 'blur' }
         ]
       },
-      formLabelWidth: '60px'
+      formLabelWidth: '60px',
+      userTree: [
+        {
+          label: '1',
+          children: [
+            {label: '1.1'},
+            {label: '1.2'}
+          ]
+        },
+        {label: '2'}
+      ],
+      userTreeProps: {
+        children: 'children',
+        label: 'label'
+      }
     }
   },
   computed: {
@@ -228,6 +252,9 @@ export default {
       searchParmas.pageSize = this.pageSize
       searchParmas.pageCurrent = this.pageCurrent
       this._getSearchList(searchParmas)
+    },
+    delUsers () {
+      this.showDelUsers = true
     },
     deleteUser (rowData) {
       console.log(rowData)

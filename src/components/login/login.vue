@@ -4,33 +4,31 @@
       <img src="@/common/img/logo.png" alt="">
     </div>
     <div class="main">
-      <div class="content">
-        <div class="login-wrapper">
-          <div class="login-type">
-            <ul>
-              <li class="type-item" :class="loginFlag === true ? 'active' : ''" @click="loginFlag = true">账号密码</li>
-              <li class="type-item" :class="loginFlag === false ? 'active' : ''" @click="validIphone">手机验证</li>
-            </ul>
+      <div class="login-wrapper">
+        <div class="login-type">
+          <ul>
+            <li class="type-item" :class="loginFlag === true ? 'active' : ''" @click="loginFlag = true">账号密码</li>
+            <li class="type-item" :class="loginFlag === false ? 'active' : ''" @click="validIphone">手机验证</li>
+          </ul>
+        </div>
+        <div>
+          <div class="login-form">
+            <el-form v-show="loginFlag" class="login-form" :model="loginForm" :rules="rules" ref="loginForm">
+              <el-form-item prop="userName">
+                <el-input v-model="loginForm.userName" placeholder="请输入系统账号">
+                  <i slot="prefix" class="el-input__icon el-icon-user"></i>
+                </el-input>
+              </el-form-item>
+              <el-form-item prop="password">
+                <el-input v-model="loginForm.password" placeholder="请输入密码">
+                  <i slot="prefix" class="el-input__icon el-icon-lock"></i>
+                </el-input>
+              </el-form-item>
+              <!--<div class="findPwd">忘记密码？</div>-->
+              <el-button class="login-btn" @click.native.prevent="login">登录</el-button>
+            </el-form>
           </div>
-          <div>
-            <div class="login-form">
-              <el-form v-show="loginFlag" class="login-form" :model="loginForm" :rules="rules" ref="loginForm">
-                <el-form-item prop="userName">
-                  <el-input v-model="loginForm.userName" placeholder="请输入系统账号">
-                    <i slot="prefix" class="el-input__icon el-icon-user"></i>
-                  </el-input>
-                </el-form-item>
-                <el-form-item prop="password">
-                  <el-input v-model="loginForm.password" placeholder="请输入密码">
-                    <i slot="prefix" class="el-input__icon el-icon-lock"></i>
-                  </el-input>
-                </el-form-item>
-                <!--<div class="findPwd">忘记密码？</div>-->
-                <el-button class="login-btn" @click.native.prevent="login">登录</el-button>
-              </el-form>
-            </div>
-            <div v-show="!loginFlag" class="login-phone">暂无内容</div>
-          </div>
+          <div v-show="!loginFlag" class="login-phone">暂无内容</div>
         </div>
       </div>
     </div>
@@ -128,60 +126,69 @@ export default {
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/mixin"
   @import "~common/stylus/variable"
+.login
+  position: absolute
+  top: 50%
+  margin: -350px 0 0 0
+  width: 100%
+  height: 720px
   .logo
+    height: 120px
     minWidth()
-    margin-top: 60px
-    margin-bottom: 15px
   .main
+    position: relative
+    height: 500px
+    width: 100%
     min-width: 1200px
-    padding: 110px 0
     background-image: url('~common/img/login-bg.png')
     background-size: 100%
     background-position: center
     background-repeat: no-repeat
-    .content
-      minWidth()
-      clearfix()
-      .login-wrapper
-        float: right
-        width: 320px
-        padding: 20px 30px
-        margin-right: 50px
-        box-sizing:border-box
-        border-radius: 7px
-        box-shadow: 0px 0px 9px 1px rgba(0, 0, 0, 0.3)
-        background-color: rgba(255,255,255,0.7)
-        .login-type
-          width: 100%
-          margin-bottom: 30px
-          clearfix()
-          .type-item
-            float: left
-            width: 50%
-            height: 50px
-            line-height: 50px
-            font-size: 20px
-            font-weight: 600
-            text-align: center
-            color: #909399
-            &.active
-              color: $color-theme
-              border-bottom: 2px solid $color-theme
-        .findPwd
-          text-align: right
-          font-size: 14px
-          color: $color-theme
-          cursor: pointer
-        .login-btn
-          width: 100%
-          margin-top: 10px
-          margin-bottom: 15px
-          background-color: $color-theme
-          color: #FFF
+    .login-wrapper
+      position: absolute
+      top: 50%
+      right: 5%
+      transform: translate(0, -50%)
+      width: 320px
+      padding: 20px 30px
+      box-sizing:border-box
+      border-radius: 7px
+      box-shadow: 0px 0px 9px 1px rgba(0, 0, 0, 0.3)
+      background-color: rgba(255,255,255,0.7)
+      .login-type
+        width: 100%
+        margin-bottom: 30px
+        clearfix()
+        .type-item
+          float: left
+          width: 50%
+          height: 50px
+          line-height: 50px
+          font-size: 20px
+          font-weight: 600
+          text-align: center
+          color: #909399
+          &.active
+            color: $color-theme
+            border-bottom: 2px solid $color-theme
+      .findPwd
+        text-align: right
+        font-size: 14px
+        color: $color-theme
+        cursor: pointer
+      .login-btn
+        width: 100%
+        margin-top: 10px
+        margin-bottom: 15px
+        background-color: $color-theme
+        color: #FFF
   .link
     minWidth()
+    padding-top: 45px
+    box-sizing: border-box
+    height: 100px
     text-align: center
-    margin: 50px auto
+    margin: auto
     b
       display: inline-block
       padding: 0 20px
