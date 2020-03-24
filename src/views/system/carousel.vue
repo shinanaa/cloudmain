@@ -2,15 +2,8 @@
   <div class="plugin common">
     <div class="search">
       <div class="search-item">
-        <span>模块</span>
-        <el-select v-model="search.module" placeholder="请选择">
-          <el-option label="全部" value=""></el-option>
-          <el-option v-for="item in moduleList" :key="item.mkid" :label="item.mc" :value="item.mkid"></el-option>
-        </el-select>
-      </div>
-      <div class="search-item">
         <span>名称</span>
-        <el-input v-model="search.moduleName" placeholder="请输入内容"></el-input>
+        <el-input v-model="search.wheelName" placeholder="请输入内容"></el-input>
       </div>
       <div class="search-item">
         <span>状态</span>
@@ -23,7 +16,7 @@
     <div class="table-wrapper">
       <div class="table-btn">
         <div class="btn-handle">
-          <el-button @click="addModule" type="primary">新增</el-button>
+          <el-button @click="addWheel" type="primary">新增</el-button>
         </div>
         <div class="btn-change">
           <i class="el-icon-s-fold" :class="{'active' : listType}" @click="listType = true"></i>
@@ -32,14 +25,15 @@
       </div>
       <div v-if="listType" class="table-main">
         <el-table
-          :data="pluginList"
+          :data="wheelList"
           style="width: 100%">
-          <el-table-column prop="mc" label="模块"></el-table-column>
-          <el-table-column prop="mcjc" label="简称"></el-table-column>
+          <el-table-column prop="mc" label="名称"></el-table-column>
           <el-table-column prop="dm" label="代码"></el-table-column>
-          <el-table-column prop="mcqc" label="全称"></el-table-column>
-          <el-table-column prop="dz" label="地址"></el-table-column>
-          <el-table-column prop="tb" label="图标"></el-table-column>
+          <el-table-column prop="tpwj" label="图片">
+            <template slot-scope="scope">
+              <img :src="scope.row.tpwj" alt="" width="200px" height="60px">
+            </template>
+          </el-table-column>
           <el-table-column prop="xh" label="序号"></el-table-column>
           <el-table-column prop="zt" label="状态">
             <template slot-scope="scope">
@@ -48,35 +42,23 @@
           </el-table-column>
           <el-table-column label="操作" width="150">
             <template slot-scope="scope">
-              <el-button size="mini" type="success" @click="editModule(scope.row)">修改</el-button>
-              <el-button size="mini" type="danger" @click="deletePlugin(scope.row)">删除</el-button>
+              <el-button size="mini" type="success" @click="editWheel(scope.row)">修改</el-button>
+              <el-button size="mini" type="danger" @click="deleteWheel(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
       </div>
       <div v-if="!listType" class="card-mian">
-        <div class="cardItem" v-for="(item, index) in pluginList" :key="index">
-          <div class="userName">{{item.mcjc}}</div>
+        <div class="cardItem" v-for="(item, index) in wheelList" :key="index">
+          <div class="userName">{{item.mc}}</div>
           <div class="infoWrapper">
-            <div class="info-item">
-              <span class="info-key">全称</span>
-              <span class="info-value">{{item.mcqc}}</span>
-            </div>
-            <div class="info-item">
-              <span class="info-key">模块</span>
-              <span class="info-value">{{item.mc}}</span>
-            </div>
-            <div class="info-item">
-              <span class="info-key">地址</span>
-              <span class="info-value">{{item.dz}}</span>
-            </div>
             <div class="info-item">
               <span class="info-key">代码</span>
               <span class="info-value">{{item.dm}}</span>
             </div>
             <div class="info-item">
-              <span class="info-key">图标</span>
-              <span class="info-value">{{item.tb}}</span>
+              <span class="info-key">图片</span>
+              <span class="info-value">{{item.tpwj}}</span>
             </div>
             <div class="info-item">
               <span class="info-key">序号</span>
@@ -88,13 +70,12 @@
             </div>
           </div>
           <div class="card-btn">
-            <el-button size="mini" type="success" @click="editModule(item)">修改</el-button>
+            <el-button size="mini" type="success" @click="editWheel(item)">修改</el-button>
             <el-button size="mini" type="danger" @click="deletePlugin(item)">删除</el-button>
           </div>
         </div>
       </div>
       <el-pagination
-        hide-on-single-page
         @current-change="pageChange"
         :current-page="currentPage"
         :page-size="pageSize"
@@ -103,40 +84,42 @@
       </el-pagination>
     </div>
     <div class="dialog">
-      <el-dialog :title="dialogTitle" :visible.sync="showPluginDialog">
-        <el-form :model="pluginForm" ref="pluginForm" :rules="pluginRules">
-          <el-form-item label="简称" :label-width="formLabelWidth" prop="mcjc">
-            <el-input type="text" v-model="pluginForm.mcjc"></el-input>
-          </el-form-item>
-          <el-form-item label="模块" :label-width="formLabelWidth" prop="mkid">
-            <el-select v-model="pluginForm.mkid" placeholder="请选择">
-              <el-option v-for="item in moduleList" :key="item.mkid" :label="item.mc" :value="item.mkid"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="全称" :label-width="formLabelWidth" prop="mcqc">
-            <el-input type="text" v-model="pluginForm.mcqc"></el-input>
+      <el-dialog :title="dialogTitle" :visible.sync="showDialog">
+        <el-form :model="wheelForm" ref="wheelForm" :rules="wheelRules">
+          <el-form-item label="名称" :label-width="formLabelWidth" prop="mc">
+            <el-input type="text" v-model="wheelForm.mc"></el-input>
           </el-form-item>
           <el-form-item label="代码" :label-width="formLabelWidth" prop="dm">
-            <el-input type="text" v-model="pluginForm.dm"></el-input>
+            <el-input type="text" v-model="wheelForm.dm"></el-input>
           </el-form-item>
-          <el-form-item label="图标" :label-width="formLabelWidth" prop="tb">
-            <el-input type="text" v-model="pluginForm.tb"></el-input>
-          </el-form-item>
-          <el-form-item label="地址" :label-width="formLabelWidth" prop="dz">
-            <el-input type="text" v-model="pluginForm.dz"></el-input>
-          </el-form-item>
-          <el-form-item label="序号" :label-width="formLabelWidth" prop="xh">
-            <el-input type="text" v-model="pluginForm.xh"></el-input>
-          </el-form-item>
-          <el-form-item label="状态" :label-width="formLabelWidth" prop="zt">
-            <el-select v-model="pluginForm.zt" placeholder="请选择">
-              <el-option v-for="item in stateDialog" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-          </el-form-item>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="图片" :label-width="formLabelWidth" prop="tpwj">
+                <el-upload
+                  class="img-uploader"
+                  action="#"
+                  :http-request="imgUpload"
+                  :show-file-list="false">
+                  <img v-if="wheelForm.tpwj" :src="wheelForm.tpwj" class="img">
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="序号" :label-width="formLabelWidth" prop="xh">
+                <el-input type="text" v-model="wheelForm.xh"></el-input>
+              </el-form-item>
+              <el-form-item label="状态" :label-width="formLabelWidth" prop="zt">
+                <el-select v-model="wheelForm.zt" placeholder="请选择">
+                  <el-option v-for="item in stateDialog" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="cancelUserSet">取 消</el-button>
-          <el-button type="primary" @click="submitUserSet">确 定</el-button>
+          <el-button @click="cancelSet">取 消</el-button>
+          <el-button type="primary" @click="submitSet">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -144,42 +127,36 @@
 </template>
 
 <script>
-import {getPluginList, addPluginItem, editPluginItem, deletePluginItem, getPluginItem} from '@/api/plugin'
-import {getModuleTree} from '@/api/module'
+import {getCrouselInfo, addCrouselItem, editCrouselItem, deleteCrouselItem, getCrouselItem, uploadFile} from '@/api/carousel'
 import {ERR_CODE} from 'common/js/config'
 import {pagingMixin} from 'common/js/mixin'
 export default {
-  name: 'unit-plugin',
+  name: 'carousel',
   mixins: [pagingMixin],
   data () {
     return {
       listType: true,
       search: {
-        module: '',
-        moduleName: '',
+        wheelName: '',
         state: ''
       },
       states: [
-        {value: 'all', label: '全部'},
-        {value: 'N', label: '停用'},
-        {value: 'Y', label: '使用'}
+        {value: '', label: '全部'},
+        {value: '1', label: '编辑'},
+        {value: '2', label: '发布'}
       ],
-      moduleList: [],
-      pluginList: [],
+      wheelList: [],
       // 弹窗
       isAdd: true,
-      showPluginDialog: false,
-      pluginForm: {
-        mcjc: '',
-        mkid: '',
-        mcqc: '',
+      showDialog: false,
+      wheelForm: {
+        mc: '',
         dm: '',
-        tb: '',
-        dz: '',
+        tpwj: '',
         xh: '',
         zt: ''
       },
-      pluginRules: {
+      wheelRules: {
         mkid: [
           { required: true, message: '模块不能为空', trigger: 'blur' }
         ],
@@ -197,76 +174,81 @@ export default {
       return stateDialog
     },
     dialogTitle () {
-      return this.isAdd ? '功能增加' : '功能修改'
+      return this.isAdd ? '轮播增加' : '轮播修改'
     }
   },
   created () {
-    this._getPluginList(this.pageSize, this.currentPage)
-    getModuleTree('getModuleTree').then((res) => {
-      if (res.errcode === ERR_CODE) {
-        console.log(res)
-        this.moduleList = res.list
-      } else {
-        return false
-      }
-    })
+    this._getWheelList({search: this.search, page: 1})
   },
   methods: {
+    imgUpload (content) {
+      let url = 'uploadImg'
+      this._noticeUpload(content.file, url)
+    },
+    _noticeUpload (file, url) {
+      let ImgData = new FormData()
+      ImgData.append('upfile', file)
+      ImgData.append('fileType', 'imageFile')
+      console.log(ImgData)
+      uploadFile(ImgData, url).then((res) => {
+        console.log(res)
+        if (res.errcode === ERR_CODE) {
+          this.wheelForm.tpwj = res.dz
+        }
+      })
+    },
     searchPlugin () {
-      const searchParmas = JSON.parse(JSON.stringify(this.search))
-      searchParmas.pageSize = this.pageSize
-      searchParmas.currentPage = this.currentPage
-      this._getSearchList(searchParmas)
+      this._getWheelList({search: this.search, page: 1})
     },
-    deletePlugin (rowData) {
+    deleteWheel (rowData) {
       console.log(rowData)
-      this._deletePluginInfo(rowData)
+      this._deleteWheelInfo(rowData)
     },
-    editModule (rowData) {
-      this._getPluginItem(rowData.gnid)
-      this.showPluginDialog = true
+    editWheel (rowData) {
+      this._getWheelItem(rowData.lbid)
+      this.showDialog = true
       this.isAdd = false
     },
-    addModule () {
-      this.showPluginDialog = true
+    addWheel () {
+      this.showDialog = true
       this.isAdd = true
     },
     pageChange (val) {
       this.currentPage = val
-      this._getPluginList(this.pageSize, val)
+      this._getWheelList({search: this.search})
     },
-    cancelUserSet () {
-      this.showPluginDialog = false
-      this.$refs.pluginForm.resetFields()
+    cancelSet () {
+      this.showDialog = false
+      this.$refs.wheelForm.resetFields()
     },
-    submitUserSet () {
-      this.$refs.pluginForm.validate(valid => {
+    submitSet () {
+      this.$refs.wheelForm.validate(valid => {
         if (valid) {
           if (this.isAdd) {
             console.log('tianjai')
-            this._addPluginInfo(this.pluginForm)
+            this._addWheelInfo(this.wheelForm)
           } else {
             console.log('xiugai')
-            this._editPluginInfo(this.pluginForm)
+            this._editWheelInfo(this.wheelForm)
           }
         } else {
           return false
         }
       })
     },
-    _deletePluginInfo (params) {
+    _deleteWheelInfo (params) {
       const deleteParams = {
-        gnid: params.gnid,
-        url: 'deletePluginInfo'
+        lbid: params.lbid,
+        url: 'deleteCarouselInfo'
       }
-      deletePluginItem(deleteParams).then((res) => {
+      deleteCrouselItem(deleteParams).then((res) => {
         if (res.errcode === ERR_CODE) {
           this.$message({
             showClose: true,
             message: res.errmsg,
             type: 'success'
           })
-          this._getPluginList(this.pageSize, this.currentPage)
+          this._getWheelList({search: this.search})
         } else {
           this.$message({
             showClose: true,
@@ -277,30 +259,27 @@ export default {
         console.log(res)
       })
     },
-    _addPluginInfo (params) {
+    _addWheelInfo (params) {
       const addParams = {
-        mkid: params.mkid,
-        mcjc: params.mcjc,
+        mc: params.mc,
         dm: params.dm,
-        mcqc: params.mcqc,
-        dz: params.dz,
-        tb: params.tb,
+        tpwj: params.tpwj,
         xh: params.xh,
         zt: params.zt,
-        url: 'addPluginInfo'
+        url: 'addCarouselInfo'
       }
-      addPluginItem(addParams).then((res) => {
+      addCrouselItem(addParams).then((res) => {
         console.log(res)
         if (res.errcode === ERR_CODE) {
-          this.cancelUserSet()
+          this.cancelSet()
           this.$message({
             showClose: true,
             message: res.errmsg,
             type: 'success'
           })
-          this._getPluginList(this.pageSize, this.currentPage)
+          this._getWheelList({search: this.search})
         } else {
-          this.cancelUserSet()
+          this.cancelSet()
           this.$message({
             showClose: true,
             message: res.errmsg,
@@ -311,33 +290,29 @@ export default {
         console.log(err)
       })
     },
-    _editPluginInfo (params) {
+    _editWheelInfo (params) {
       console.log(params)
       const editParams = {
-        mcjc: params.mcjc,
+        mc: params.mc,
         dm: params.dm,
-        mcqc: params.mcqc,
-        dz: params.dz,
-        tb: params.tb,
+        tpwj: params.tpwj,
         xh: params.xh,
         zt: params.zt,
-        mkid: params.mkid,
-        gnid: params.gnid,
-        url: 'editPluginInfo'
+        lbid: params.lbid,
+        url: 'editCarouselInfo'
       }
-      editPluginItem(editParams).then((res) => {
+      editCrouselItem(editParams).then((res) => {
         console.log(res)
         if (res.errcode === ERR_CODE) {
-          this.cancelUserSet()
+          this.cancelSet()
           this.$message({
             showClose: true,
             message: res.errmsg,
             type: 'success'
           })
-          console.log(this.currentPage)
-          this._getPluginList(this.pageSize, this.currentPage)
+          this._getWheelList({search: this.search})
         } else {
-          this.cancelUserSet()
+          this.cancelSet()
           this.$message({
             showClose: true,
             message: res.errmsg,
@@ -346,49 +321,32 @@ export default {
         }
       })
     },
-    _getPluginItem (gnid) {
+    _getWheelItem (lbid) {
       const getInfo = {
-        gnid: gnid,
-        url: 'getPluginById'
+        lbid: lbid,
+        url: 'getCarouselById'
       }
-      getPluginItem(getInfo).then((res) => {
+      getCrouselItem(getInfo).then((res) => {
         if (res.errcode === ERR_CODE) {
-          const pluginItem = res.list[0]
-          this.pluginForm = JSON.parse(JSON.stringify(pluginItem))
+          const wheelItem = res.list[0]
+          console.log(wheelItem)
+          this.wheelForm = JSON.parse(JSON.stringify(wheelItem))
         }
       }).catch((err) => {
         console.log(err)
       })
     },
-    _getSearchList (searchParmas) {
+    _getWheelList ({search, page = this.currentPage}) {
       const getInfo = {
-        mkid: searchParmas.module,
-        mcjc: searchParmas.moduleName,
-        zt: searchParmas.state,
-        pageSize: searchParmas.pageSize,
-        pageCurrent: searchParmas.currentPage,
-        url: 'getPluginInfo'
+        mc: search.wheelName,
+        zt: search.zt,
+        pageSize: this.pageSize,
+        pageCurrent: page,
+        url: 'getCarouselInfo'
       }
-      getPluginList(getInfo).then((res) => {
+      getCrouselInfo(getInfo).then((res) => {
         if (res.errcode === ERR_CODE) {
-          console.log(res)
-          this.pluginList = res.rows
-          this.total = res.totalCount
-        }
-        console.log(res)
-      }).catch((err) => {
-        console.log(err)
-      })
-    },
-    _getPluginList (pageSize, currentPage) {
-      const getInfo = {
-        pageSize: pageSize,
-        pageCurrent: currentPage,
-        url: 'getPluginInfo'
-      }
-      getPluginList(getInfo).then((res) => {
-        if (res.errcode === ERR_CODE) {
-          this.pluginList = res.rows
+          this.wheelList = res.rows
           this.total = res.totalCount
         }
         console.log(res)
@@ -402,4 +360,28 @@ export default {
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/common"
+  .dialog
+    .img-uploader
+      /deep/  .el-upload
+        border: 1px dashed #d9d9d9
+        border-radius: 6px
+        cursor: pointer
+        position: relative
+        overflow: hidden
+        &:hover
+          border-color: #409EFF;
+    .avatar-uploader-icon
+      width: 178px
+      height: 178px
+      line-height: 178px
+      display: block
+    .img
+      width: 175px
+      height: 175px
+      display: block
+    .seeNotice
+      h1
+        padding-bottom: 30px
+        text-align: center
+        font-size: 22px
 </style>

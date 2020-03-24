@@ -87,7 +87,6 @@
         </div>
       </div>
       <el-pagination
-        hide-on-single-page
         @current-change="pageChange"
         :current-page="currentPage"
         :page-size="pageSize"
@@ -255,12 +254,12 @@ export default {
   },
   created () {
     this.tinymceId = new Date().getTime() + ''
-    this._getNoticeList(this.search)
+    this._getNoticeList({search: this.search, page: 1})
   },
   methods: {
     pageChange (val) {
       this.currentPage = val
-      this._getNoticeList(this.search)
+      this._getNoticeList({search: this.search})
     },
     seeNotice (item) {
       this.isSee = true
@@ -303,7 +302,7 @@ export default {
       this._deleteNoticeItem(item.tzggid)
     },
     searchNotice () {
-      this._getNoticeList(this.search)
+      this._getNoticeList({search: this.search, page: 1})
     },
     imgUpload (content) {
       this.isImgUpload = true
@@ -336,9 +335,6 @@ export default {
         }
       })
     },
-    imgDisplay (res, file) {
-      this.noticeForm.imageUrl = URL.createObjectURL(file.raw)
-    },
     _addNoticeInfo (params) {
       console.log(params)
       const addParams = {
@@ -368,7 +364,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getNoticeList(this.search)
+          this._getNoticeList({search: this.search})
         } else {
           this.cancelNoticeSet()
           this.$message({
@@ -408,7 +404,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getNoticeList(this.search)
+          this._getNoticeList({search: this.search})
         } else {
           this.cancelNoticeSet()
           this.$message({
@@ -431,7 +427,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getNoticeList(this.search)
+          this._getNoticeList({search: this.search})
         } else {
           this.$message({
             showClose: true,
@@ -481,13 +477,13 @@ export default {
         }
       })
     },
-    _getNoticeList (parmas) {
+    _getNoticeList ({search, page = this.currentPage}) {
       const getInfo = {
-        type: parmas.type,
-        title: parmas.title,
-        state: parmas.state,
+        type: search.type,
+        title: search.title,
+        state: search.state,
         pageSize: this.pageSize,
-        pageNo: this.currentPage,
+        pageNo: page,
         url: 'getNoticeInfo'
       }
       console.log(getInfo)

@@ -40,7 +40,12 @@
         <div v-if="listType" class="table-main">
           <el-table
             :data="userList"
+            @selection-change="selectTable"
             style="width: 100%">
+            <el-table-column
+              type="selection"
+              width="55">
+            </el-table-column>
             <el-table-column prop="yhmc" label="名称"></el-table-column>
             <el-table-column prop="dm" label="代码"></el-table-column>
             <el-table-column prop="jsmc" label="角色"></el-table-column>
@@ -87,7 +92,6 @@
             </div>
         </div>
         <el-pagination
-          hide-on-single-page
           @current-change="pageChange"
           :current-page="currentPage"
           :page-size="pageSize"
@@ -133,19 +137,19 @@
           </div>
         </el-dialog>
         <!--批量删除-->
-        <el-dialog title="批量删除" :visible.sync="showDelUsers">
-          <el-tree
-            :data="userTree"
-            :props="userTreeProps"
-            show-checkbox>
-          </el-tree>
-        </el-dialog>
+        <!--<el-dialog title="批量删除" :visible.sync="showDelUsers">-->
+          <!--<el-tree-->
+            <!--:data="userTree"-->
+            <!--:props="userTreeProps"-->
+            <!--show-checkbox>-->
+          <!--</el-tree>-->
+        <!--</el-dialog>-->
       </div>
     </div>
 </template>
 
 <script>
-import {getUserList, editUserItem, addUserItem, deleteUserItem, getUserItem} from '@/api/user'
+import {getUserList, editUserItem, addUserItem, deleteUserItem, getUserItem, deleteUsers} from '@/api/user'
 import {getRoleTree} from '@/api/role'
 import {ERR_CODE} from 'common/js/config'
 import {pagingMixin} from 'common/js/mixin'
@@ -168,6 +172,7 @@ export default {
       ],
       roles: [],
       userList: [],
+      selectRows: [],
       // 弹窗
       isAdd: true,
       showDelUsers: false,
@@ -230,7 +235,7 @@ export default {
     }
   },
   created () {
-    this._getUserList(this.pageSize, this.currentPage)
+    this._getUserList({search: this.search, page: 1})
     // 获取搜索中角色列表
     getRoleTree('getRoleTree').then((res) => {
       if (res.errcode === ERR_CODE) {
@@ -248,13 +253,39 @@ export default {
   },
   methods: {
     searchUser () {
-      const searchParmas = JSON.parse(JSON.stringify(this.search))
-      searchParmas.pageSize = this.pageSize
-      searchParmas.pageCurrent = this.pageCurrent
-      this._getSearchList(searchParmas)
+      this._getUserList({search: this.search, page: 1})
+    },
+    selectTable (val) {
+      this.selectRows = val
     },
     delUsers () {
-      this.showDelUsers = true
+      console.log(this.selectRows)
+      let userids = []
+      this.selectRows.map((row) => {
+        userids.push(row.yhid)
+      })
+      console.log(userids)
+      const deleteParams = {
+        userids,
+        url: 'deleteUsers'
+      }
+      deleteUsers(deleteParams).then((res) => {
+        if (res.errcode === ERR_CODE) {
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'success'
+          })
+          this._getUserList({search: this.search})
+        } else {
+          this.$message({
+            showClose: true,
+            message: res.errmsg,
+            type: 'error'
+          })
+        }
+      })
+      // this.showDelUsers = true
     },
     deleteUser (rowData) {
       console.log(rowData)
@@ -270,7 +301,8 @@ export default {
       this.isAdd = false
     },
     pageChange (val) {
-      this._getUserList(this.pageSize, val)
+      this.currentPage = val
+      this._getUserList({search: this.search})
     },
     cancelUserSet () {
       this.showUserDialog = false
@@ -303,7 +335,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getUserList(this.pageSize, this.currentPage)
+          this._getUserList({search: this.search})
         } else {
           this.$message({
             showClose: true,
@@ -333,7 +365,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getUserList(this.pageSize, this.currentPage)
+          this._getUserList({search: this.search})
         } else {
           this.cancelUserSet()
           this.$message({
@@ -369,7 +401,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getUserList(this.pageSize, this.currentPage)
+          this._getUserList({search: this.search})
         } else {
           this.cancelUserSet()
           this.$message({
@@ -386,7 +418,7 @@ export default {
         jsid: searchParmas.role,
         zt: searchParmas.state,
         pageSize: searchParmas.pageSize,
-        pageCurrent: searchParmas.currentPage,
+        pageCurrent: searchParmas.pageCurrent,
         url: 'getUserInfo'
       }
       getUserList(getInfo).then((res) => {
@@ -418,10 +450,13 @@ export default {
         console.log(err)
       })
     },
-    _getUserList (pageSize, currentPage) {
+    _getUserList ({search, page = this.currentPage}) {
       const getInfo = {
-        pageSize: pageSize,
-        pageCurrent: currentPage,
+        mc: search.userName,
+        jsid: search.role,
+        zt: search.state,
+        pageSize: this.pageSize,
+        pageCurrent: page,
         url: 'getUserInfo'
       }
       console.log(getInfo)

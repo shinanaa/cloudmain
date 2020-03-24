@@ -67,7 +67,6 @@
         </div>
       </div>
       <el-pagination
-        hide-on-single-page
         :page-size="pageSize"
         @current-change="pageChange"
         :current-page="currentPage"
@@ -187,15 +186,11 @@ export default {
     }
   },
   created () {
-    this._getRoleList(this.pageSize, this.currentPage)
+    this._getRoleList({search: this.search})
   },
   methods: {
     searchRoles () {
-      const searchParmas = JSON.parse(JSON.stringify(this.search))
-      searchParmas.pageSize = this.pageSize
-      searchParmas.pageCurrent = this.pageCurrent
-      console.log(searchParmas)
-      this._getSearchList(searchParmas)
+      this._getRoleList({search: this.search, page: 1})
     },
     deleteRole (rowData) {
       console.log(rowData)
@@ -214,7 +209,7 @@ export default {
     },
     pageChange (val) {
       this.currentPage = val
-      this._getRoleList(this.pageSize, val)
+      this._getRoleList({page: val})
     },
     cancelRoleSet () {
       this.showRoleDialog = false
@@ -275,7 +270,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getRoleList(this.pageSize, this.currentPage)
+          this._getRoleList({search: this.search})
         } else {
           this.$message({
             showClose: true,
@@ -304,7 +299,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getRoleList(this.pageSize, this.currentPage)
+          this._getRoleList({search: this.search})
         } else {
           this.cancelRoleSet()
           this.$message({
@@ -336,7 +331,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getRoleList(this.pageSize, this.currentPage)
+          this._getRoleList({search: this.search})
         } else {
           this.cancelRoleSet()
           this.$message({
@@ -369,28 +364,12 @@ export default {
         console.log(err)
       })
     },
-    _getSearchList (searchParmas) {
+    _getRoleList ({search, page = this.currentPage}) {
       const getInfo = {
-        mc: searchParmas.userName,
-        zt: searchParmas.state,
-        pageSize: searchParmas.pageSize,
-        pageCurrent: searchParmas.currentPage,
-        url: 'getRoleInfo'
-      }
-      getRoleList(getInfo).then((res) => {
-        if (res.errcode === ERR_CODE) {
-          this.roleList = res.rows
-          this.total = res.totalCount
-        }
-        console.log(res)
-      }).catch((err) => {
-        console.log(err)
-      })
-    },
-    _getRoleList (pageSize, currentPage) {
-      const getInfo = {
-        pageSize: pageSize,
-        pageCurrent: currentPage,
+        mc: search.userName,
+        zt: search.state,
+        pageSize: this.pageSize,
+        pageCurrent: page,
         url: 'getRoleInfo'
       }
       getRoleList(getInfo).then((res) => {

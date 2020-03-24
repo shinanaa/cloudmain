@@ -94,7 +94,6 @@
           </div>
         </div>
         <el-pagination
-          hide-on-single-page
           @current-change="pageChange"
           :current-page="currentPage"
           :page-size="pageSize"
@@ -160,7 +159,7 @@ export default {
         state: ''
       },
       states: [
-        {value: 'all', label: '全部'},
+        {value: '', label: '全部'},
         {value: 'N', label: '停用'},
         {value: 'Y', label: '使用'}
       ],
@@ -201,7 +200,7 @@ export default {
     }
   },
   created () {
-    this._getPluginList(this.pageSize, this.currentPage)
+    this._getPluginList({search: this.search, page: 1})
     getModuleTree('getModuleTree').then((res) => {
       if (res.errcode === ERR_CODE) {
         console.log(res)
@@ -213,10 +212,7 @@ export default {
   },
   methods: {
     searchPlugin () {
-      const searchParmas = JSON.parse(JSON.stringify(this.search))
-      searchParmas.pageSize = this.pageSize
-      searchParmas.currentPage = this.currentPage
-      this._getSearchList(searchParmas)
+      this._getPluginList({search: this.search, page: 1})
     },
     deletePlugin (rowData) {
       console.log(rowData)
@@ -233,7 +229,7 @@ export default {
     },
     pageChange (val) {
       this.currentPage = val
-      this._getPluginList(this.pageSize, val)
+      this._getPluginList({search: this.search, page: val})
     },
     cancelUserSet () {
       this.showPluginDialog = false
@@ -266,7 +262,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getPluginList(this.pageSize, this.currentPage)
+          this._getPluginList({search: this.search})
         } else {
           this.$message({
             showClose: true,
@@ -298,7 +294,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getPluginList(this.pageSize, this.currentPage)
+          this._getPluginList({search: this.search})
         } else {
           this.cancelUserSet()
           this.$message({
@@ -334,8 +330,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          console.log(this.currentPage)
-          this._getPluginList(this.pageSize, this.currentPage)
+          this._getPluginList({search: this.search})
         } else {
           this.cancelUserSet()
           this.$message({
@@ -360,30 +355,13 @@ export default {
         console.log(err)
       })
     },
-    _getSearchList (searchParmas) {
+    _getPluginList ({search, page = this.currentPage}) {
       const getInfo = {
-        mkid: searchParmas.module,
-        mcjc: searchParmas.moduleName,
-        zt: searchParmas.state,
-        pageSize: searchParmas.pageSize,
-        pageCurrent: searchParmas.currentPage,
-        url: 'getPluginInfo'
-      }
-      getPluginList(getInfo).then((res) => {
-        if (res.errcode === ERR_CODE) {
-          console.log(res)
-          this.pluginList = res.rows
-          this.total = res.totalCount
-        }
-        console.log(res)
-      }).catch((err) => {
-        console.log(err)
-      })
-    },
-    _getPluginList (pageSize, currentPage) {
-      const getInfo = {
-        pageSize: pageSize,
-        pageCurrent: currentPage,
+        mkid: search.module,
+        mcjc: search.moduleName,
+        zt: search.state,
+        pageSize: this.pageSize,
+        pageCurrent: page,
         url: 'getPluginInfo'
       }
       getPluginList(getInfo).then((res) => {

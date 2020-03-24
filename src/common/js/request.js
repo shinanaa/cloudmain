@@ -43,6 +43,20 @@ const Http = {
     console.log(config)
     return axios(config)
   },
+  postFile: function (url, param) {
+    param = param && typeof param === 'object' ? param : {}
+    url = J_API + i[url].url
+    const config = {
+      url: url,
+      method: 'post',
+      headers: {
+        'Content-Type': 'multipart/form-data;'
+      },
+      data: param,
+      timeout: 20000
+    }
+    return axios(config)
+  },
   getReuest: function (url, param) {
     param = param && typeof param === 'object' ? param : {}
     url = J_API + i[url].url

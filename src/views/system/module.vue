@@ -72,7 +72,6 @@
           </div>
         </div>
         <el-pagination
-          hide-on-single-page
           :current-page="currentPage"
           layout="total, prev, pager, next, jumper"
           :total="total">
@@ -160,14 +159,11 @@ export default {
     }
   },
   created () {
-    this._getModuleList(this.pageSize, this.currentPage)
+    this._getModuleList({search: this.search, page: 1})
   },
   methods: {
     searchModule () {
-      const searchParmas = JSON.parse(JSON.stringify(this.search))
-      searchParmas.pageSize = this.pageSize
-      searchParmas.pageCurrent = this.pageCurrent
-      this._getSearchList(searchParmas)
+      this._getModuleList({search: this.search, page: 1})
     },
     deleteModule (rowData) {
       console.log(rowData)
@@ -213,7 +209,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getModuleList(this.pageSize, this.currentPage)
+          this._getModuleList({search: this.search})
         } else {
           this.$message({
             showClose: true,
@@ -243,7 +239,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getModuleList(this.pageSize, this.currentPage)
+          this._getModuleList({search: this.search})
         } else {
           this.cancelUserSet()
           this.$message({
@@ -276,7 +272,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getModuleList(this.pageSize, this.currentPage)
+          this._getModuleList({search: this.search})
         } else {
           this.cancelUserSet()
           this.$message({
@@ -285,25 +281,6 @@ export default {
             type: 'error'
           })
         }
-      })
-    },
-    _getSearchList (searchParmas) {
-      const getInfo = {
-        mc: searchParmas.userName,
-        zt: searchParmas.state,
-        pageSize: searchParmas.pageSize,
-        pageCurrent: searchParmas.currentPage,
-        url: 'getModuleInfo'
-      }
-      console.log(getInfo)
-      getModuleList(getInfo).then((res) => {
-        if (res.errcode === ERR_CODE) {
-          this.moduleList = res.rows
-          this.total = res.totalCount
-        }
-        console.log(res)
-      }).catch((err) => {
-        console.log(err)
       })
     },
     _getMoudleItem (mkid) {
@@ -322,10 +299,12 @@ export default {
         console.log(err)
       })
     },
-    _getModuleList (pageSize, currentPage) {
+    _getModuleList ({search, page = this.currentPage}) {
       const getInfo = {
-        pageSize: pageSize,
-        pageCurrent: currentPage,
+        mc: search.userName,
+        zt: search.state,
+        pageSize: this.pageSize,
+        pageCurrent: page,
         url: 'getModuleInfo'
       }
       getModuleList(getInfo).then((res) => {

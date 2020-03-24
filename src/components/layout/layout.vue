@@ -45,7 +45,7 @@
       </div>
     </div>
     <div class="changePwd">
-      <el-dialog title="修改密码" :visible.sync="showChangePwd">
+      <el-dialog title="修改密码" :visible.sync="showChangePwd" width="30%">
         <el-form :model="changePwdForm" ref="changePwdForm" :rules="changePwdRules">
           <el-form-item label="旧密码：" :label-width="formLabelWidth" prop="oldPwd">
             <el-input type="text" v-model="changePwdForm.oldPwd"></el-input>

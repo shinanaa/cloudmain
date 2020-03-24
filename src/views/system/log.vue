@@ -72,7 +72,6 @@
           </div>
         </div>
         <el-pagination
-          hide-on-single-page
           @current-change="pageChange"
           :current-page="currentPage"
           :page-size="pageSize"
@@ -107,7 +106,7 @@ export default {
     }
   },
   created () {
-    this._getLogList(this.search)
+    this._getLogList({search: this.search, page: 1})
   },
   methods: {
     searchLog () {
@@ -126,19 +125,22 @@ export default {
         this.search.dateStart = ''
         this.search.dateEnd = ''
       }
-      this._getLogList(this.search)
+      this._getLogList({search: this.search, page: 1})
     },
-    pageChange () {},
+    pageChange (val) {
+      this.currentPage = val
+      this._getLogList({search: this.search})
+    },
     _changeData (date) {
       return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
     },
-    _getLogList (params) {
+    _getLogList ({search, page = this.currentPage}) {
       const getInfo = {
-        lx: params.type,
-        ksrq: params.dateStart,
-        jsrq: params.dateEnd,
+        lx: search.type,
+        ksrq: search.dateStart,
+        jsrq: search.dateEnd,
         pageSize: this.pageSize,
-        pageNo: this.currentPage,
+        pageNo: page,
         url: 'getLogInfo'
       }
       getLogList(getInfo).then((res) => {

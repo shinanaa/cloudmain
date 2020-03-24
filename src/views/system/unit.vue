@@ -91,7 +91,6 @@
           </div>
         </div>
         <el-pagination
-          hide-on-single-page
           @current-change="pageChange"
           :current-page="currentPage"
           :page-size="pageSize"
@@ -206,12 +205,12 @@ export default {
     }
   },
   created () {
-    this._getUnitList(this.search)
+    this._getUnitList({search: this.search})
   },
   methods: {
     pageChange (val) {
       this.currentPage = val
-      this._getUnitList(this.pageSize, val)
+      this._getUnitList({page: val})
     },
     editUnit (item) {
       this._getPluginTree()
@@ -253,7 +252,7 @@ export default {
       })
     },
     searchUnit () {
-      this._getUnitList(this.search)
+      this._getUnitList({search: this.search, page: 1})
     },
     _deleteUnitInfo (params) {
       const deleteParams = {
@@ -268,7 +267,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getUnitList(this.search)
+          this._getUnitList({search: this.search})
         } else {
           this.$message({
             showClose: true,
@@ -290,7 +289,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getUnitList(this.search)
+          this._getUnitList({search: this.search})
         } else {
           this.cancelUserSet()
           this.$message({
@@ -316,7 +315,7 @@ export default {
             message: res.errmsg,
             type: 'success'
           })
-          this._getUnitList(this.search)
+          this._getUnitList({search: this.search})
         } else {
           this.cancelUserSet()
           this.$message({
@@ -365,14 +364,14 @@ export default {
         console.log(err)
       })
     },
-    _getUnitList (params) {
-      console.log(params)
+    _getUnitList ({search, page = this.currentPage}) {
+      console.log(search)
       const getInfo = {
-        mc: params.userName,
-        dm: params.code,
-        zt: params.state,
+        mc: search.userName,
+        dm: search.code,
+        zt: search.state,
         pageSize: this.pageSize,
-        pageNo: this.currentPage,
+        pageNo: page,
         url: 'getUnitInfo'
       }
       getUnitList(getInfo).then((res) => {

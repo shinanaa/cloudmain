@@ -2,7 +2,8 @@ const i = {
   loginOn: { url: 'portal/loginAdmin' },
   logOut: { url: 'portal/logout' },
   changePwd: { url: 'gateway/system/system/user/updatePassword' },
-  getPluginList: { url: 'gateway/admin/admin/plugin/showGn' },
+  getPluginList: { url: 'gateway/admin/admin/plugin/showGn' }, // 获取菜单导航列表
+  uploadImg: { url: 'gateway/admin/admin/file/upImage' }, // 图片上传
   // 用户管理
   getUserTree: { url: 'gateway/admin/admin/adminUser/queryAllUser' },
   getUserInfo: { url: 'gateway/admin/admin/adminUser/queryAllUserWithPage' }, // 分页获取用户数据
@@ -10,6 +11,7 @@ const i = {
   editUserInfo: { url: 'gateway/admin/admin/adminUser/updateUser' },
   addUserInfo: { url: 'gateway/admin/admin/adminUser/insertUser' },
   deleteUserInfo: { url: 'gateway/admin/admin/adminUser/deleteUser' },
+  deleteUsers: { url: 'gateway/admin/admin/adminUser/deleteUsers' },
   // 模块管理
   getModuleTree: { url: 'gateway/admin/admin/module/queryModuleList' },
   getModuleInfo: { url: 'gateway/admin/admin/module/queryModuleListPage' },
@@ -46,8 +48,14 @@ const i = {
   getNoticeById: { url: 'gateway/admin/admin/notice/queryNoticeById' },
   addNoticeInfo: { url: 'gateway/admin/admin/notice/saveNoticeInfo' },
   editNoticeInfo: { url: 'gateway/admin/admin/notice/updateNotice' },
-  deleteNoticeInfo: { url: 'gateway/admin/admin/notice/deleteNoticeById' }
-
+  deleteNoticeInfo: { url: 'gateway/admin/admin/notice/deleteNoticeById' },
+  // 轮播管理
+  getCarouselInfo: { url: 'gateway/admin/admin/carousel/queryCarouselListPage' },
+  getCarouselById: { url: 'gateway/admin/admin/carousel/queryCarouselById' },
+  addCarouselInfo: { url: 'gateway/admin/admin/carousel/saveCarouselInfo' },
+  editCarouselInfo: { url: 'gateway/admin/admin/carousel/updateCarousel' },
+  deleteCarouselInfo: { url: 'gateway/admin/admin/carousel/deleteCarouselById' },
+  getCarouselList: { url: 'gateway/admin/admin/carousel/queryCarouselList' } // 登录页轮播图片
 }
 
 export default i

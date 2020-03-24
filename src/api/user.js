@@ -51,6 +51,13 @@ export function deleteUserItem (deleteParams) {
   return Http.postRequest(deleteParams.url, data)
 }
 
+export function deleteUsers (deleteParams) {
+  const data = {
+    userids: deleteParams.userids
+  }
+  return Http.postRequest(deleteParams.url, data)
+}
+
 export function getUserTree (url) {
   return Http.postRequest(url)
 }
