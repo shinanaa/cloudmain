@@ -78,7 +78,7 @@
         </el-pagination>
       </div>
       <div class="dialog">
-        <el-dialog :title="dialogTitle" :visible.sync="showUserDialog">
+        <el-dialog :title="dialogTitle" :visible.sync="showUserDialog" :before-close="cancelUserSet">
           <el-form :model="moduleForm" ref="moduleForm" :rules="moduleRules">
             <el-form-item label="名称" :label-width="formLabelWidth" prop="mc">
               <el-input type="text" v-model="moduleForm.mc"></el-input>

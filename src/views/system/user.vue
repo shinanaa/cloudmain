@@ -101,7 +101,7 @@
       </div>
       <div class="dialog">
         <!--新增/修改-->
-        <el-dialog :title="dialogTitle" :visible.sync="showUserDialog">
+        <el-dialog :title="dialogTitle" :visible.sync="showUserDialog" :before-close="cancelUserSet">
           <el-form :model="userForm" ref="UsersForm" :rules="userRules">
             <el-form-item label="名称" :label-width="formLabelWidth" prop="yhmc">
               <el-input type="text" v-model="userForm.yhmc"></el-input>

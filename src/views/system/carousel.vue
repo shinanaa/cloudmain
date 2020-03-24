@@ -84,7 +84,7 @@
       </el-pagination>
     </div>
     <div class="dialog">
-      <el-dialog :title="dialogTitle" :visible.sync="showDialog">
+      <el-dialog :title="dialogTitle" :visible.sync="showDialog" :before-close="cancelSet">
         <el-form :model="wheelForm" ref="wheelForm" :rules="wheelRules">
           <el-form-item label="名称" :label-width="formLabelWidth" prop="mc">
             <el-input type="text" v-model="wheelForm.mc"></el-input>

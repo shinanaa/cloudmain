@@ -102,7 +102,7 @@
         </el-pagination>
       </div>
       <div class="dialog">
-        <el-dialog :title="dialogTitle" :visible.sync="showPluginDialog">
+        <el-dialog :title="dialogTitle" :visible.sync="showPluginDialog" :before-close="cancelUserSet">
           <el-form :model="pluginForm" ref="pluginForm" :rules="pluginRules">
             <el-form-item label="简称" :label-width="formLabelWidth" prop="mcjc">
               <el-input type="text" v-model="pluginForm.mcjc"></el-input>

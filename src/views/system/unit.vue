@@ -99,7 +99,7 @@
         </el-pagination>
       </div>
       <div class="dialog">
-        <el-dialog :title="dialogTitle" :visible.sync="showUnitDialog">
+        <el-dialog :title="dialogTitle" :visible.sync="showUnitDialog" :before-close="cancelSet">
           <el-form :model="unitForm" ref="unitForm" :rules="unitRules">
             <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
               <el-input type="text" v-model="unitForm.name"></el-input>
@@ -132,7 +132,7 @@
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button @click="cancelUserSet">取 消</el-button>
+            <el-button @click="cancelSet">取 消</el-button>
             <el-button type="primary" @click="submitUnitSet">确 定</el-button>
           </div>
         </el-dialog>
@@ -227,7 +227,7 @@ export default {
       this.showUnitDialog = true
       this.isAdd = true
     },
-    cancelUserSet () {
+    cancelSet () {
       this.showUnitDialog = false
       this.$refs.unitForm.resetFields()
       this.$refs.pluginTree.setCheckedNodes([])
@@ -283,7 +283,7 @@ export default {
       addUnitItem(addParams).then((res) => {
         console.log(res)
         if (res.errcode === ERR_CODE) {
-          this.cancelUserSet()
+          this.cancelSet()
           this.$message({
             showClose: true,
             message: res.errmsg,
@@ -291,7 +291,7 @@ export default {
           })
           this._getUnitList({search: this.search})
         } else {
-          this.cancelUserSet()
+          this.cancelSet()
           this.$message({
             showClose: true,
             message: res.errmsg,
@@ -309,7 +309,7 @@ export default {
       editUnitItem(editParams).then((res) => {
         console.log(res)
         if (res.errcode === ERR_CODE) {
-          this.cancelUserSet()
+          this.cancelSet()
           this.$message({
             showClose: true,
             message: res.errmsg,
@@ -317,7 +317,7 @@ export default {
           })
           this._getUnitList({search: this.search})
         } else {
-          this.cancelUserSet()
+          this.cancelSet()
           this.$message({
             showClose: true,
             message: res.errmsg,

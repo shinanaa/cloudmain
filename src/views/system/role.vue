@@ -75,7 +75,7 @@
       </el-pagination>
     </div>
     <div class="dialog">
-      <el-dialog :title="dialogTitle" :visible.sync="showRoleDialog">
+      <el-dialog :title="dialogTitle" :visible.sync="showRoleDialog" :before-close="cancelRoleSet">
         <el-form :model="roleForm" ref="roleForm" :rules="moduleRules">
           <el-form-item label="名称" :label-width="formLabelWidth" prop="mc">
             <el-input type="text" v-model="roleForm.mc"></el-input>
@@ -91,26 +91,14 @@
               <el-option v-for="item in stateDialog" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
-          <!--级联选择 多选-->
-          <!--<el-form-item label="功能" :label-width="formLabelWidth">
-            <el-cascader
-            v-model="roleForm.jsgnid"
-            :options="plugins"
-            :props="props"></el-cascader>
-          </el-form-item>-->
           <el-form-item label="功能" :label-width="formLabelWidth">
             <el-tree :data="plugins" :props="pluginTree" show-checkbox ref="pluginTree" node-key="value"></el-tree>
           </el-form-item>
           <el-form-item label="用户" :label-width="formLabelWidth">
             <el-select v-model="roleForm.userids" multiple placeholder="请选择">
-            <el-option v-for="item in userIds" :key="item.id" :label="item.yhmc" :value="item.yhid"></el-option>
+            <el-option v-for="item in userIdsList" :key="item.id" :label="item.yhmc" :value="item.yhid"></el-option>
             </el-select>
           </el-form-item>
-          <!--<el-form-item label="用户" :label-width="formLabelWidth">-->
-            <!--<el-checkbox-group v-model="roleForm.userids">-->
-              <!--<el-checkbox v-for="(item,index) in userIds" :label="item.yhmc" :key="index"></el-checkbox>-->
-            <!--</el-checkbox-group>-->
-          <!--</el-form-item>-->
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="cancelRoleSet">取 消</el-button>
@@ -163,7 +151,7 @@ export default {
           { required: true, message: '代码不能为空', trigger: 'blur' }
         ]
       },
-      userIds: [],
+      userIdsList: [],
       plugins: [],
       pluginTree: {
         label: 'label',
@@ -237,11 +225,11 @@ export default {
       })
     },
     _getTreeList () {
-      if (!this.userIds.length) {
+      if (!this.userIdsList.length) {
         getUserTree('getUserTree').then((res) => {
           console.log(res)
           if (res.errcode === ERR_CODE) {
-            this.userIds = res.list
+            this.userIdsList = res.list
           }
         }).catch((err) => {
           console.log(err)

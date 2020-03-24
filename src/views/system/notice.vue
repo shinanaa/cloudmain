@@ -95,7 +95,7 @@
       </el-pagination>
     </div>
     <div class="dialog">
-      <el-dialog :title="dialogTitle" :visible.sync="showNoticeDialog">
+      <el-dialog :title="dialogTitle" :visible.sync="showNoticeDialog" :before-close="cancelNoticeSet">
         <el-form :model="noticeForm" ref="noticeForm" :rules="userRules">
           <el-row>
             <el-col :span="12">
