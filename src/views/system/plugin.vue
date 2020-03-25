@@ -179,11 +179,23 @@ export default {
         zt: ''
       },
       pluginRules: {
+        mcjc: [
+          { required: true, message: '简称不能为空', trigger: 'blur' }
+        ],
         mkid: [
-          { required: true, message: '模块不能为空', trigger: 'blur' }
+          { required: true, message: '模块不能为空', trigger: 'change' }
+        ],
+        mcqc: [
+          { required: true, message: '全称不能为空', trigger: 'blur' }
         ],
         dm: [
           { required: true, message: '代码不能为空', trigger: 'blur' }
+        ],
+        dz: [
+          { required: true, message: '地址不能为空', trigger: 'blur' }
+        ],
+        zt: [
+          { required: true, message: '状态不能为空', trigger: 'change' }
         ]
       },
       formLabelWidth: '60px'

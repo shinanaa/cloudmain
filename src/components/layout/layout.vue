@@ -11,49 +11,32 @@
         </li>
       </ul>
       <div class="right">
-        <el-col :span="11">
-          <el-row type="flex" class="info">
-            <el-col :span="8">
-              <el-badge :value="3" class="item">
-                <i class="icon el-icon-postcard"></i>
-              </el-badge>
-            </el-col>
-            <el-col :span="8">
-              <i class="icon el-icon-microphone"></i>
-            </el-col>
-            <el-col :span="8">
-              <i class="icon el-icon-chat-dot-square"></i>
-            </el-col>
-          </el-row>
-        </el-col>
-        <el-col :span="13">
-          <el-dropdown>
-            <div class="user">
-              <div class="user-text">
-                <div class="username">{{userRole}}</div>
-                <div class="userIntroduce">{{userName}}</div>
-              </div>
-              <img class="userImg" src="@/common/img/user.png" alt="">
+        <el-dropdown>
+          <div class="user">
+            <div class="user-text">
+              <div class="username">{{userName}}</div>
+              <div class="userIntroduce">{{userRole}}</div>
             </div>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>切换角色</el-dropdown-item>
-              <el-dropdown-item><span @click="showChangePwd = true">修改密码</span></el-dropdown-item>
-              <el-dropdown-item><span @click="logout">退出登录</span></el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </el-col>
+            <img class="userImg" src="@/common/img/user.png" alt="">
+          </div>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>切换角色</el-dropdown-item>
+            <el-dropdown-item><span @click="showChangePwd = true">修改密码</span></el-dropdown-item>
+            <el-dropdown-item><span @click="logout">退出登录</span></el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </div>
     </div>
     <div class="changePwd">
       <el-dialog title="修改密码" :visible.sync="showChangePwd" width="30%">
         <el-form :model="changePwdForm" ref="changePwdForm" :rules="changePwdRules">
-          <el-form-item label="旧密码：" :label-width="formLabelWidth" prop="oldPwd">
+          <el-form-item label="旧的密码" :label-width="formLabelWidth" prop="oldPwd">
             <el-input type="text" v-model="changePwdForm.oldPwd"></el-input>
           </el-form-item>
-          <el-form-item label="新密码：" :label-width="formLabelWidth" prop="newPwd">
+          <el-form-item label="新的密码" :label-width="formLabelWidth" prop="newPwd">
             <el-input type="text" v-model="changePwdForm.newPwd"></el-input>
           </el-form-item>
-          <el-form-item label="确认密码：" :label-width="formLabelWidth" prop="surePwd">
+          <el-form-item label="确认密码" :label-width="formLabelWidth" prop="surePwd">
             <el-input type="text" v-model="changePwdForm.surePwd"></el-input>
           </el-form-item>
         </el-form>
@@ -222,7 +205,7 @@ export default {
             background: rgba(255,255,255,0.1)
       .right
         float:right
-        width: 300px
+        width: 150px
         .info
           clearfix()
           height: 60px
@@ -235,11 +218,12 @@ export default {
               font-size: 30px
               color: #FFF
         .user
-          height: 80px
-          padding-left: 10px
           display: flex
           align-items: center
           text-align: right
+          height: 80px
+          padding-left: 10px
+          border-left: 2px solid #21324f
           clearfix()
           .user-text
             font-size: 14px

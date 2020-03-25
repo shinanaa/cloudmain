@@ -9,6 +9,8 @@
 
 <script>
 // import editorImage from './components/editorImage'
+import {uploadFile} from '@/api/carousel'
+import {ERR_CODE} from 'common/js/config'
 import plugins from './plugins'
 import toolbar from './toolbar'
 
@@ -31,7 +33,8 @@ export default {
       }
     },
     menubar: {
-      default: 'file edit insert view format table'
+      // default: 'file edit insert view format table' // 修改 隐藏头部菜单
+      default: ''
     },
     height: {
       type: Number,
@@ -72,6 +75,7 @@ export default {
         selector: `#${this.tinymceId}`,
         height: this.height,
         body_class: 'panel-body ',
+        statusbar: false, // 隐藏下方状态栏
         object_resizing: false,
         resize: false,
         toolbar: this.toolbar.length > 0 ? this.toolbar : toolbar,
@@ -83,7 +87,8 @@ export default {
         code_dialog_width: 1000,
         advlist_bullet_styles: 'square',
         advlist_number_styles: 'default',
-        imagetools_cors_hosts: ['www.tinymce.com', 'codepen.io'],
+        // images_upload_url: 'uploadImg', // 新增 图片请求地址
+        imagetools_cors_hosts: ['http://www.netpaper.top:5000'], // 修改 允许cros的域数组
         default_link_target: '_blank',
         link_title: false,
         nonbreaking_force_tab: true, // inserting nonbreaking space &nbsp; need Nonbreaking Space Plugin
@@ -101,40 +106,56 @@ export default {
           editor.on('FullscreenStateChanged', (e) => {
             _this.fullscreen = e.state
           })
+        },
+        // 新增 本地图片上传
+        images_upload_handler (blobInfo, success, failure) {
+          const url = 'uploadImg'
+          const formData = new FormData()
+          formData.append('upfile', blobInfo.blob())
+          formData.append('fileType', 'noticeFile')
+          uploadFile(formData, url).then((res) => {
+            console.log(res)
+            if (res.errcode === ERR_CODE) {
+              success(res.dz)
+            }
+          }).catch(err => {
+            failure('出现未知问题，刷新页面，或者联系程序员')
+            console.log(err)
+          })
         }
         // 整合七牛上传
-        // images_dataimg_filter(img) {
+        // images_dataimg_filter (img) {
         //   setTimeout(() => {
-        //     const $image = $(img);
-        //     $image.removeAttr('width');
-        //     $image.removeAttr('height');
+        //     const $image = $(img)
+        //     $image.removeAttr('width')
+        //     $image.removeAttr('height')
         //     if ($image[0].height && $image[0].width) {
-        //       $image.attr('data-wscntype', 'image');
-        //       $image.attr('data-wscnh', $image[0].height);
-        //       $image.attr('data-wscnw', $image[0].width);
-        //       $image.addClass('wscnph');
+        //       $image.attr('data-wscntype', 'image')
+        //       $image.attr('data-wscnh', $image[0].height)
+        //       $image.attr('data-wscnw', $image[0].width)
+        //       $image.addClass('wscnph')
         //     }
-        //   }, 0);
+        //   }, 0)
         //   return img
         // },
-        // images_upload_handler(blobInfo, success, failure, progress) {
-        //   progress(0);
-        //   const token = _this.$store.getters.token;
+        // images_upload_handler (blobInfo, success, failure, progress) {
+        //   progress(0)
+        //   const token = _this.$store.getters.token
         //   getToken(token).then(response => {
-        //     const url = response.data.qiniu_url;
-        //     const formData = new FormData();
-        //     formData.append('token', response.data.qiniu_token);
-        //     formData.append('key', response.data.qiniu_key);
-        //     formData.append('file', blobInfo.blob(), url);
+        //     const url = response.data.qiniu_url
+        //     const formData = new FormData()
+        //     formData.append('token', response.data.qiniu_token)
+        //     formData.append('key', response.data.qiniu_key)
+        //     formData.append('file', blobInfo.blob(), url)
         //     upload(formData).then(() => {
-        //       success(url);
-        //       progress(100);
+        //       success(url)
+        //       progress(100)
         //     })
         //   }).catch(err => {
         //     failure('出现未知问题，刷新页面，或者联系程序员')
-        //     console.log(err);
-        //   });
-        // },
+        //     console.log(err)
+        //   })
+        // }
       })
     },
     destroyTinymce () {

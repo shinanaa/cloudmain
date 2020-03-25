@@ -15,12 +15,12 @@
           <div class="login-form">
             <el-form v-show="loginFlag" class="login-form" :model="loginForm" :rules="rules" ref="loginForm">
               <el-form-item prop="userName">
-                <el-input v-model="loginForm.userName" placeholder="请输入系统账号">
+                <el-input v-model="loginForm.userName" placeholder="请输入账号">
                   <i slot="prefix" class="el-input__icon el-icon-user"></i>
                 </el-input>
               </el-form-item>
               <el-form-item prop="password">
-                <el-input v-model="loginForm.password" placeholder="请输入密码">
+                <el-input v-model="loginForm.password" placeholder="请输入密码" show-password @keyup.enter.native="login">
                   <i slot="prefix" class="el-input__icon el-icon-lock"></i>
                 </el-input>
               </el-form-item>
@@ -61,12 +61,12 @@ export default {
     }
     return {
       loginForm: {
-        userName: 'admin',
-        password: 'admin'
+        userName: '',
+        password: ''
       },
       rules: {
         userName: [
-          { required: true, message: '用户名不能为空', trigger: 'blur' },
+          { required: true, message: '账号不能为空', trigger: 'blur' },
           { required: true, trigger: 'blur', validator: validateUsername }
         ],
         password: [

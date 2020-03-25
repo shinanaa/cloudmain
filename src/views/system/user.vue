@@ -30,7 +30,7 @@
           <div class="btn-handle">
             <el-button type="primary" @click="addUser">新增</el-button>
             <el-button type="primary">导入</el-button>
-            <el-button type="primary" @click="delUsers">批量删除</el-button>
+            <!--<el-button type="primary" @click="delUsers">批量删除</el-button>-->
           </div>
           <div class="btn-change">
             <i class="el-icon-s-fold" :class="{'active' : listType}" @click="listType = true"></i>
@@ -40,12 +40,7 @@
         <div v-if="listType" class="table-main">
           <el-table
             :data="userList"
-            @selection-change="selectTable"
             style="width: 100%">
-            <el-table-column
-              type="selection"
-              width="55">
-            </el-table-column>
             <el-table-column prop="yhmc" label="名称"></el-table-column>
             <el-table-column prop="dm" label="代码"></el-table-column>
             <el-table-column prop="jsmc" label="角色"></el-table-column>
@@ -149,7 +144,7 @@
 </template>
 
 <script>
-import {getUserList, editUserItem, addUserItem, deleteUserItem, getUserItem, deleteUsers} from '@/api/user'
+import {getUserList, editUserItem, addUserItem, deleteUserItem, getUserItem} from '@/api/user'
 import {getRoleTree} from '@/api/role'
 import {ERR_CODE} from 'common/js/config'
 import {pagingMixin} from 'common/js/mixin'
@@ -255,38 +250,38 @@ export default {
     searchUser () {
       this._getUserList({search: this.search, page: 1})
     },
-    selectTable (val) {
-      this.selectRows = val
-    },
-    delUsers () {
-      console.log(this.selectRows)
-      let userids = []
-      this.selectRows.map((row) => {
-        userids.push(row.yhid)
-      })
-      console.log(userids)
-      const deleteParams = {
-        userids,
-        url: 'deleteUsers'
-      }
-      deleteUsers(deleteParams).then((res) => {
-        if (res.errcode === ERR_CODE) {
-          this.$message({
-            showClose: true,
-            message: res.errmsg,
-            type: 'success'
-          })
-          this._getUserList({search: this.search})
-        } else {
-          this.$message({
-            showClose: true,
-            message: res.errmsg,
-            type: 'error'
-          })
-        }
-      })
-      // this.showDelUsers = true
-    },
+    // selectTable (val) {
+    //   this.selectRows = val
+    // },
+    // delUsers () {
+    //   console.log(this.selectRows)
+    //   let userids = []
+    //   this.selectRows.map((row) => {
+    //     userids.push(row.yhid)
+    //   })
+    //   console.log(userids)
+    //   const deleteParams = {
+    //     userids,
+    //     url: 'deleteUsers'
+    //   }
+    //   deleteUsers(deleteParams).then((res) => {
+    //     if (res.errcode === ERR_CODE) {
+    //       this.$message({
+    //         showClose: true,
+    //         message: res.errmsg,
+    //         type: 'success'
+    //       })
+    //       this._getUserList({search: this.search})
+    //     } else {
+    //       this.$message({
+    //         showClose: true,
+    //         message: res.errmsg,
+    //         type: 'error'
+    //       })
+    //     }
+    //   })
+    //   // this.showDelUsers = true
+    // },
     deleteUser (rowData) {
       console.log(rowData)
       this._deleteUserInfo(rowData)

@@ -37,7 +37,8 @@
           <el-table-column prop="xh" label="序号"></el-table-column>
           <el-table-column prop="zt" label="状态">
             <template slot-scope="scope">
-              <span>{{scope.row.zt === 'Y' ? '使用' : '停用'}}</span>
+              <span v-if="scope.row.zt === '1'">编辑</span>
+              <span v-if="scope.row.zt === '2'">发布</span>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="150">
@@ -339,7 +340,7 @@ export default {
     _getWheelList ({search, page = this.currentPage}) {
       const getInfo = {
         mc: search.wheelName,
-        zt: search.zt,
+        zt: search.state,
         pageSize: this.pageSize,
         pageCurrent: page,
         url: 'getCarouselInfo'

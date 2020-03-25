@@ -40,8 +40,8 @@
             <el-table-column prop="yh" label="用户"></el-table-column>
             <el-table-column prop="lx" label="类型">
               <template slot-scope="scope">
-                <span v-if="scope.row.lx === '1'">登录日志</span>
-                <span v-if="scope.row.lx === '2'">操作日志</span>
+                <span v-if="scope.row.lx === '1'">登录</span>
+                <span v-if="scope.row.lx === '2'">操作</span>
               </template>
             </el-table-column>
             <el-table-column prop="nr" label="内容"></el-table-column>
@@ -56,17 +56,21 @@
                 <span class="info-value">{{item.rq}}</span>
               </div>
               <div class="info-item">
+                <span class="info-key">时间</span>
+                <span class="info-value">{{item.sj}}</span>
+              </div>
+              <div class="info-item">
                 <span class="info-key">地址</span>
                 <span class="info-value">{{item.dz}}</span>
               </div>
               <div class="info-item">
                 <span class="info-key">类型</span>
-                <span class="info-value"  v-if="item.lx === '1'">登录日志</span>
-                <span class="info-value"  v-if="item.lx === '2'">操作日志</span>
+                <span class="info-value"  v-if="item.lx === '1'">登录</span>
+                <span class="info-value"  v-if="item.lx === '2'">操作</span>
               </div>
               <div class="info-item">
                 <span class="info-key">内容</span>
-                <span class="info-value">{{item.zt === 'Y' ? '使用' : '禁用'}}</span>
+                <span class="info-value">{{item.nr}}</span>
               </div>
             </div>
           </div>
@@ -94,8 +98,8 @@ export default {
       listType: true,
       types: [
         {value: '', label: '全部'},
-        {value: '1', label: '登录日志'},
-        {value: '2', label: '操作日志'}
+        {value: '1', label: '登录'},
+        {value: '2', label: '操作'}
       ],
       search: {
         userName: '',

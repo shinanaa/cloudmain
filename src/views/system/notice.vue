@@ -101,7 +101,7 @@
             <el-col :span="12">
               <el-form-item label="类型" :label-width="formLabelWidth" prop="type">
                 <el-select v-model="noticeForm.type" placeholder="请选择">
-                  <el-option v-for="item in types" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                  <el-option v-for="item in typesDialog" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -118,7 +118,7 @@
           </el-form-item>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="范围" :label-width="formLabelWidth">
+              <el-form-item label="范围" :label-width="formLabelWidth" prop="unitIds">
                 <el-select v-model="noticeForm.unitIds" multiple value-key="dwid" placeholder="请选择">
                   <el-option v-for="(item, index) in unitList" :key="index" :label="item.mc" :value="item.dwid"></el-option>
                 </el-select>
@@ -216,14 +216,20 @@ export default {
         nr: ''
       },
       userRules: {
-        yhmc: [
-          { required: true, message: '名称不能为空', trigger: 'blur' }
+        type: [
+          { required: true, message: '类型不能为空', trigger: 'change' }
         ],
-        dm: [
-          { required: true, message: '代码不能为空', trigger: 'blur' }
+        state: [
+          { required: true, message: '状态不能为空', trigger: 'change' }
         ],
-        mm: [
-          { required: true, message: '密码不能为空', trigger: 'blur' }
+        title: [
+          { required: true, message: '标题不能为空', trigger: 'blur' }
+        ],
+        unitIds: [
+          { required: true, message: '范围不能为空', trigger: 'change' }
+        ],
+        nr: [
+          { required: true, message: '内容不能为空', trigger: 'change' }
         ]
       },
       imgParams: { // action
@@ -244,6 +250,11 @@ export default {
       let stateDialog = JSON.parse(JSON.stringify(this.states))
       stateDialog.shift()
       return stateDialog
+    },
+    typesDialog () {
+      let typesDialog = JSON.parse(JSON.stringify(this.types))
+      typesDialog.shift()
+      return typesDialog
     },
     dialogTitle () {
       return this.isAdd ? '通知公告增加' : '通知公告修改'
