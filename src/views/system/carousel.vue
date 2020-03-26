@@ -378,9 +378,4 @@ export default {
       width: 175px
       height: 175px
       display: block
-    .seeNotice
-      h1
-        padding-bottom: 30px
-        text-align: center
-        font-size: 22px
 </style>

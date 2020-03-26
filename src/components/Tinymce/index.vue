@@ -54,7 +54,8 @@ export default {
     value (val) {
       if (!this.hasChange && this.hasInit) {
         this.$nextTick(() =>
-          window.tinymce.get(this.tinymceId).setContent(val || ''))
+          window.tinymce.get(this.tinymceId).setContent(val || '')
+        )
       }
     }
   },
@@ -87,7 +88,7 @@ export default {
         code_dialog_width: 1000,
         advlist_bullet_styles: 'square',
         advlist_number_styles: 'default',
-        // images_upload_url: 'uploadImg', // 新增 图片请求地址
+        convert_urls: false,
         imagetools_cors_hosts: ['http://www.netpaper.top:5000'], // 修改 允许cros的域数组
         default_link_target: '_blank',
         link_title: false,
@@ -98,7 +99,7 @@ export default {
           }
           _this.hasInit = true
           editor.on('NodeChange Change KeyUp SetContent', () => {
-            // this.hasChange = true  注释后，编辑器只能回显一次内容的问题解决
+            // this.hasChange = true // 注释后，编辑器只能回显一次内容的问题解决
             this.$emit('input', editor.getContent())
           })
         },

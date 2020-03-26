@@ -245,6 +245,16 @@ export default {
       }
     }
   },
+  watch: {
+    'noticeForm.nr': {
+      deep: true,
+      handler: function (newV, oldV) {
+        if (newV !== '') {
+          this.$refs['noticeForm'].clearValidate(['nr'])
+        }
+      }
+    }
+  },
   computed: {
     stateDialog () {
       let stateDialog = JSON.parse(JSON.stringify(this.states))
@@ -538,4 +548,6 @@ export default {
         padding-bottom: 30px
         text-align: center
         font-size: 22px
+      /deep/ img
+        max-width: 100%
 </style>
