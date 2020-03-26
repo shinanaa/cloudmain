@@ -152,7 +152,7 @@
             </el-upload>
           </el-form-item>
           <el-form-item label="内容" :label-width="formLabelWidth" prop="nr">
-            <tinymce :height="300" v-model="noticeForm.nr" :id="tinymceId"></tinymce>
+            <tinymce :height="300" v-model="noticeForm.nr" :id="tinymceId" v-if="isTinymce"></tinymce>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -181,6 +181,7 @@ export default {
   components: {Tinymce},
   data () {
     return {
+      isTinymce: true,
       listType: true,
       search: {
         type: '',
@@ -302,6 +303,10 @@ export default {
     cancelNoticeSet () {
       this.showNoticeDialog = false
       this.$refs.noticeForm.resetFields()
+      this.isTinymce = false
+      this.$nextTick(() => {
+        this.isTinymce = true
+      })
       console.log(this.noticeForm)
     },
     submitNoticeSet () {

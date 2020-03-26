@@ -116,13 +116,28 @@ export default {
   },
   methods: {
     searchLog () {
-      console.log(this.search)
-      if (this.search.date) {
-        if (this.search.date.length) {
-          let dateStart = new Date(this.search.date[0])
-          let dateEnd = new Date(this.search.date[1])
-          this.search.dateStart = this._changeData(dateStart)
-          this.search.dateEnd = this._changeData(dateEnd)
+      this._getLogList({search: this.search, page: 1})
+    },
+    pageChange (val) {
+      this.currentPage = val
+      this._getLogList({search: this.search})
+    },
+    _dateAdd0 (time) {
+      if (time < 10) {
+        time = `0${time}`
+      }
+      return time
+    },
+    _changeData (date) {
+      return date.getFullYear() + '-' + this._dateAdd0(date.getMonth() + 1) + '-' + this._dateAdd0(date.getDate())
+    },
+    _getLogList ({search, page = this.currentPage}) {
+      if (search.date) {
+        if (search.date.length) {
+          let dateStart = new Date(search.date[0])
+          let dateEnd = new Date(search.date[1])
+          search.dateStart = this._changeData(dateStart)
+          search.dateEnd = this._changeData(dateEnd)
         } else {
           this.search.dateStart = ''
           this.search.dateEnd = ''
@@ -131,16 +146,6 @@ export default {
         this.search.dateStart = ''
         this.search.dateEnd = ''
       }
-      this._getLogList({search: this.search, page: 1})
-    },
-    pageChange (val) {
-      this.currentPage = val
-      this._getLogList({search: this.search})
-    },
-    _changeData (date) {
-      return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
-    },
-    _getLogList ({search, page = this.currentPage}) {
       const getInfo = {
         lx: search.type,
         yh: search.userName,
