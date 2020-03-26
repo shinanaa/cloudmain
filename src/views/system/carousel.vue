@@ -29,11 +29,6 @@
           style="width: 100%">
           <el-table-column prop="mc" label="名称"></el-table-column>
           <el-table-column prop="dm" label="代码"></el-table-column>
-          <el-table-column prop="tpwj" label="图片">
-            <template slot-scope="scope">
-              <img :src="scope.row.tpwj" alt="" width="200px" height="60px">
-            </template>
-          </el-table-column>
           <el-table-column prop="xh" label="序号"></el-table-column>
           <el-table-column prop="zt" label="状态">
             <template slot-scope="scope">
@@ -56,10 +51,6 @@
             <div class="info-item">
               <span class="info-key">代码</span>
               <span class="info-value">{{item.dm}}</span>
-            </div>
-            <div class="info-item">
-              <span class="info-key">图片</span>
-              <span class="info-value">{{item.tpwj}}</span>
             </div>
             <div class="info-item">
               <span class="info-key">序号</span>
@@ -93,23 +84,23 @@
           <el-form-item label="代码" :label-width="formLabelWidth" prop="dm">
             <el-input type="text" v-model="wheelForm.dm"></el-input>
           </el-form-item>
+          <el-form-item label="图片" :label-width="formLabelWidth" prop="tpwj">
+            <el-upload
+              class="img-uploader"
+              action="#"
+              :http-request="imgUpload"
+              :show-file-list="false">
+              <img v-if="wheelForm.tpwj" :src="wheelForm.tpwj" class="img">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </el-form-item>
           <el-row>
-            <el-col :span="12">
-              <el-form-item label="图片" :label-width="formLabelWidth" prop="tpwj">
-                <el-upload
-                  class="img-uploader"
-                  action="#"
-                  :http-request="imgUpload"
-                  :show-file-list="false">
-                  <img v-if="wheelForm.tpwj" :src="wheelForm.tpwj" class="img">
-                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
-              </el-form-item>
-            </el-col>
             <el-col :span="12">
               <el-form-item label="序号" :label-width="formLabelWidth" prop="xh">
                 <el-input type="text" v-model="wheelForm.xh"></el-input>
               </el-form-item>
+            </el-col>
+            <el-col :span="12">
               <el-form-item label="状态" :label-width="formLabelWidth" prop="zt">
                 <el-select v-model="wheelForm.zt" placeholder="请选择">
                   <el-option v-for="item in stateDialog" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -158,11 +149,17 @@ export default {
         zt: ''
       },
       wheelRules: {
-        mkid: [
-          { required: true, message: '模块不能为空', trigger: 'blur' }
+        mc: [
+          { required: true, message: '名称不能为空', trigger: 'blur' }
         ],
         dm: [
           { required: true, message: '代码不能为空', trigger: 'blur' }
+        ],
+        tpwj: [
+          { required: true, message: '图片不能为空', trigger: 'change' }
+        ],
+        zt: [
+          { required: true, message: '状态不能为空', trigger: 'change' }
         ]
       },
       formLabelWidth: '60px'
@@ -195,6 +192,7 @@ export default {
         console.log(res)
         if (res.errcode === ERR_CODE) {
           this.wheelForm.tpwj = res.dz
+          this.$refs.wheelForm.validateField('tpwj')
         }
       })
     },
