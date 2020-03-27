@@ -100,6 +100,7 @@ export default {
     ...mapGetters([
       'userName',
       'userRole',
+      'roleId',
       'moduleList',
       'userLogin'
     ])
@@ -162,6 +163,7 @@ export default {
     _getUserRole () {
       const info = {
         yhid: this.userLogin,
+        jsid: this.roleId,
         url: 'getUserRole'
       }
       getUserRole(info).then((res) => {
@@ -173,7 +175,8 @@ export default {
     },
     _getUserModule () {
       const info = {
-        userid: this.userLogin,
+        yhid: this.userLogin,
+        jsid: this.roleId,
         url: 'getUserModule'
       }
       getUserModule(info).then(res => {

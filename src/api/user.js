@@ -64,14 +64,16 @@ export function getUserTree (url) {
 
 export function getUserRole (info) {
   const data = {
-    yhid: info.yhid
+    yhid: info.yhid,
+    jsid: info.jsid
   }
   return Http.postRequest(info.url, data)
 }
 
 export function getUserModule (info) {
   const data = {
-    userid: info.userid
+    yhid: info.yhid,
+    jsid: info.jsid
   }
   return Http.postRequest(info.url, data)
 }

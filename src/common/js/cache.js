@@ -56,6 +56,20 @@ export function removeUserRole () {
   return []
 }
 
+// 用户角色id
+const ROLEID_KEY = 'user-RoleId'
+
+export function setUserRoleId (name) {
+  return storage.session.set(ROLEID_KEY, name)
+}
+export function getUserRoleId () {
+  return storage.session.get(ROLEID_KEY)
+}
+export function removeUserRoleId () {
+  storage.session.remove(ROLEID_KEY)
+  return []
+}
+
 // 头部的模块列表
 const MODULE_LIST_KEY = 'router-list'
 export function setRouter (list) {
