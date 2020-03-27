@@ -45,13 +45,13 @@ import {mapActions} from 'vuex'
 export default {
   name: 'login',
   data () {
-    const validateUsername = (rule, value, callback) => {
-      if (value.length < 5) {
-        callback(new Error('用户名不能少于5位'))
-      } else {
-        callback()
-      }
-    }
+    // const validateUsername = (rule, value, callback) => {
+    //   if (value.length < 5) {
+    //     callback(new Error('用户名不能少于5位'))
+    //   } else {
+    //     callback()
+    //   }
+    // }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 4) {
         callback(new Error('密码不能少于4位'))
@@ -66,8 +66,8 @@ export default {
       },
       rules: {
         userName: [
-          { required: true, message: '账号不能为空', trigger: 'blur' },
-          { required: true, trigger: 'blur', validator: validateUsername }
+          { required: true, message: '账号不能为空', trigger: 'blur' }
+          // { required: true, trigger: 'blur', validator: validateUsername }
         ],
         password: [
           { required: true, message: '密码不能为空', trigger: 'blur' },

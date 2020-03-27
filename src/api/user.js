@@ -61,3 +61,17 @@ export function deleteUsers (deleteParams) {
 export function getUserTree (url) {
   return Http.postRequest(url)
 }
+
+export function getUserRole (info) {
+  const data = {
+    yhid: info.yhid
+  }
+  return Http.postRequest(info.url, data)
+}
+
+export function getUserModule (info) {
+  const data = {
+    userid: info.userid
+  }
+  return Http.postRequest(info.url, data)
+}

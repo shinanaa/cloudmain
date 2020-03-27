@@ -1,4 +1,5 @@
 const getters = {
+  token: state => state.user.token,
   userName: state => state.user.userName,
   userLogin: state => state.user.userLogin,
   userRole: state => state.user.role,

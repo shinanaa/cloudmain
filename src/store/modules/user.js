@@ -1,16 +1,19 @@
 import * as types from '../mutation-types'
 import {ERR_CODE} from 'common/js/config'
 import {loginByUsername, logout} from '@/api/login'
-import {getRouter, setRouter, removeRouter, getUserLogin, setUserLogin, removeUserLogin, setUserName, getUserName, removeUserName, setUserRole, getUserRole, removeUserRole, removePluginList} from 'common/js/cache'
+import {setToken, getToken, removeToken, getUserLogin, setUserLogin, removeUserLogin, setUserName, getUserName, removeUserName, setUserRole, getUserRole, removeUserRole, removePluginList} from 'common/js/cache'
 
 const user = {
   state: {
+    token: getToken(),
     role: getUserRole(),
-    moduleList: getRouter(),
     userLogin: getUserLogin(),
     userName: getUserName()
   },
   mutations: {
+    [types.SET_USER_TOKEN] (state, token) {
+      state.token = token
+    },
     [types.SET_USER_LOGIN] (state, userLogin) {
       state.userLogin = userLogin
     },
@@ -28,18 +31,13 @@ const user = {
     LoginByUsername ({commit}, userInfo) {
       return new Promise((resolve, reject) => {
         loginByUsername(userInfo).then((res) => {
-          console.log(111)
-          console.log(res)
-          console.log(222)
           const data = res
           if (data.errcode === ERR_CODE) {
-            commit(types.SET_USER_LOGIN, data.authorization)
-            // setToken(data.authorization)
+            commit(types.SET_USER_TOKEN, data.authorization)
             commit(types.SET_USER_NAME, data.mc)
-            commit(types.SET_ROUTER, data.mkList)
             commit(types.SET_USER_LOGIN, data.yhid)
             commit(types.SET_USER_ROLE, data.jsmc)
-            setRouter(data.mkList)
+            setToken(data.authorization)
             setUserLogin(data.yhid)
             setUserName(data.mc)
             setUserRole(data.jsmc)
@@ -58,7 +56,7 @@ const user = {
           commit(types.SET_USER_NAME, '')
           commit(types.SET_USER_LOGIN, '')
           commit(types.SET_USER_ROLE, '')
-          removeRouter()
+          removeToken()
           removeUserLogin()
           removeUserName()
           removeUserRole()

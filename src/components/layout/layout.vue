@@ -20,8 +20,10 @@
             <img class="userImg" src="@/common/img/user.png" alt="">
           </div>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>切换角色</el-dropdown-item>
-            <el-dropdown-item><span @click="showChangePwd = true">修改密码</span></el-dropdown-item>
+            <p v-if="roleList.length > 1" v-for="(item, index) in roleList" :key="index">
+              <el-dropdown-item><span @click="changeRoles(item.jsid)">切换到：{{item.mc}}</span></el-dropdown-item>
+            </p>
+            <el-dropdown-item divided><span @click="showChangePwd = true">修改密码</span></el-dropdown-item>
             <el-dropdown-item><span @click="logout">退出登录</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -55,6 +57,7 @@ import {ERR_CODE} from 'common/js/config'
 import {setPluginList} from 'common/js/cache'
 import {mapActions, mapGetters} from 'vuex'
 import {changePwd, getPluginList} from '@/api/login'
+import {getUserRole, getUserModule} from '@/api/user'
 export default {
   name: 'layout',
   data () {
@@ -85,13 +88,15 @@ export default {
         ]
       },
       showChangePwd: false,
-      formLabelWidth: '100px'
+      formLabelWidth: '100px',
+      roleList: [],
+      modules: []
     }
   },
   computed: {
-    modules () {
-      return this.moduleList
-    },
+    // modules () {
+    //   return this.moduleList
+    // },
     ...mapGetters([
       'userName',
       'userRole',
@@ -99,7 +104,14 @@ export default {
       'userLogin'
     ])
   },
+  created () {
+    this._getUserRole()
+    this._getUserModule()
+  },
   methods: {
+    changeRoles (role) {
+      console.log(role)
+    },
     moduleListItem (index, id) {
       this.activeIndex = index
       if (id === '1f8f43fb-7adb-48cf-b8a8-1419543bbfec') {
@@ -145,6 +157,30 @@ export default {
       const url = 'logOut'
       this.logOut(url).then(() => {
         this.$router.push({ path: '/login' })
+      })
+    },
+    _getUserRole () {
+      const info = {
+        yhid: this.userLogin,
+        url: 'getUserRole'
+      }
+      getUserRole(info).then((res) => {
+        console.log(res)
+        if (res.errcode === ERR_CODE) {
+          this.roleList = res.list
+        }
+      })
+    },
+    _getUserModule () {
+      const info = {
+        userid: this.userLogin,
+        url: 'getUserModule'
+      }
+      getUserModule(info).then(res => {
+        console.log(res)
+        if (res.errcode === ERR_CODE) {
+          this.modules = res.list
+        }
       })
     },
     ...mapActions([

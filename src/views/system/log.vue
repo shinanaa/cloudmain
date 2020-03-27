@@ -123,10 +123,7 @@ export default {
       this._getLogList({search: this.search})
     },
     _dateAdd0 (time) {
-      if (time < 10) {
-        time = `0${time}`
-      }
-      return time
+      return time < 10 ? `0${time}` : time
     },
     _changeData (date) {
       return date.getFullYear() + '-' + this._dateAdd0(date.getMonth() + 1) + '-' + this._dateAdd0(date.getDate())

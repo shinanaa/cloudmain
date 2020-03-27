@@ -1,7 +1,7 @@
 import axios from 'axios'
 import qs from 'qs'
-// import store from '@/store'
-// import {getToken} from 'common/js/cache'
+import store from '@/store'
+import {getToken} from 'common/js/cache'
 
 import { J_API } from '../../../config/prod.env'
 import i from './i'
@@ -10,9 +10,9 @@ import i from './i'
 // 请求拦截器
 axios.interceptors.request.use(config => {
   // 携带token访问接口
-  // if (store.getters.token) {
-  //   config.data['authorization'] = getToken()
-  // }
+  if (store.getters.token) {
+    config.data['authorization'] = getToken()
+  }
   return config
 }, error => {
   Promise.reject(error)

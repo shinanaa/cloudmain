@@ -12,6 +12,7 @@ const i = {
   addUserInfo: { url: 'gateway/admin/admin/adminUser/insertUser' },
   deleteUserInfo: { url: 'gateway/admin/admin/adminUser/deleteUser' },
   deleteUsers: { url: 'gateway/admin/admin/adminUser/deleteUsers' },
+  getUserRole: { url: 'gateway/admin/admin/adminUser/showUserRole' }, // 获取当前用户的角色列表
   // 模块管理
   getModuleTree: { url: 'gateway/admin/admin/module/queryModuleList' },
   getModuleInfo: { url: 'gateway/admin/admin/module/queryModuleListPage' },
@@ -19,6 +20,7 @@ const i = {
   addModuleInfo: { url: 'gateway/admin/admin/module/saveModule' },
   editModuleInfo: { url: 'gateway/admin/admin/module/updateModule' },
   deleteModuleInfo: { url: 'gateway/admin/admin/module/deleteModuleById' },
+  getUserModule: { url: 'gateway/admin/admin/module/queryModuleByUserId' }, // 获取当前用户的模块列表
   // 功能管理
   getPluginTree: { url: 'gateway/admin/admin/plugin/moudlePluginTree' },
   getPluginInfo: { url: 'gateway/admin/admin/plugin/queryPluginListPage' },
