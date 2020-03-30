@@ -169,6 +169,7 @@
 </template>
 
 <script>
+import {getToken} from 'common/js/cache'
 import {mapGetters} from 'vuex'
 import {getNoticeInfo, uploadImg, addNoticeItem, getNoticeItem, editNoticeItem} from '@/api/notice'
 import {getUnitTree} from '@/api/treeAndList'
@@ -332,7 +333,7 @@ export default {
     },
     imgUpload (content) {
       this.isImgUpload = true
-      let url = 'http://www.netpaper.top:5000/gateway/admin/admin/file/upImage'
+      let url = 'http://192.168.1.127/gateway/admin/admin/file/upImage'
       this._noticeUpload(content.file, url)
     },
     annexUpload (content) {
@@ -344,6 +345,7 @@ export default {
       let ImgData = new FormData()
       ImgData.append('upfile', file)
       ImgData.append('fileType', 'noticeFile')
+      ImgData.append('authorization', getToken())
       console.log(ImgData)
       uploadImg(ImgData, url).then((res) => {
         console.log(res)

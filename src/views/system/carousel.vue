@@ -121,6 +121,7 @@
 <script>
 import {getCrouselInfo, addCrouselItem, editCrouselItem, deleteCrouselItem, getCrouselItem, uploadFile} from '@/api/carousel'
 import {ERR_CODE} from 'common/js/config'
+import {getToken} from 'common/js/cache'
 import {pagingMixin} from 'common/js/mixin'
 export default {
   name: 'carousel',
@@ -187,6 +188,7 @@ export default {
       let ImgData = new FormData()
       ImgData.append('upfile', file)
       ImgData.append('fileType', 'imageFile')
+      ImgData.append('authorization', getToken())
       console.log(ImgData)
       uploadFile(ImgData, url).then((res) => {
         console.log(res)

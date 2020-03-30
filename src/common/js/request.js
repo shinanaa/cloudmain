@@ -55,6 +55,7 @@ const Http = {
       data: param,
       timeout: 20000
     }
+    console.log(config)
     return axios(config)
   },
   getReuest: function (url, param) {

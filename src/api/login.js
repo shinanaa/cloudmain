@@ -24,6 +24,7 @@ export function changePwd (pwdInfo) {
 export function getPluginList (getInfo) {
   const data = {
     yhid: getInfo.yhid,
+    jsid: getInfo.jsid,
     mkid: getInfo.mkid
   }
   return Http.postRequest(getInfo.url, data)

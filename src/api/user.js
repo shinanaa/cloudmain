@@ -64,8 +64,7 @@ export function getUserTree (url) {
 
 export function getUserRole (info) {
   const data = {
-    yhid: info.yhid,
-    jsid: info.jsid
+    yhid: info.yhid
   }
   return Http.postRequest(info.url, data)
 }

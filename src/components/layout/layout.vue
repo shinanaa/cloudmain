@@ -5,7 +5,7 @@
         <img src="@/common/img/logo-index.png" alt="">
       </router-link>
       <ul class="modules">
-        <li v-for="(item, index) in modules" :key="item.mkid" @click="moduleListItem(index, item.mkid)" :class="{'active': activeIndex === index}">
+        <li v-for="(item, index) in modules" :key="item.mkid" @click="moduleListItem(index, item)" :class="{'active': activeIndex === index}">
           <!--<router-link tag="span" :to="item.url">{{item.name}}</router-link>-->
           {{item.mc}}
         </li>
@@ -21,7 +21,7 @@
           </div>
           <el-dropdown-menu slot="dropdown">
             <p v-if="roleList.length > 1" v-for="(item, index) in roleList" :key="index">
-              <el-dropdown-item><span @click="changeRoles(item.jsid)">切换到：{{item.mc}}</span></el-dropdown-item>
+              <el-dropdown-item><span @click="changeRoles(item)">切换到：{{item.mc}}</span></el-dropdown-item>
             </p>
             <el-dropdown-item divided><span @click="showChangePwd = true">修改密码</span></el-dropdown-item>
             <el-dropdown-item><span @click="logout">退出登录</span></el-dropdown-item>
@@ -94,9 +94,6 @@ export default {
     }
   },
   computed: {
-    // modules () {
-    //   return this.moduleList
-    // },
     ...mapGetters([
       'userName',
       'userRole',
@@ -112,22 +109,33 @@ export default {
   methods: {
     changeRoles (role) {
       console.log(role)
+      this.changeRole(role).then(() => {
+        this._getUserModule()
+        this.$router.push('/home')
+      })
     },
-    moduleListItem (index, id) {
+    moduleListItem (index, item) {
       this.activeIndex = index
-      if (id === '1f8f43fb-7adb-48cf-b8a8-1419543bbfec') {
-        const getInfo = {
-          yhid: this.userLogin,
-          mkid: id,
-          url: 'getPluginList'
-        }
-        getPluginList(getInfo).then((res) => {
-          console.log(res)
+      const getInfo = {
+        yhid: this.userLogin,
+        jsid: this.roleId,
+        mkid: item.mkid,
+        url: 'getPluginList'
+      }
+      getPluginList(getInfo).then((res) => {
+        console.log(res)
+        if (res.errcode === ERR_CODE) {
           console.log(res.menuList)
           setPluginList(res.menuList)
-          this.$router.push('/system')
-        })
-      }
+          if (item.mc === '系统管理') {
+            this.$router.push('/system')
+          }
+          if (item.mc === '单位管理') {
+            this.$router.push('/unit')
+          }
+        }
+      })
+      this.changeModule(item.mc)
     },
     changPwd () {
       this.changePwdForm.url = 'changePwd'
@@ -163,7 +171,6 @@ export default {
     _getUserRole () {
       const info = {
         yhid: this.userLogin,
-        jsid: this.roleId,
         url: 'getUserRole'
       }
       getUserRole(info).then((res) => {
@@ -187,7 +194,9 @@ export default {
       })
     },
     ...mapActions([
-      'logOut'
+      'logOut',
+      'changeRole',
+      'changeModule'
     ])
   }
 }

@@ -29,7 +29,7 @@
         <div class="table-btn">
           <div class="btn-handle">
             <el-button type="primary" @click="addUser">新增</el-button>
-            <el-button type="primary">导入</el-button>
+            <!--<el-button type="primary">导入</el-button>-->
             <!--<el-button type="primary" @click="delUsers">批量删除</el-button>-->
           </div>
           <div class="btn-change">

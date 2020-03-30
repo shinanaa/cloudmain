@@ -14,7 +14,7 @@ export function removeToken () {
   return []
 }
 
-// 用户登录信息
+// 用户登录信息 id
 const LOGIN_KEY = 'user-Info'
 
 export function setUserLogin (token) {
@@ -25,7 +25,7 @@ export function getUserLogin () {
 }
 export function removeUserLogin () {
   storage.session.remove(LOGIN_KEY)
-  return []
+  return ''
 }
 
 // 用户名
@@ -39,7 +39,7 @@ export function getUserName () {
 }
 export function removeUserName () {
   storage.session.remove(NAME_KEY)
-  return []
+  return ''
 }
 
 // 用户角色
@@ -53,7 +53,7 @@ export function getUserRole () {
 }
 export function removeUserRole () {
   storage.session.remove(ROLE_KEY)
-  return []
+  return ''
 }
 
 // 用户角色id
@@ -67,7 +67,7 @@ export function getUserRoleId () {
 }
 export function removeUserRoleId () {
   storage.session.remove(ROLEID_KEY)
-  return []
+  return ''
 }
 
 // 头部的模块列表
@@ -81,6 +81,19 @@ export function getRouter () {
 export function removeRouter () {
   storage.session.remove(MODULE_LIST_KEY)
   return []
+}
+
+// 当前模块名称
+const CURRENT_MODULE_KEY = 'module-name'
+export function setModule (list) {
+  return storage.session.set(CURRENT_MODULE_KEY, list)
+}
+export function getModule () {
+  return storage.session.get(CURRENT_MODULE_KEY)
+}
+export function removeModule () {
+  storage.session.remove(CURRENT_MODULE_KEY)
+  return ''
 }
 
 // 左侧的功能列表

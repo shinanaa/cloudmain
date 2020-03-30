@@ -5,6 +5,7 @@ const getters = {
   userRole: state => state.user.role,
   roleId: state => state.user.roleId,
   moduleList: state => state.user.moduleList,
-  opened: state => state.app.opened
+  opened: state => state.app.opened,
+  currentModule: state => state.app.currentModule
 }
 export default getters
