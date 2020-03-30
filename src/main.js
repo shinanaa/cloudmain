@@ -7,10 +7,12 @@ import store from './store'
 import './permission'
 import Element from 'element-ui'
 import '../node_modules/element-ui/lib/theme-chalk/index.css'
+import VeLine from 'v-charts/lib/line.common'
 import 'common/stylus/index.styl'
 import myHttp from 'common/js/request'
 Vue.prototype.$http = myHttp
 
+Vue.component(VeLine.name, VeLine)
 Vue.use(Element)
 
 Vue.config.productionTip = false
