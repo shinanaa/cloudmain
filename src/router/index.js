@@ -29,7 +29,7 @@ export default new Router({
             { path: '/notice', component: () => import('@/views/system/notice'), meta: {title: '通知公告'} },
             { path: '/unit', component: () => import('@/views/system/unit'), meta: {title: '单位管理'} }, // 后续添加轮播管理
             { path: '/log', component: () => import('@/views/system/log'), meta: {title: '日志管理'} },
-            { path: '/carousel', component: () => import('@/views/system/carousel'), meta: {title: '单位功能管理'} }
+            { path: '/carousel', component: () => import('@/views/system/carousel'), meta: {title: '轮播管理'} }
           ]
         },
         {
