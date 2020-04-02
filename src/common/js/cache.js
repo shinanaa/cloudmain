@@ -14,7 +14,7 @@ export function removeToken () {
   return []
 }
 
-// 用户登录信息 id
+// 用户id
 const LOGIN_KEY = 'user-Info'
 
 export function setUserLogin (token) {
@@ -71,7 +71,7 @@ export function removeUserRoleId () {
 }
 
 // 头部的模块列表
-const MODULE_LIST_KEY = 'router-list'
+const MODULE_LIST_KEY = 'module-list'
 export function setRouter (list) {
   return storage.session.set(MODULE_LIST_KEY, list)
 }
@@ -106,5 +106,18 @@ export function getPluginList () {
 }
 export function removePluginList () {
   storage.session.remove(PLUGIN_LIST_KEY)
+  return []
+}
+
+// 可访问路由列表
+const ROUTER_LIST_KEY = 'router-list'
+export function setRouteList (list) {
+  return storage.session.set(ROUTER_LIST_KEY, list)
+}
+export function getRouteList () {
+  return storage.session.get(ROUTER_LIST_KEY)
+}
+export function removeRouteList () {
+  storage.session.remove(ROUTER_LIST_KEY)
   return []
 }

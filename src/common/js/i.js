@@ -4,6 +4,7 @@ const i = {
   changePwd: { url: 'gateway/system/system/user/updatePassword' },
   getPluginList: { url: 'gateway/admin/admin/plugin/showGn' }, // 获取菜单导航列表
   uploadImg: { url: 'gateway/admin/admin/file/upImage' }, // 图片上传
+  getPowerList: { url: 'gateway/admin/admin/plugin/userRoute' }, // 用户的权限列表
   // 用户管理
   getUserTree: { url: 'gateway/admin/admin/adminUser/queryAllUser' },
   getUserInfo: { url: 'gateway/admin/admin/adminUser/queryAllUserWithPage' }, // 分页获取用户数据

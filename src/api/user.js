@@ -76,3 +76,7 @@ export function getUserModule (info) {
   }
   return Http.postRequest(info.url, data)
 }
+
+export function getPowerList (url) {
+  return Http.postRequest(url)
+}

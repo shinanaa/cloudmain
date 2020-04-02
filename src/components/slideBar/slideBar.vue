@@ -57,6 +57,13 @@ export default {
       return !this.opened
     }
   },
+  watch: {
+    $route: {
+      handler: function (val, oldVal) {
+        this.menuList = getPluginList()
+      }
+    }
+  },
   methods: {}
 }
 </script>

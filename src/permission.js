@@ -1,5 +1,5 @@
 import router from './router'
-import {getUserLogin, getPluginList} from 'common/js/cache'
+import {getUserLogin, getRouteList} from 'common/js/cache'
 
 const whiteList = ['/home', '/login', '/system']
 
@@ -12,15 +12,11 @@ router.beforeEach((to, from, next) => {
       if (whiteList.indexOf(to.path) > -1) {
         next()
       } else {
-        const menuInfo = getPluginList()
-        const menuList = []
+        const menuInfo = getRouteList()
         if (menuInfo) {
-          menuInfo.map(item => {
-            menuList.push(item.path)
-          })
           console.log('luyou')
-          console.log(menuList)
-          if (menuList.indexOf(to.path) > -1) {
+          console.log(menuInfo)
+          if (menuInfo.indexOf(to.path) > -1) {
             next()
           } else {
             next({ path: '/home' })

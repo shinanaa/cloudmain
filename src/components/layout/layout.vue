@@ -54,10 +54,10 @@
 
 <script>
 import {ERR_CODE} from 'common/js/config'
-import {setPluginList} from 'common/js/cache'
+import {setPluginList, setRouteList} from 'common/js/cache'
 import {mapActions, mapGetters} from 'vuex'
 import {changePwd, getPluginList} from '@/api/login'
-import {getUserRole, getUserModule} from '@/api/user'
+import {getUserRole, getUserModule, getPowerList} from '@/api/user'
 export default {
   name: 'layout',
   data () {
@@ -105,6 +105,7 @@ export default {
   created () {
     this._getUserRole()
     this._getUserModule()
+    this._getPowerList()
   },
   methods: {
     changeRoles (role) {
@@ -130,7 +131,7 @@ export default {
           if (item.mc === '系统管理') {
             this.$router.push('/system')
           }
-          if (item.mc === '单位管理') {
+          if (item.mc === '题库管理') {
             this.$router.push('/unit')
           }
         }
@@ -166,6 +167,14 @@ export default {
       const url = 'logOut'
       this.logOut(url).then(() => {
         this.$router.push({ path: '/login' })
+      })
+    },
+    _getPowerList () {
+      getPowerList('getPowerList').then(res => {
+        if (res.errcode === ERR_CODE) {
+          setRouteList(res.route)
+        }
+        console.log(res)
       })
     },
     _getUserRole () {
